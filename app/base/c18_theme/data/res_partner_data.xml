@@ -7,7 +7,7 @@ Belum dicek apakah ada tempat lain yang hardcode string "OdooBot" di luar
 field name ini (lihat "Belum Diputuskan" di requirement 01).
 -->
 <odoo noupdate="1">
-    <record id="mail.partner_root" model="res.partner">
+    <record id="base.partner_root" model="res.partner">
         <field name="name">System Bot</field>
     </record>
 </odoo>

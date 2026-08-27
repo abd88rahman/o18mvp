@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Batasi menu Apps (Settings > Apps, action bawaan base.open_module_tree) supaya
+cuma menampilkan modul custom kita (prefix c18_*) - lihat konvensi prefix di
+erd/00-konvensi-teknis.md poin 2. Proyek ini sengaja zero-dependency ke app
+bisnis bawaan Odoo, jadi app-app bawaan itu tidak perlu (dan tidak boleh)
+kelihatan/di-install dari sini.
+-->
+<odoo>
+    <record id="base.open_module_tree" model="ir.actions.act_window">
+        <field name="domain">[('name', '=like', 'c18\_%')]</field>
+    </record>
+</odoo>

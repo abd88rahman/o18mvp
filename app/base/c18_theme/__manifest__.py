@@ -16,6 +16,7 @@ Belum melewati smoke test end-to-end - lihat erd/base/00-status-requirement.md.
     'data': [
         'views/webclient_templates.xml',
         'views/erp_root_menu.xml',
+        'views/ir_module_module_views.xml',
         'data/res_partner_data.xml',
         'data/mail_templates_email_layouts.xml',
         'data/res_company_data.xml',
@@ -33,10 +34,11 @@ Belum melewati smoke test end-to-end - lihat erd/base/00-status-requirement.md.
             'c18_theme/static/src/js/messaging_menu_patch.js',
         ],
     },
-    # auto_install begitu 'web' terinstall - auth_signup/mail/portal tidak
-    # otomatis ada di database baru, jadi tidak dijadikan trigger penuh
-    # (pola sama seperti c18_theme di proyek referensi aviat-odoo).
-    'auto_install': ['web'],
+    # auto_install=True (bukan list parsial ['web']) - dicek langsung: di
+    # database baru, keempat depends (web/auth_signup/mail/portal) semuanya
+    # sudah ter-install by default lewat auto_install chain modul Odoo
+    # sendiri, jadi trigger penuh ini aman & terbukti jalan (2026-08-27).
+    'auto_install': True,
     'installable': True,
     'application': True,
     'license': 'LGPL-3',
