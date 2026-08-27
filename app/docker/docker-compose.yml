@@ -35,6 +35,11 @@ services:
       - "8072:8072"
 
   nginx:
+    # profile "proxy" - tidak ikut start otomatis di "docker compose up -d".
+    # Aktifkan manual saat nginx sudah siap dipakai:
+    #   docker compose --profile proxy up -d
+    profiles:
+      - proxy
     image: nginx:stable
     depends_on:
       - odoo18-erp

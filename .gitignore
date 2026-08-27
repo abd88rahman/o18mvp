@@ -5,3 +5,7 @@ __pycache__/
 # OS/editor
 .DS_Store
 Thumbs.db
+
+# Postgres data (bind mount) - keep folder, ignore contents
+app/docker/pgdata/*
+!app/docker/pgdata/.gitkeep
