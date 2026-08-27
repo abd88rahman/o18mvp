@@ -1,0 +1,12 @@
+# Secret asli - cuma versi .example yang di-commit (lihat README.md)
+.env
+etc/odoo.conf
+
+# Data Postgres (bind mount native - lihat notes/human-notes/master-plan.txt & docker-compose.yml)
+pgdata/*
+!pgdata/.gitkeep
+
+# Data runtime Odoo (filestore/sessions/log) yang ikut ke-mount di etc/
+etc/filestore/
+etc/sessions/
+etc/*.log

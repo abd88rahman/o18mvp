@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Flyout submenu (drill arrow) - lihat erd/base/02-tema-menu.md poin 3.
+Diverifikasi terhadap source asli Odoo 18
+(addons/web/static/src/webclient/navbar/navbar.xml, t-name
+"web.NavBar.SectionsMenu.Dropdown.MenuSlot") - template rekursif, jadi
+override ini berlaku otomatis di semua level kedalaman menu.
+Dropdown sudah terdaftar di static components NavBar (navbar.js), tidak
+perlu import/registrasi component tambahan di sini.
+Belum smoke test visual di browser.
+-->
+<templates xml:space="preserve">
+    <t t-inherit="web.NavBar.SectionsMenu.Dropdown.MenuSlot" t-inherit-mode="extension">
+        <xpath expr="//t[@t-name='web.NavBar.SectionsMenu.Dropdown.MenuSlot']//t[@t-else='']" position="replace">
+            <t t-else="">
+                <Dropdown position="'right-start'">
+                    <button class="dropdown-item d-flex justify-content-between align-items-center" t-att-style="style">
+                        <span t-esc="item.name"/>
+                        <i class="oi oi-chevron-right ms-2"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
+                            <t t-set="items" t-value="item.childrenTree" />
+                            <t t-set="decalage" t-value="20" />
+                        </t>
+                    </t>
+                </Dropdown>
+            </t>
+        </xpath>
+    </t>
+</templates>

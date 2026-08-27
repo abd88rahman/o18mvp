@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Override 2 layout email dasar Odoo (cover mayoritas email transaksional) -
+lihat erd/base/04-template-email.md. Xpath diverifikasi terhadap source asli
+addons/mail/data/mail_templates_email_layouts.xml.
+
+PENTING: pakai company.env (bukan request.env) - template ini bisa dirender
+di luar HTTP request (mis. dari cron/queue job pengiriman email), request.env
+belum tentu ada di konteks itu.
+
+Belum smoke test.
+-->
+<odoo>
+
+    <template id="mail_notification_layout_branding" inherit_id="mail.mail_notification_layout">
+        <xpath expr="//a[contains(@href, 'odoo.com')]" position="replace">
+            <span t-esc="company.env['ir.http']._erp_brand_name()"/>
+        </xpath>
+    </template>
+
+    <template id="mail_notification_light_branding" inherit_id="mail.mail_notification_light">
+        <xpath expr="//a[contains(@href, 'odoo.com')]" position="replace">
+            <span t-esc="company.env['ir.http']._erp_brand_name()"/>
+        </xpath>
+    </template>
+
+</odoo>

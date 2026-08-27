@@ -1,0 +1,34 @@
+tier versi produk erp ini:
+1. basic
+2. standard
+3. enterprise
+
+---
+cakupan tier basic:
+1. hanya modul accounting, tidak ada sales, purchase, inventory, bahkan hris
+2. dampaknya setiap transaksi khusus dari penjualan maka dibuatkan menu inputan jurnal penjualan bukan dg design invoice
+3. semua tipe jurnal memang tersedia tapi formatnya jurnal umum saja, dibedakan menu dan formnya agar bisa dikelompokkan sehingga ketika melacak sumber inputan dari mana sudah jelas asalnya
+4. tidak ada fitur spesifik apapun di modul accounting, bahkan aktiva tetap juga, hanya mencatat daftar aktiva, utk jurnal penyusutannya murni diinput manual dg format jurnal umum tapi menunya tersendiri agar tipe jurnalnya sesuai
+5. rincian requirement akan dibuat terpisah
+
+cakupan tier standar:
+1. melengkapi form2 spesifik dari tier basic, contohnya: sales order, sales delivery, sales invoice, sales advance, sales payment, sales return, sales write-off, akuisisi aktiva tetap, penyusutan aktiva otomatis, drill
+2. tapi utk jurnal gaji masih diinput manual, hanya disediakan 2 form: jurnal gaji dan jurnal pembayaran gaji, tidak dibuat generate sistem payroll khusus
+
+cakupan enterprise (customize):
+1. fitur hris lengkap: data karyawan, departmen, job posisi, cuti, lembur, absen, payroll dan konfigurasinya
+2. fitur lain yg khusus dibutuhkan client
+
+---
+rincian modul accounting pada tier basic:
+
+Daftar tipe jurnal yang sudah versi original tier basic:
+- Jurnal Umum
+- Jurnal Kas Masuk (selain piutang customer), Jurnal Kas Keluar (selain utang vendor), Jurnal Transfer antar Kas
+- **Tutup Buku**: Penyesuaian (awal tahun & akhir tahun), Tutup Buku
+
+Daftar tipe jurnal dengan versi generik berupa format jurnal umum yang dipisahkan menunya sesuai kelompok modul berikut:
+- **Siklus Pembelian format jurnal umum**: Penerimaan Barang, Pembelian, Uang Muka Pembelian, Pembayaran Vendor, Retur Barang Vendor, Write-off Hutang
+- **Siklus Penjualan format jurnal umum**: Pengiriman Barang, Penjualan, Uang Muka Penjualan, Penerimaan Piutang, Retur Barang Customer, Write-off Piutang
+- **Aktiva Tetap format jurnal umum**: Pengakuan, Penyusutan, Penghapusan, Penjualan, Revaluasi
+- **Payroll format jurnal umum**: Hutang Gaji, Bayar Gaji

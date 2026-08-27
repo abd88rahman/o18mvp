@@ -1,0 +1,31 @@
+<!--
+Belum smoke test - lihat erd/base/01-branding-atribut.md.
+Dirender via qweb_render() standalone (bukan ir.ui.view/ORM), karena di level
+nodb request.env belum tentu ada database yang ter-resolve.
+-->
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Database Manager</title>
+    <link type="image/x-icon" rel="shortcut icon" href="/c18_theme/static/src/img/favicon_custom.png"/>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="card border-0 mx-auto" style="max-width: 300px;">
+            <div class="card-body">
+                <div class="text-center pb-3 border-bottom mb-4">
+                    <img src="/c18_theme/static/src/img/logo_custom.png" alt="Logo" style="max-height:120px; max-width: 100%; width:auto"/>
+                </div>
+                <form role="form" action="/web/database/manager" method="post">
+                    <p t-if="error" class="text-danger" t-esc="error"/>
+                    <div class="mb-3">
+                        <label for="master_pwd" class="form-label">Master Password</label>
+                        <input type="password" name="master_pwd" id="master_pwd" class="form-control" required="required" autofocus="autofocus"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Unlock</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

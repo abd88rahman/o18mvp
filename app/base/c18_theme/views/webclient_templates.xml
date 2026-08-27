@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Belum smoke test - lihat erd/base/01-branding-atribut.md poin 1 & 2.
+Xpath diverifikasi terhadap source asli
+addons/web/views/webclient_templates.xml (web.layout, web.login_layout).
+-->
+<odoo>
+
+    <template id="erp_layout_branding" inherit_id="web.layout">
+        <xpath expr="//title" position="replace">
+            <title t-esc="title or request.env['ir.http']._erp_brand_name()"/>
+        </xpath>
+        <xpath expr="//link[@rel='shortcut icon']" position="replace">
+            <link type="image/x-icon" rel="shortcut icon"
+                  t-att-href="x_icon or '/c18_theme/static/src/img/%s' % request.env['ir.http']._erp_brand_favicon()"/>
+        </xpath>
+    </template>
+
+    <template id="erp_login_layout_branding" inherit_id="web.login_layout">
+        <!-- hapus atribusi "Powered by Odoo" + link odoo.com, ganti teks polos -->
+        <xpath expr="//a[contains(@href, 'utm_medium=auth')]" position="replace">
+            <span>Powered by <t t-esc="request.env['ir.http']._erp_brand_name()"/></span>
+        </xpath>
+    </template>
+
+</odoo>

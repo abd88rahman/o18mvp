@@ -1,0 +1,2 @@
+Folder ini bind mount native untuk data Postgres (lihat notes/human-notes/master-plan.txt & docker-compose.yml service "db").
+Isinya (file data Postgres sungguhan) sengaja diabaikan git - lihat .gitignore di root repo.

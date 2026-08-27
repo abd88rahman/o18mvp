@@ -1,0 +1,59 @@
+[options]
+; ==========================================================================
+; Branding custom, dibaca oleh module c18_theme
+; (lihat ../../../erd/base/01-branding-atribut.md)
+; GANTI brand_name sebelum deploy - nilai final ditentukan user, bukan di
+; requirement. brand_logo/brand_favicon cuma nama file, file fisiknya wajib
+; ada di c18_theme/static/src/img/<nama_file>.
+; ==========================================================================
+brand_name = ERP
+brand_logo = logo_custom.png
+brand_favicon = favicon_custom.png
+
+; --------------------------------------------------------------------------
+; --addons-path | addon 3 layer repo ini: app/base -> app/mvp -> app/custom
+; --------------------------------------------------------------------------
+addons_path = /mnt/extra-addons/base,/mnt/extra-addons/mvp,/mnt/extra-addons/custom
+
+; --------------------------------------------------------------------------
+; --load | server-wide modules
+; WAJIB ada c18_theme di sini (bukan cuma di-install biasa) - rute
+; /web/database/manager, /web/login, dsb bersifat "nodb", controller-nya
+; cuma dimuat dari daftar ini, bukan dari modul yang ter-install di database
+; manapun. Detail di ../../../erd/base/01-branding-atribut.md.
+; --------------------------------------------------------------------------
+server_wide_modules = base,web,c18_theme
+
+; --------------------------------------------------------------------------
+; -D / --data-dir | filestore, sessions, addons upload tersimpan di sini
+; --------------------------------------------------------------------------
+data_dir = /etc/odoo
+
+; --------------------------------------------------------------------------
+; Master password Database Manager - GANTI sebelum deploy, jangan pernah
+; commit nilai asli ke git. Ini beda dari gate Master Password custom di
+; c18_theme (01-branding-atribut.md poin 5) - field ini yang divalidasi
+; oleh gate tsb (check_super), bukan password terpisah.
+; --------------------------------------------------------------------------
+admin_passwd = CHANGE_ME_BEFORE_DEPLOY
+
+; --------------------------------------------------------------------------
+; --proxy-mode | WAJIB True karena Odoo ada di belakang reverse proxy nginx
+; (lihat nginx/odoo-erp.conf) - supaya Odoo baca header
+; X-Forwarded-*, bukan salah kira semua request dari IP nginx.
+; --------------------------------------------------------------------------
+proxy_mode = True
+
+; --------------------------------------------------------------------------
+; Koneksi database TIDAK diisi di sini - db_host/db_user/db_password
+; disuntikkan lewat environment variable HOST/USER/PASSWORD di
+; docker-compose.yml (image resmi odoo:18 baca env var itu otomatis),
+; supaya password tidak dobel ditulis di file ini.
+; --------------------------------------------------------------------------
+
+logfile = /etc/odoo/odoo-server.log
+
+; list_db dibiarkan default (True/tidak diisi) - kontrol akses Database
+; Manager sudah dipegang oleh gate Master Password custom di c18_theme,
+; bukan dengan mematikan list_db.
+; list_db = True

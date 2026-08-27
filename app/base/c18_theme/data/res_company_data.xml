@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Placeholder data res.company - lihat erd/base/05-template-report.md.
+noupdate="0" (default) SENGAJA, bukan "1" - supaya admin bebas edit lewat
+Settings > General Settings > Companies tanpa nilai ini "ngotot" balik tiap
+upgrade module, sesuai keputusan di requirement 05.
+Belum smoke test cetak report dengan data ini.
+-->
+<odoo>
+    <record id="base.main_company" model="res.company">
+        <field name="report_footer">Dokumen ini sah tanpa tanda tangan basah.</field>
+    </record>
+</odoo>

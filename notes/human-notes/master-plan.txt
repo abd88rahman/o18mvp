@@ -1,0 +1,52 @@
+tentang file ini:
+file ini berisi catatan kasar utk coretan ide rencana pengembangan aplikasi erp berbasis odoo 
+tapi semua fiturnya full custom yg hanya gunakan framework odoo nya saja,
+saya butuh bantuan jg utk menyajikan framework aslinya odoo versi 18,
+deploy nya gunakan docker yg mana tidak bisa langsung terlihat source code aslinya odoo seperti apa,
+
+rencananya struktur folder yg akan disiapkan pd repo ini:
+> root
+>> app-base
+>> app-custom
+>> app-mvp
+>> docker
+
+app-base akan diisi perubahan framework odoo meliputi:
+1. mengubah atribut per-odoo-an seperti icon, logo, powered by odoo, template email, template report, atau apapun
+2. mengubah tema warna, hirarki menu root-categ-sub menu dg drill arrow
+3. kalo bisa url yg ada ../odoo/.. juga diganti jadi ../erp/..
+4. dan hal2 lain yg nanti sy tulis lg kalo udh mulai modifikasi inti odoo
+
+app-mvp akan diisi modul2 versi minimum yg memungkinkan bisa digunakan oleh semua jenis perusahaan, 
+tentu inherit dari modul2 yg ada di app-base, 
+kira mencakup:
+1. sales
+2. purchases
+3. inventory
+4. accounting
+5. hris
+6. include fitur laporan, cetakan, dasbor, analisis
+
+app-custom akan diisi modul2 versi modifikasi sesuai client yg akan gunakan dg cara inherit ke modul2 yg ada di app-mvp maupun di app-base,
+utk saat ini belum bisa didefinisikan modifikasinya seperti apa tapi foldernya harus sudah disediakan dan dipanggil oleh docker-compose.yml
+
+utk bind mount database dibuat native aja agar foldernya terlihat di file manager server bukan di dalam volume docker
+
+---
+## referensi repo lain di root yg sama dg repo ini:
+1. odoo18-accurate = utk modul accounting, sales, purchase, inventory yg mana versi accurate memang mvp utk semua jenis usaha
+2. odoo18-toso = utk modul base, theme, payroll
+3. odoo18-cep = utk modul payroll sbg compare dg versi toso
+4. odoo10-kp3 = utk fitur payroll sbg alternatif saja
+5. odoo18-original bisa jadi referensi base
+6. D:\PT KP3\Source Code Aviat SCI\Backup Aplikasi AVIAT\aviat-odoo\ERD\NAT-00-Foundation
+
+---
+## konsep odoo yg akan diterapkan di repo ini :
+Misi proyek ini membangun ERP penuh (Accounting, Purchase, Stock, HR, Payroll, dst) di atas Odoo, dengan struktur modul full custom — hanya bergantung pada app bawaan Odoo base (+ web, keduanya wajib ada di setiap instalasi Odoo). Tidak memakai app bawaan Odoo lain (account, sale, purchase, stock, hr, contacts, dst) sama sekali, di modul manapun.
+Tiap modul jadi addon terpisah dengan prefix folder c18_*
+Utk nama class dan nama model (tabel di db) pakai prefix o18_* agar tidak bentrok dg class/model asli odoo
+jika ada nama class/model/tabel yg identik dg aslinya odoo tetap aman karna sudah ada prefix o18_*, contoh: o18.account.account
+nama field berbahasa inggris yg berlaku umum di odoo ataupun sistem aplikasi erp yg mungkin berbeda dg bahasa inggris percakapan
+fitur account analytic di odoo aslinya akan diganti dg istilah cost center, tp cara kerjanya tidak sepenuhnya seperti analytic odoo, nanti akan dijelaskan lebih lanjut
+utk fitur erp (accounting, sales, purchase, inventory) akan lebih mirip dg repo odoo18_accurate yg mengadopsi software accurate

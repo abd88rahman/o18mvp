@@ -1,0 +1,111 @@
+# struktur modul asli odoo seperti berikut :
+
+## Base / Core (`res_*`, `ir_*`)
+
+- `res_partner`, `res_users`, `res_company`, `res_currency`, `res_country`, `res_country_state`,
+  `res_config_settings`, `res_groups`, `res_lang`
+- `ir_model`, `ir_model_fields`, `ir_attachment`, `ir_cron`, `ir_sequence`, `ir_rule`,
+  `ir_actions`, `ir_ui_view`, `ir_ui_menu`
+
+## Accounting (`account_*`)
+
+- `account_account`, `account_journal`, `account_move`, `account_move_line`
+- `account_payment`, `account_payment_method`, `account_payment_term`
+- `account_tax`, `account_tax_group`
+- `account_fiscal_position`, `account_fiscal_position_tax`
+- `account_analytic_account`, `account_analytic_line`, `account_analytic_plan`
+- `account_bank_statement`, `account_bank_statement_line`
+- `account_reconcile_model`, `account_full_reconcile`
+
+## Sales (`sale_*`)
+
+- `sale_order`, `sale_order_line`
+- `sale_order_template`, `sale_order_template_line`
+
+## Purchase (`purchase_*`)
+
+- `purchase_order`, `purchase_order_line`
+- `purchase_request`, `purchase_request_line`
+- `purchase_requisition`
+
+## Product (`product_*`)
+
+- `product_template`, `product_product`
+- `product_category`
+- `product_uom`, `product_uom_categ`
+- `product_pricelist`, `product_pricelist_item`
+- `product_attribute`, `product_attribute_value`, `product_attribute_line`
+- `product_supplierinfo`
+- `product_packaging`
+- `product_tag`
+
+## Inventory / Stock (`stock_*`)
+
+- `stock_move`, `stock_move_line`
+- `stock_picking`, `stock_picking_type`
+- `stock_location`, `stock_location_route`
+- `stock_quant`, `stock_quant_package`
+- `stock_warehouse`, `stock_warehouse_orderpoint`
+- `stock_rule`
+- `stock_lot`
+- `stock_package_level`
+- `stock_scrap`
+- `stock_valuation_layer`
+
+## Manufacturing (`mrp_*`)
+
+- `mrp_production`
+- `mrp_bom`, `mrp_bom_line`
+- `mrp_workorder`, `mrp_workcenter`, `mrp_workcenter_productivity`
+- `mrp_routing_workcenter`
+- `mrp_unbuild`
+
+## CRM (`crm_*`)
+
+- `crm_lead`, `crm_stage`, `crm_team`, `crm_team_member`, `crm_tag`
+
+## Human Resources (`hr_*`)
+
+- `hr_employee`, `hr_department`, `hr_job`, `hr_contract`
+- `hr_attendance`
+- `hr_leave`, `hr_leave_type`, `hr_leave_allocation`
+- `hr_payslip`, `hr_payslip_line`
+- `hr_expense`, `hr_expense_sheet`
+- `hr_recruitment` (`hr_applicant`, `hr_recruitment_stage`)
+
+## Project (`project_*`)
+
+- `project_project`, `project_task`, `project_task_type`, `project_milestone`, `project_tags`
+
+## Point of Sale (`pos_*`)
+
+- `pos_order`, `pos_order_line`
+- `pos_session`, `pos_config`
+- `pos_payment`, `pos_payment_method`
+- `pos_category`
+
+## Website / eCommerce (`website_*`)
+
+- `website`, `website_page`, `website_menu`, `website_visitor`
+
+## Messaging / Activity (`mail_*`)
+
+- `mail_message`
+- `mail_activity`, `mail_activity_type`
+- `mail_followers`
+- `mail_template`
+- `mail_channel` (→ `discuss_channel` di v17/18)
+
+## Manajemen Dokumen & Sign
+
+- `documents_document`
+- `sign_request`, `sign_request_item`
+
+## Pola Umum
+
+- `<modul>_<objek_utama>` → header record, contoh `sale_order`, `account_move`
+- `<modul>_<objek>_line` → baris detail dari header di atas, contoh `sale_order_line`,
+  `account_move_line`
+- `<modul>_<sub_objek>` → master data pendukung modul itu, contoh `stock_location`,
+  `hr_department`
+- Model many2many custom biasanya muncul sebagai tabel relasi `<modelA>_<modelB>_rel`

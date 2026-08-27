@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Rename "OdooBot" -> "System Bot" - lihat erd/base/01-branding-atribut.md poin 7.
+noupdate="1" supaya kalau admin ganti lagi nama ini manual, tidak ketimpa balik
+saat module diupgrade.
+Belum dicek apakah ada tempat lain yang hardcode string "OdooBot" di luar
+field name ini (lihat "Belum Diputuskan" di requirement 01).
+-->
+<odoo noupdate="1">
+    <record id="mail.partner_root" model="res.partner">
+        <field name="name">System Bot</field>
+    </record>
+</odoo>

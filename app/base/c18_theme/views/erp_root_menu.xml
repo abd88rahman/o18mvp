@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+1 root app tunggal - lihat erd/base/02-tema-menu.md poin 2.
+Module app/mvp & app/custom yang bikin root menu sendiri wajib di-reparent ke
+xmlid c18_theme.menu_erp_root ini (parent="c18_theme.menu_erp_root"),
+plus ubah 'application' di manifest masing-masing dari True -> False.
+Belum smoke test.
+-->
+<odoo>
+    <menuitem id="menu_erp_root"
+              name="ERP"
+              sequence="1"
+              web_icon="c18_theme,static/description/icon.png"/>
+</odoo>
