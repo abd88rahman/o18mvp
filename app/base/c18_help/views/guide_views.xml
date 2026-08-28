@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_c18_help_guide_form" model="ir.ui.view">
+        <field name="name">c18.help.guide.form</field>
+        <field name="model">c18.help.guide</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="content" widget="html"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_help_guide_00" model="ir.actions.act_window">
+        <field name="name">00 - Profile</field>
+        <field name="res_model">c18.help.guide</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" eval="ref('guide_00_profile')"/>
+        <field name="target">current</field>
+    </record>
+
+    <record id="action_help_guide_01" model="ir.actions.act_window">
+        <field name="name">01 - Transactions</field>
+        <field name="res_model">c18.help.guide</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" eval="ref('guide_01_transactions')"/>
+        <field name="target">current</field>
+    </record>
+
+    <record id="action_help_guide_02" model="ir.actions.act_window">
+        <field name="name">02 - Procedure</field>
+        <field name="res_model">c18.help.guide</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" eval="ref('guide_02_procedure')"/>
+        <field name="target">current</field>
+    </record>
+</odoo>

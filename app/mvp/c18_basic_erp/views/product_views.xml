@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_c18_product_list" model="ir.ui.view">
+        <field name="name">c18.product.list</field>
+        <field name="model">c18.product</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="product_type"/>
+                <field name="is_purchaseable"/>
+                <field name="is_saleable"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_c18_product_form" model="ir.ui.view">
+        <field name="name">c18.product.form</field>
+        <field name="model">c18.product</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="product_type"/>
+                        <field name="is_purchaseable"/>
+                        <field name="is_saleable"/>
+                        <field name="active"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_c18_product" model="ir.actions.act_window">
+        <field name="name">Product</field>
+        <field name="res_model">c18.product</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

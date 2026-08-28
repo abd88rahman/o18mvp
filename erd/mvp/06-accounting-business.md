@@ -184,10 +184,12 @@ Juga bukan bagian 6 jenis resmi `tiering-versi.txt` — tapi penting secara prak
 - **State**: `draft` → `posted`.
 - Modul: tetap `c18_account`, form generik sama (poin D).
 
-### G. Aktiva Tetap Basic — **tanpa register aset**, murni jurnal
-**Tidak ada** model/daftar aset (`asset_id`, kode aset, kategori, dst) di tier Basic — kalau disediakan UI "Daftar Aktiva Tetap" tapi nilainya cuma angka manual tanpa kalkulasi penyusutan otomatis, itu kesan fitur setengah jadi yang bakal menimbulkan pertanyaan klien ("kok nanggung"). Register aset (dengan kategori, umur ekonomis, kalkulasi otomatis) baru mulai dibangun di **Standard**, sebagai model baru, bukan upgrade dari sesuatu yang sudah ada.
+### G. Aktiva Tetap Basic — **tanpa register aset penuh**, murni jurnal + 1 field tag ringan
+**Tidak ada** model register aset dengan kategori/umur ekonomis/kalkulasi penyusutan otomatis di tier Basic — kalau disediakan UI "Daftar Aktiva Tetap" yang nilainya cuma angka manual tapi *terlihat* seperti hasil kalkulasi otomatis, itu kesan fitur setengah jadi yang bakal menimbulkan pertanyaan klien ("kok nanggung"). Register aset penuh (dengan kategori, umur ekonomis, kalkulasi otomatis) baru mulai dibangun di **Standard**, sebagai model baru, bukan upgrade dari sesuatu yang sudah ada.
 
 Basic cukup pakai **form generik yang sama seperti poin D** (1 form, bukan 5 form terpisah) — bedanya cuma di header ada field pilih **tipe transaksi aktiva tetap** (selection: Pengakuan / Penyusutan / Penghapusan / Penjualan / Revaluasi), yang menentukan `journal_id` dipakai (5 jenis jurnal Aktiva Tetap tetap ada sebagai master jurnal, sesuai [01-accounting-foundation.md](01-accounting-foundation.md) poin 2 — cuma bedanya di sini dipilih di 1 form, bukan 5 menu/form terpisah, beda dari poin D yang tiap jenis dapat menu sendiri). User input akun & jumlah manual sendiri per transaksi (tidak ada kalkulasi/asset tracking apapun).
+
+**Koreksi (2026-08-28)** — 1 pengecualian ditambahkan: field **`kode_aset`** (Many2one ke model tag ringan `c18.fixed.asset.tag` — cuma `kode` + `nama`, dipilih dari dropdown existing atau bikin baru lewat "Create", **bukan** free text supaya konsisten lintas form) ditambahkan di header form generik yang sama. Tujuannya murni **grouping key** buat laporan "Daftar Aktiva Tetap" (lihat [fitur-laporan.txt](../../notes/human-notes/fitur-laporan.txt) baris 19) — laporan itu **rekap SUM** dari jurnal-jurnal yang sudah diinput manual per `kode_aset` (harga perolehan dari transaksi Pengakuan, akumulasi penyusutan dari SUM transaksi Penyusutan, nilai buku = perolehan − akumulasi), **bukan** hasil kalkulasi/schedule otomatis — sama sifatnya dengan laporan "Jurnal Pembelian"/"Jurnal Penjualan" generic (poin D) yang juga murni rekap. Model tag ini **tidak** punya kategori, umur ekonomis, atau logika penyusutan apapun — beda karakter dari register Standard, jadi tidak dianggap "setengah jadi" (murni identitas buat pengelompokan laporan, bukan master data aset).
 
 ### H. Payroll Basic — 2 jenis jurnal
 Sama pola form generik seperti poin D (1 template, header pilih akun/partner/cost center/jumlah), tapi arah debit/kredit-nya **sudah pasti** (bukan generic bebas):
@@ -206,7 +208,7 @@ Tidak perlu model/view terpisah dari Standard — cukup pastikan field yang dito
 - **UoM**: **tetap tidak dipakai** di Basic — qty di baris PO/Penerimaan Barang polos tanpa satuan/konversi. Dependency ke `c18.uom.uom` baru muncul mulai `c18_purchase`/`c18_sale`/`c18_stock` (Standard), yang `_inherit` `c18.product` buat nambah `uom_id`.
 
 ### K. Skema Nomor Dokumen (2026-08-26, dikonfirmasi)
-Placeholder `ir.sequence` sudah dibuat di [`app/mvp/c18_account/data/ir_sequence_data.xml`](../../app/mvp/c18_account/data/ir_sequence_data.xml), siap dipakai begitu module `c18_account` mulai discaffold.
+Placeholder `ir.sequence` sudah dibuat di [`app/mvp/c18_basic_erp/data/ir_sequence_data.xml`](../../app/mvp/c18_basic_erp/data/ir_sequence_data.xml) (modul, semula bernama `c18_account`, sudah di-rename jadi `c18_basic_erp` - lihat [00-status-requirement.md](00-status-requirement.md)).
 
 **Format tampilan**: `KODE-yyyy-mm-xxx` (`yyyy`/`mm` cuma menunjukkan tanggal transaksi berjalan saat itu, `xxx` = 3 digit). **Nomor urut (`xxx`) berlanjut terus tanpa reset** (bukan reset tiap bulan/tahun) — dikonfirmasi 2026-08-26, sesuai semangat Basic yang sederhana. Teknis: `ir.sequence` dipakai **tanpa** `use_date_range` (counter tunggal global per jenis jurnal, `%(year)s`/`%(month)s` di prefix cuma menampilkan tanggal berjalan, tidak memicu reset counter). **Kode prefix maks 4 huruf** (dikonfirmasi 2026-08-26). Daftar kode per jenis jurnal (ditentukan sendiri, belum dikonfirmasi user — cek ulang pas review):
 

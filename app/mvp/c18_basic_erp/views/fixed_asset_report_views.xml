@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_c18_fixed_asset_report_wizard_form" model="ir.ui.view">
+        <field name="name">c18.fixed.asset.report.wizard.form</field>
+        <field name="model">c18.fixed.asset.report.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </group>
+                <button name="action_generate" type="object" string="Tampilkan" class="oe_highlight"/>
+                <div class="alert alert-danger" role="alert" invisible="not is_mismatch">
+                    <field name="mismatch_message" readonly="1"/>
+                </div>
+                <field name="line_ids" readonly="1">
+                    <list create="false" delete="false">
+                        <field name="asset_tag_id"/>
+                        <field name="tanggal_perolehan"/>
+                        <field name="harga_perolehan"/>
+                        <field name="akumulasi_awal"/>
+                        <field name="beban_periode"/>
+                        <field name="akumulasi_akhir"/>
+                        <field name="nilai_buku"/>
+                    </list>
+                </field>
+                <group invisible="not line_ids">
+                    <field name="total_harga_perolehan" readonly="1"/>
+                    <field name="total_saldo_coa" readonly="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_c18_fixed_asset_report" model="ir.actions.act_window">
+        <field name="name">Daftar Aktiva Tetap</field>
+        <field name="res_model">c18.fixed.asset.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

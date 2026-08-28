@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Data default Chart of Accounts (erd/mvp/01-accounting-foundation.md poin 1,
+tabel 41 akun di "Belum Diputuskan / Perlu Digali"). noupdate="0" (default) -
+admin bebas edit/tambah lewat UI, tidak "ngotot" balik tiap upgrade module.
+-->
+<odoo>
+    <record id="acc_1_1000" model="c18.account.account">
+        <field name="code">1-1000</field>
+        <field name="name">Kas</field>
+        <field name="account_type">kas_bank</field>
+    </record>
+    <record id="acc_1_1100" model="c18.account.account">
+        <field name="code">1-1100</field>
+        <field name="name">Bank</field>
+        <field name="account_type">kas_bank</field>
+    </record>
+    <record id="acc_1_1200" model="c18.account.account">
+        <field name="code">1-1200</field>
+        <field name="name">Piutang Usaha</field>
+        <field name="account_type">piutang_usaha</field>
+    </record>
+    <record id="acc_1_1300" model="c18.account.account">
+        <field name="code">1-1300</field>
+        <field name="name">Persediaan Barang Dagang</field>
+        <field name="account_type">persediaan</field>
+    </record>
+    <record id="acc_1_1400" model="c18.account.account">
+        <field name="code">1-1400</field>
+        <field name="name">Uang Muka Pembelian</field>
+        <field name="account_type">aktiva_lancar_lainnya</field>
+    </record>
+    <record id="acc_1_1410" model="c18.account.account">
+        <field name="code">1-1410</field>
+        <field name="name">PPN Masukan</field>
+        <field name="account_type">aktiva_lancar_lainnya</field>
+    </record>
+    <record id="acc_1_1420" model="c18.account.account">
+        <field name="code">1-1420</field>
+        <field name="name">Biaya Dibayar Dimuka</field>
+        <field name="account_type">aktiva_lancar_lainnya</field>
+    </record>
+    <record id="acc_1_2000" model="c18.account.account">
+        <field name="code">1-2000</field>
+        <field name="name">Tanah</field>
+        <field name="account_type">aktiva_tetap</field>
+    </record>
+    <record id="acc_1_2100" model="c18.account.account">
+        <field name="code">1-2100</field>
+        <field name="name">Bangunan</field>
+        <field name="account_type">aktiva_tetap</field>
+    </record>
+    <record id="acc_1_2200" model="c18.account.account">
+        <field name="code">1-2200</field>
+        <field name="name">Kendaraan</field>
+        <field name="account_type">aktiva_tetap</field>
+    </record>
+    <record id="acc_1_2300" model="c18.account.account">
+        <field name="code">1-2300</field>
+        <field name="name">Peralatan Kantor</field>
+        <field name="account_type">aktiva_tetap</field>
+    </record>
+    <record id="acc_1_2900" model="c18.account.account">
+        <field name="code">1-2900</field>
+        <field name="name">Akumulasi Penyusutan</field>
+        <field name="account_type">aktiva_tetap</field>
+    </record>
+    <record id="acc_1_3000" model="c18.account.account">
+        <field name="code">1-3000</field>
+        <field name="name">Aktiva Lain-lain</field>
+        <field name="account_type">aktiva_lain</field>
+    </record>
+    <record id="acc_1_3050" model="c18.account.account">
+        <field name="code">1-3050</field>
+        <field name="name">Transaksi Aktiva Tetap</field>
+        <field name="account_type">aktiva_lain</field>
+        <!--
+        Akun penampung/WIP - biaya perolehan aktiva tetap yang belum
+        dikapitalisasi (mis. cicilan/beberapa termin pembayaran sebelum
+        aset jadi/siap pakai). Sengaja BUKAN account_type "aktiva_tetap"
+        supaya bebas dijurnal berkali-kali lewat Jurnal Umum tanpa kena
+        guard c18.fixed.asset.entry (Kode Aset wajib, dst) - guard itu baru
+        aktif pas saldo di sini dipindah/dikapitalisasi ke akun aset final
+        (mis. "Kendaraan") lewat form Aktiva Tetap, transaction_type
+        Pengakuan, debit akun final, kredit akun ini. Baru dari titik itu
+        tercatat sebagai 1 aktiva. Lihat erd/mvp/06-accounting-business.md
+        poin G & notes/claude-notes/rencana-restriksi-akun-per-jurnal.md.
+        -->
+    </record>
+    <record id="acc_1_3100" model="c18.account.account">
+        <field name="code">1-3100</field>
+        <field name="name">Jaminan/Deposit</field>
+        <field name="account_type">aktiva_lain</field>
+    </record>
+    <record id="acc_2_1000" model="c18.account.account">
+        <field name="code">2-1000</field>
+        <field name="name">Hutang Usaha</field>
+        <field name="account_type">hutang_usaha</field>
+    </record>
+    <record id="acc_2_1100" model="c18.account.account">
+        <field name="code">2-1100</field>
+        <field name="name">Hutang Belum Difaktur</field>
+        <field name="account_type">hutang_usaha</field>
+    </record>
+    <record id="acc_2_1200" model="c18.account.account">
+        <field name="code">2-1200</field>
+        <field name="name">Uang Muka Penjualan</field>
+        <field name="account_type">hutang_lancar_lainnya</field>
+    </record>
+    <record id="acc_2_1300" model="c18.account.account">
+        <field name="code">2-1300</field>
+        <field name="name">Hutang Gaji</field>
+        <field name="account_type">hutang_lancar_lainnya</field>
+    </record>
+    <record id="acc_2_1400" model="c18.account.account">
+        <field name="code">2-1400</field>
+        <field name="name">PPN Keluaran</field>
+        <field name="account_type">hutang_lancar_lainnya</field>
+    </record>
+    <record id="acc_2_1500" model="c18.account.account">
+        <field name="code">2-1500</field>
+        <field name="name">Hutang Pajak</field>
+        <field name="account_type">hutang_lancar_lainnya</field>
+    </record>
+    <record id="acc_2_2000" model="c18.account.account">
+        <field name="code">2-2000</field>
+        <field name="name">Hutang Bank Jangka Panjang</field>
+        <field name="account_type">hutang_jangka_panjang</field>
+    </record>
+    <record id="acc_2_2100" model="c18.account.account">
+        <field name="code">2-2100</field>
+        <field name="name">Hutang Leasing</field>
+        <field name="account_type">hutang_jangka_panjang</field>
+    </record>
+    <record id="acc_3_1000" model="c18.account.account">
+        <field name="code">3-1000</field>
+        <field name="name">Modal</field>
+        <field name="account_type">ekuitas</field>
+    </record>
+    <record id="acc_3_1100" model="c18.account.account">
+        <field name="code">3-1100</field>
+        <field name="name">Laba Ditahan</field>
+        <field name="account_type">ekuitas</field>
+    </record>
+    <record id="acc_3_1200" model="c18.account.account">
+        <field name="code">3-1200</field>
+        <field name="name">Laba Tahun Berjalan</field>
+        <field name="account_type">ekuitas</field>
+    </record>
+    <record id="acc_3_1300" model="c18.account.account">
+        <field name="code">3-1300</field>
+        <field name="name">Dividen</field>
+        <field name="account_type">ekuitas</field>
+    </record>
+    <record id="acc_3_1900" model="c18.account.account">
+        <field name="code">3-1900</field>
+        <field name="name">Balancing Account</field>
+        <field name="account_type">ekuitas</field>
+    </record>
+    <record id="acc_4_1000" model="c18.account.account">
+        <field name="code">4-1000</field>
+        <field name="name">Pendapatan Penjualan/Jasa</field>
+        <field name="account_type">pendapatan</field>
+    </record>
+    <record id="acc_4_1100" model="c18.account.account">
+        <field name="code">4-1100</field>
+        <field name="name">Retur &amp; Potongan Penjualan</field>
+        <field name="account_type">pendapatan</field>
+    </record>
+    <record id="acc_5_1000" model="c18.account.account">
+        <field name="code">5-1000</field>
+        <field name="name">Beban Pokok Penjualan/HPP</field>
+        <field name="account_type">beban_pokok_pendapatan</field>
+    </record>
+    <record id="acc_6_1000" model="c18.account.account">
+        <field name="code">6-1000</field>
+        <field name="name">Beban Gaji</field>
+        <field name="account_type">beban_usaha</field>
+    </record>
+    <record id="acc_6_1100" model="c18.account.account">
+        <field name="code">6-1100</field>
+        <field name="name">Beban ATK</field>
+        <field name="account_type">beban_usaha</field>
+    </record>
+    <record id="acc_6_1200" model="c18.account.account">
+        <field name="code">6-1200</field>
+        <field name="name">Beban Operasional</field>
+        <field name="account_type">beban_usaha</field>
+    </record>
+    <record id="acc_6_1300" model="c18.account.account">
+        <field name="code">6-1300</field>
+        <field name="name">Beban Piutang Tak Tertagih</field>
+        <field name="account_type">beban_usaha</field>
+    </record>
+    <record id="acc_6_1400" model="c18.account.account">
+        <field name="code">6-1400</field>
+        <field name="name">Beban Penyusutan</field>
+        <field name="account_type">beban_usaha</field>
+    </record>
+    <record id="acc_6_1500" model="c18.account.account">
+        <field name="code">6-1500</field>
+        <field name="name">Selisih Persediaan</field>
+        <field name="account_type">beban_usaha</field>
+    </record>
+    <record id="acc_6_1600" model="c18.account.account">
+        <field name="code">6-1600</field>
+        <field name="name">Beban Sewa</field>
+        <field name="account_type">beban_usaha</field>
+    </record>
+    <record id="acc_8_1000" model="c18.account.account">
+        <field name="code">8-1000</field>
+        <field name="name">Pendapatan Lain-lain</field>
+        <field name="account_type">pendapatan_luar_usaha</field>
+    </record>
+    <record id="acc_8_1100" model="c18.account.account">
+        <field name="code">8-1100</field>
+        <field name="name">Pendapatan Bunga</field>
+        <field name="account_type">pendapatan_luar_usaha</field>
+    </record>
+    <record id="acc_9_1000" model="c18.account.account">
+        <field name="code">9-1000</field>
+        <field name="name">Beban Bunga</field>
+        <field name="account_type">beban_luar_usaha</field>
+    </record>
+    <record id="acc_9_1100" model="c18.account.account">
+        <field name="code">9-1100</field>
+        <field name="name">Beban Admin Bank</field>
+        <field name="account_type">beban_luar_usaha</field>
+    </record>
+    <record id="acc_9_1200" model="c18.account.account">
+        <field name="code">9-1200</field>
+        <field name="name">Beban Denda</field>
+        <field name="account_type">beban_luar_usaha</field>
+    </record>
+</odoo>

@@ -16,10 +16,12 @@ Belum melewati smoke test end-to-end - lihat erd/base/00-status-requirement.md.
     'data': [
         'views/webclient_templates.xml',
         'views/erp_root_menu.xml',
+        'views/home_dashboard_actions.xml',
         'views/ir_module_module_views.xml',
         'data/res_partner_data.xml',
         'data/mail_templates_email_layouts.xml',
         'data/res_company_data.xml',
+        'data/report_paperformat_a5h.xml',
     ],
     'assets': {
         # colors.scss wajib masuk bundle _assets_primary_variables dan dimuat
@@ -30,8 +32,11 @@ Belum melewati smoke test end-to-end - lihat erd/base/00-status-requirement.md.
         ],
         'web.assets_backend': [
             'c18_theme/static/src/xml/menu_flyout_submenu.xml',
+            'c18_theme/static/src/xml/home_dashboard.xml',
             'c18_theme/static/src/js/user_menu_patch.js',
             'c18_theme/static/src/js/messaging_menu_patch.js',
+            'c18_theme/static/src/js/home_dashboard.js',
+            'c18_theme/static/src/scss/home_dashboard.scss',
         ],
     },
     # auto_install=True (bukan list parsial ['web']) - dicek langsung: di

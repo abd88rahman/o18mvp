@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Custom paper format A5H (A5 Half/Horizontal) - lihat erd/base/05-template-report.md.
+page_width/page_height sudah landscape (bukan portrait yang dirotate), dipasangkan
+dengan orientation=Landscape - keduanya final, bukan double-rotate.
+Belum smoke test cetak report dengan format ini.
+-->
+<odoo>
+    <record id="paperformat_a5h" model="report.paperformat">
+        <field name="name">A5H</field>
+        <field name="format">custom</field>
+        <field name="page_width">210</field>
+        <field name="page_height">148</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">5</field>
+        <field name="dpi">90</field>
+    </record>
+</odoo>

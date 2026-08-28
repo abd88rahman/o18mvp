@@ -1,0 +1,22 @@
+laporan yg dibuat sesuai modul2 utama:
+1. accounting
+    1. neraca
+    2. laba rugi
+    3. perubahan laba ditahan
+    4. arus kas (metode tidak langsung)
+    5. buku besar utama
+    6. buku besar bantu (satu akun dirinci per partner)
+2. purchases
+    1. daftar transaksi pembelian
+    2. aging hutang per vendor, aging piutang per invoice (group urutan pelanggan), riwayat pembayaran hutang
+3. sales
+    1. daftar transaksi penjualan
+    2. aging piutang per pelanggan, aging piutang per invoice (group urutan pelanggan), riwayat penerimaan piutang
+4. inventory
+    1. daftar saldo persediaan, daftar saldo persediaan per gudang
+    2. kartu stok per produk
+5. aktiva tetap
+    1. daftar aktiva tetap (berisi kode, nama, tanggal perolehan, harga perolehan, akumulasi penyusutan awal periode, beban penyusutan periode ini, akumulasi penyusutan akhir periode, nilai buku)
+       - dikonfirmasi 2026-08-28: masuk tier Basic juga (bukan Standard+ doang). Basic tetap tanpa register aset penuh (tanpa kategori/umur ekonomis/auto-depresiasi) - cuma ditambah 1 field tag ringan kode_aset di form jurnal generic Aktiva Tetap (lihat erd/mvp/06-accounting-business.md poin G), laporan ini murni SUM rekap dari jurnal manual per kode_aset, bukan hasil kalkulasi otomatis.
+6. payroll
+

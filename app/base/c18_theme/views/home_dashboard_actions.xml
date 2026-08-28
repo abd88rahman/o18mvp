@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Landing page app ERP - lihat erd/base/02-tema-menu.md. Menu ini sengaja
+diberi sequence=1 (paling kecil) supaya jadi menu pertama yang ditemukan
+webclient saat app icon diklik, dan sengaja punya action langsung (beda
+dari root menu lain yang biasanya cuma grouping) supaya drill berhenti di
+sini, bukan lanjut ke action pertama modul app/mvp (mis. Jurnal Umum).
+-->
+<odoo>
+    <record id="action_c18_theme_home_dashboard" model="ir.actions.client">
+        <field name="name">Home</field>
+        <field name="tag">c18_theme_home_dashboard</field>
+    </record>
+
+    <menuitem id="menu_c18_theme_home"
+              name="Home"
+              parent="menu_erp_root"
+              action="action_c18_theme_home_dashboard"
+              sequence="1"/>
+</odoo>

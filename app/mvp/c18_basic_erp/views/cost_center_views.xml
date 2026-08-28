@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_c18_basic_erp_cost_center_list" model="ir.ui.view">
+        <field name="name">c18.account.cost.center.list</field>
+        <field name="model">c18.account.cost.center</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_c18_basic_erp_cost_center_form" model="ir.ui.view">
+        <field name="name">c18.account.cost.center.form</field>
+        <field name="model">c18.account.cost.center</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_c18_basic_erp_cost_center" model="ir.actions.act_window">
+        <field name="name">Cost Center</field>
+        <field name="res_model">c18.account.cost.center</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

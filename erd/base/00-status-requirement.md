@@ -2,7 +2,7 @@
 
 Catatan pelacakan status tiap dokumen requirement di folder ini, supaya gampang lanjut sesi berikutnya tanpa perlu baca ulang semua file. Update manual tiap kali ada progres/keputusan baru.
 
-Terakhir diupdate: 2026-08-26 (`c18_theme` sudah di-scaffold penuh di `app/base/c18_theme/` — manifest, controllers, models, views, data, static — tapi **belum pernah smoke test** ke instance Odoo sungguhan. Rename dari `erp_base_theme` ke `c18_theme` mengikuti konvensi baru, lihat `notes/human-notes/master-plan.txt`.).
+Terakhir diupdate: 2026-08-27 (`c18_theme` sudah **lolos smoke test** ke instance Odoo sungguhan, hasil sesuai ekspektasi. Rename dari `erp_base_theme` ke `c18_theme` mengikuti konvensi baru, lihat `notes/human-notes/master-plan.txt`.).
 
 ## Sudah Selesai / Cukup
 
@@ -22,4 +22,4 @@ _(tidak ada — semua dokumen requirement app/base sudah lengkap/cukup)_
 - Breakdown kategori/menu final per modul bisnis di [02](02-tema-menu.md) — baru konkret saat `app/mvp` mulai dibangun.
 
 ## Status Implementasi Kode
-- `c18_theme` — **sudah di-scaffold** di [`app/base/c18_theme/`](../../app/base/c18_theme/), requirement (dokumen 01-05) semua sudah lengkap. **Belum smoke test** ke instance Odoo sungguhan sama sekali — itu langkah berikutnya yang paling mendesak.
+- `c18_theme` — **sudah di-scaffold** di [`app/base/c18_theme/`](../../app/base/c18_theme/), requirement (dokumen 01-05) semua sudah lengkap, dan **sudah lolos smoke test** ke instance Odoo sungguhan (hasil sesuai ekspektasi, 2026-08-27).

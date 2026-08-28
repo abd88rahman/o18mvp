@@ -61,6 +61,30 @@ Karena template ini rekursif (`t-call` ke dirinya sendiri), override berlaku oto
 
 **Catatan operasional penting**: perubahan ini masuk asset bundle (`web.assets_backend`), bukan `ir.ui.view`/data biasa — di proyek referensi ditemukan bahwa container Odoo yang sedang berjalan lama **tidak otomatis reload bundle** setelah module di-upgrade dari proses/container lain (mis. `docker compose run --rm`); perlu `docker restart <container_odoo>` supaya perubahan asset benar-benar kepakai. Perlu diingat saat development/deploy nanti.
 
+### 4. Home dashboard (landing page saat app icon diklik) — dikonfirmasi & diimplementasikan 2026-08-28
+**Masalah**: root app menu (`menu_erp_root`) & root kategori di bawahnya (mis. "Accounting") sengaja tanpa `action` (poin 2, murni grouping) — akibatnya webclient auto-drill ke `action` pertama yang ditemukan di pohon menu (menu dengan `sequence` terkecil, rekursif turun ke anak pertama yang punya action). Sebelum fitur ini ada, itu berarti klik icon ERP langsung membuka form **Jurnal Umum** (`c18_basic_erp`) sebagai first-impression — membingungkan.
+
+**Keputusan**: tambah 1 menuitem baru **"Home"**, `parent="c18_theme.menu_erp_root"`, `sequence="1"` (lebih kecil dari kategori manapun), dengan `action` sendiri (`ir.actions.client`) — supaya drill berhenti di sini duluan, bukan lanjut ke action pertama modul `app/mvp`.
+
+**Isi halaman** (client action OWL, bukan `ir.actions.act_window`, karena tidak ada model data yang perlu ditampilkan):
+- Logo company aktif (`res.company.logo`)
+- "Selamat Datang, {nama user login}"
+- Nama company
+- Teks kecil "Pilih menu di bagian atas untuk mulai bekerja."
+
+**Sengaja generic/tanpa quick-link ke menu spesifik** (mis. tombol langsung ke Pembelian/Penjualan) — konsisten dengan prinsip di poin 2 & Struktur Modul di bawah: `c18_theme` (base layer) tidak boleh tahu menu/action milik module `app/mvp`/`app/custom`. Kalau nanti mau ada quick-link/ringkasan angka, itu ditambahkan di module `app/mvp` masing-masing (mis. `c18_basic_erp` override action `Home` ini via xmlid, atau bikin action Home sendiri lalu reparent menu), bukan di `c18_theme`.
+
+**Struktur file** (ditambahkan ke `c18_theme/`):
+```
+c18_theme/
+  views/
+    home_dashboard_actions.xml   # ir.actions.client + menuitem "Home" (sequence=1)
+  static/src/
+    js/home_dashboard.js         # OWL component, registry.category("actions")
+    xml/home_dashboard.xml       # template
+    scss/home_dashboard.scss     # batas ukuran logo
+```
+
 ## Kapan Detail Ini Terasa Konkret
 Struktur kategori & kedalaman menu yang riil baru kelihatan begitu modul `app/mvp` (sales/purchases/inventory/accounting/hris) mulai dibangun — dokumen ini menyiapkan **pola teknis & keputusan strukturalnya** (1 root app, flyout otomatis di semua level), bukan daftar final kategori/menu per modul.
 

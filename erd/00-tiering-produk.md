@@ -2,6 +2,8 @@
 
 Status: catatan tiering wajib dipertimbangkan di **semua** requirement `app/mvp` (dan turunannya di `app/custom`) — menentukan modul/fitur apa yang benar-benar ada di tiap level produk. Diringkas dari [`notes/human-notes/tiering-versi.txt`](../notes/human-notes/tiering-versi.txt) (2026-08-26).
 
+**RENAME (2026-08-27)**: modul `c18_account` yang disebut di seluruh dokumen ini (termasuk diagram inheritance di bawah) sudah di-rename teknis jadi **`c18_basic_erp`** — nama lama dianggap menyesatkan karena isinya sudah jauh lebih dari GL/Accounting (Purchase, Sales, Inventory, Payroll, Fixed Assets ikut masuk demi "Basic cukup 1 modul"). Narasi historis di bawah **sengaja tidak diubah** (tetap pakai nama `c18_account` sesuai konteks penulisan aslinya) — cukup diingat nama teknis foldernya sekarang `app/mvp/c18_basic_erp/`.
+
 ## Daftar Tier
 
 ### 1. Basic

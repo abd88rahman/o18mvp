@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_c18_purchase_payment_list" model="ir.ui.view">
+        <field name="name">c18.purchase.payment.list</field>
+        <field name="model">c18.purchase.payment</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="amount_net"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_c18_purchase_payment_form" model="ir.ui.view">
+        <field name="name">c18.purchase.payment.form</field>
+        <field name="model">c18.purchase.payment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_post" type="object" string="Post" class="oe_highlight" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="date" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="account_id" readonly="state != 'draft'"/>
+                            <field name="cost_center_id" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <field name="line_ids" readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <field name="bill_id"/>
+                            <field name="amount_original"/>
+                            <field name="amount_residual"/>
+                            <field name="amount_paid"/>
+                        </list>
+                    </field>
+                    <field name="deduction_ids" readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <field name="name"/>
+                            <field name="account_id"/>
+                            <field name="amount"/>
+                        </list>
+                    </field>
+                    <group class="oe_subtotal_footer">
+                        <field name="amount_paid_total"/>
+                        <field name="amount_deduction_total"/>
+                        <field name="amount_net"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_c18_purchase_payment" model="ir.actions.act_window">
+        <field name="name">Pembayaran Vendor</field>
+        <field name="res_model">c18.purchase.payment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

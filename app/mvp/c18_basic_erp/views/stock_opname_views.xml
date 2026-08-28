@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_c18_basic_erp_stock_opname_list" model="ir.ui.view">
+        <field name="name">c18.account.stock.opname.list</field>
+        <field name="model">c18.account.stock.opname</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="product_id"/>
+                <field name="qty_system"/>
+                <field name="qty_physical"/>
+                <field name="difference"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_c18_basic_erp_stock_opname_form" model="ir.ui.view">
+        <field name="name">c18.account.stock.opname.form</field>
+        <field name="model">c18.account.stock.opname</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_post" type="object" string="Post" class="oe_highlight" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="product_id" readonly="state != 'draft'"/>
+                            <field name="date" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="qty_system" readonly="1"/>
+                            <field name="qty_physical" readonly="state != 'draft'"/>
+                            <field name="difference" readonly="1"/>
+                            <field name="amount" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="cost_center_id" readonly="state != 'draft'"/>
+                        <field name="note" readonly="state != 'draft'"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_c18_basic_erp_stock_opname" model="ir.actions.act_window">
+        <field name="name">Stok Opname</field>
+        <field name="res_model">c18.account.stock.opname</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Master c18.account.journal - daftar tipe jurnal granular (erd/mvp/01-accounting-foundation.md
+poin 2, kode & sequence_id lihat erd/mvp/06-accounting-business.md poin K).
+Tiap record link ke placeholder ir.sequence yang sudah ada di ir_sequence_data.xml.
+-->
+<odoo noupdate="1">
+    <record id="journal_ju" model="c18.account.journal">
+        <field name="name">Jurnal Umum</field>
+        <field name="code">JU</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_ju"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="journal_pawl" model="c18.account.journal">
+        <field name="name">Penyesuaian Awal Tahun</field>
+        <field name="code">PAWL</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_pawl"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="journal_pakh" model="c18.account.journal">
+        <field name="name">Penyesuaian Akhir Tahun</field>
+        <field name="code">PAKH</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_pakh"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="journal_tutb" model="c18.account.journal">
+        <field name="name">Tutup Buku</field>
+        <field name="code">TUTB</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_tutb"/>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="journal_km" model="c18.account.journal">
+        <field name="name">Kas Masuk</field>
+        <field name="code">KM</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_km"/>
+        <field name="sequence">50</field>
+    </record>
+    <record id="journal_kk" model="c18.account.journal">
+        <field name="name">Kas Keluar</field>
+        <field name="code">KK</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_kk"/>
+        <field name="sequence">60</field>
+    </record>
+    <record id="journal_trf" model="c18.account.journal">
+        <field name="name">Transfer Kas/Bank</field>
+        <field name="code">TRF</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_trf"/>
+        <field name="sequence">70</field>
+    </record>
+
+    <record id="journal_po" model="c18.account.journal">
+        <field name="name">Purchase Order (ringan)</field>
+        <field name="code">PO</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_po"/>
+        <field name="sequence">80</field>
+    </record>
+    <record id="journal_pnbr" model="c18.account.journal">
+        <field name="name">Penerimaan Barang</field>
+        <field name="code">PNBR</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_pnbr"/>
+        <field name="sequence">90</field>
+    </record>
+    <record id="journal_pb" model="c18.account.journal">
+        <field name="name">Pembelian (Vendor Bill)</field>
+        <field name="code">PB</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_pb"/>
+        <field name="sequence">100</field>
+    </record>
+    <record id="journal_umpb" model="c18.account.journal">
+        <field name="name">Uang Muka Pembelian</field>
+        <field name="code">UMPB</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_umpb"/>
+        <field name="sequence">110</field>
+    </record>
+    <record id="journal_bpv" model="c18.account.journal">
+        <field name="name">Pembayaran Vendor</field>
+        <field name="code">BPV</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_bpv"/>
+        <field name="sequence">120</field>
+    </record>
+    <record id="journal_rtbv" model="c18.account.journal">
+        <field name="name">Retur Barang Vendor</field>
+        <field name="code">RTBV</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_rtbv"/>
+        <field name="sequence">130</field>
+    </record>
+    <record id="journal_woht" model="c18.account.journal">
+        <field name="name">Write-off Hutang</field>
+        <field name="code">WOHT</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_woht"/>
+        <field name="sequence">140</field>
+    </record>
+
+    <record id="journal_so" model="c18.account.journal">
+        <field name="name">Sales Order (ringan)</field>
+        <field name="code">SO</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_so"/>
+        <field name="sequence">150</field>
+    </record>
+    <record id="journal_pngb" model="c18.account.journal">
+        <field name="name">Pengiriman Barang</field>
+        <field name="code">PNGB</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_pngb"/>
+        <field name="sequence">160</field>
+    </record>
+    <record id="journal_pj" model="c18.account.journal">
+        <field name="name">Penjualan (Customer Invoice)</field>
+        <field name="code">PJ</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_pj"/>
+        <field name="sequence">170</field>
+    </record>
+    <record id="journal_umpj" model="c18.account.journal">
+        <field name="name">Uang Muka Penjualan</field>
+        <field name="code">UMPJ</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_umpj"/>
+        <field name="sequence">180</field>
+    </record>
+    <record id="journal_bpp" model="c18.account.journal">
+        <field name="name">Penerimaan Piutang</field>
+        <field name="code">BPP</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_bpp"/>
+        <field name="sequence">190</field>
+    </record>
+    <record id="journal_rtbc" model="c18.account.journal">
+        <field name="name">Retur Barang Customer</field>
+        <field name="code">RTBC</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_rtbc"/>
+        <field name="sequence">200</field>
+    </record>
+    <record id="journal_wopt" model="c18.account.journal">
+        <field name="name">Write-off Piutang</field>
+        <field name="code">WOPT</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_wopt"/>
+        <field name="sequence">210</field>
+    </record>
+
+    <record id="journal_pmks" model="c18.account.journal">
+        <field name="name">Pemakaian Sendiri (Consume)</field>
+        <field name="code">PMKS</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_pmks"/>
+        <field name="sequence">220</field>
+    </record>
+    <record id="journal_sopn" model="c18.account.journal">
+        <field name="name">Stok Opname</field>
+        <field name="code">SOPN</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_sopn"/>
+        <field name="sequence">230</field>
+    </record>
+
+    <record id="journal_akat" model="c18.account.journal">
+        <field name="name">Aktiva Tetap - Pengakuan</field>
+        <field name="code">AKAT</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_akat"/>
+        <field name="sequence">240</field>
+    </record>
+    <record id="journal_pnyt" model="c18.account.journal">
+        <field name="name">Aktiva Tetap - Penyusutan</field>
+        <field name="code">PNYT</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_pnyt"/>
+        <field name="sequence">250</field>
+    </record>
+    <record id="journal_haps" model="c18.account.journal">
+        <field name="name">Aktiva Tetap - Penghapusan</field>
+        <field name="code">HAPS</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_haps"/>
+        <field name="sequence">260</field>
+    </record>
+    <record id="journal_jlat" model="c18.account.journal">
+        <field name="name">Aktiva Tetap - Penjualan</field>
+        <field name="code">JLAT</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_jlat"/>
+        <field name="sequence">270</field>
+    </record>
+    <record id="journal_rvls" model="c18.account.journal">
+        <field name="name">Aktiva Tetap - Revaluasi</field>
+        <field name="code">RVLS</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_rvls"/>
+        <field name="sequence">280</field>
+    </record>
+
+    <record id="journal_hgj" model="c18.account.journal">
+        <field name="name">Jurnal Pengakuan (Hutang Gaji)</field>
+        <field name="code">HGJ</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_hgj"/>
+        <field name="sequence">290</field>
+    </record>
+    <record id="journal_bgj" model="c18.account.journal">
+        <field name="name">Jurnal Pembayaran (Bayar Gaji)</field>
+        <field name="code">BGJ</field>
+        <field name="sequence_id" ref="seq_c18_basic_erp_bgj"/>
+        <field name="sequence">300</field>
+    </record>
+</odoo>

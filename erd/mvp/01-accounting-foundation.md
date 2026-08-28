@@ -7,7 +7,7 @@ Status: **draft direview sebagian (2026-08-26), belum diimplementasikan.**
 ## Kenapa Ini Duluan
 Sales, Purchase, Inventory, dan HRIS (lewat payroll) semuanya di ujungnya menghasilkan transaksi yang harus dibukukan jadi jurnal (invoice → piutang, pembelian → hutang, stock movement → valuasi persediaan, payroll → beban gaji). Tanpa fondasi Accounting siap duluan, modul lain tidak punya tempat konsisten buat menaruh hasil transaksinya. Pola ini mengikuti proyek referensi `aviat-odoo` (`c18_account` dibangun duluan, modul lain depends ke situ) dan sejalan dengan `notes/human-notes/master-plan.txt` yang bilang fitur ERP kita "akan lebih mirip repo `odoo18_accurate`" — GL sebagai hub pusat, modul lain jadi sub-ledger yang lapor ke situ.
 
-Sesuai [erd/00-konvensi-teknis.md](../00-konvensi-teknis.md): **zero dependency** ke app `account` bawaan Odoo — model dibangun dari nol, bukan `_inherit`. Nama modul final: **`c18_account`**.
+Sesuai [erd/00-konvensi-teknis.md](../00-konvensi-teknis.md): **zero dependency** ke app `account` bawaan Odoo — model dibangun dari nol, bukan `_inherit`. Nama modul awal: `c18_account` — **di-rename jadi `c18_basic_erp` (2026-08-27)** setelah scope-nya berkembang jauh melebihi GL/Accounting (Purchase, Sales, Inventory, Payroll, Fixed Assets ikut masuk demi "Basic cukup 1 modul", lihat [00-tiering-produk.md](../00-tiering-produk.md)). Nama **model** Odoo (`c18.account.*`) tidak berubah, cuma technical module name-nya.
 
 ## Scope
 
@@ -97,5 +97,6 @@ Tidak pakai `account.fiscal.year` bawaan Odoo (zero dependency). **Tanpa field t
 | 39 | 9-1000 Beban Bunga | Beban di Luar Usaha | Tidak | — (opsi bebas di deduction Pembayaran Vendor/Penerimaan Piutang, D.4/E.4) |
 | 40 | 9-1100 Beban Admin Bank | Beban di Luar Usaha | Tidak | — (opsi bebas di deduction Pembayaran Vendor/Penerimaan Piutang, D.4/E.4) |
 | 41 | 9-1200 Beban Denda | Beban di Luar Usaha | Tidak | — (opsi bebas di deduction Pembayaran Vendor/Penerimaan Piutang, D.4/E.4) |
+| 42 | 6-1600 Beban Sewa | Beban Usaha | Tidak | — (ditambah 2026-08-28, temuan dari skenario testing PT Roda Sejahtera — sebelumnya amortisasi sewa numpang ke 6-1200 Beban Operasional, dianggap layak jadi akun default sendiri krn hampir semua bisnis punya beban sewa & nilainya material) |
 
 Akun yang sudah punya "asal-usul"/alasan spesifik (Hutang Belum Difaktur, Uang Muka, HPP, dll) dibahas detail di [06-accounting-business.md](06-accounting-business.md).

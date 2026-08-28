@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!--
-        Placeholder no_gap ir.sequence per jenis jurnal (c18_account, tier Basic).
+        no_gap ir.sequence per jenis jurnal (c18_basic_erp, tier Basic).
         Format: KODE-yyyy-mm-xxx (yyyy/mm cuma tampilan tanggal berjalan; xxx = 3 digit,
         counter berlanjut terus TANPA reset per bulan/tahun - dikonfirmasi 2026-08-26,
         makanya use_date_range TIDAK diset True di sini, counter global per jenis jurnal).
         Kode prefix maks 4 huruf (dikonfirmasi 2026-08-26). Detail per jenis:
         erd/mvp/06-accounting-business.md.
-
-        Belum terdaftar di __manifest__.py (module c18_account belum discaffold) —
-        file ini murni placeholder skema penomoran, disiapkan lebih awal sesuai
-        permintaan, tinggal di-include ke data[] pas module ini mulai dibangun.
     -->
 
     <!-- Jurnal Umum & Tutup Buku (poin A, C) -->
-    <record id="seq_c18_account_ju" model="ir.sequence">
+    <record id="seq_c18_basic_erp_ju" model="ir.sequence">
         <field name="name">Jurnal Umum</field>
         <field name="code">c18.account.journal.ju</field>
         <field name="prefix">JU-%(year)s-%(month)s-</field>
@@ -22,7 +18,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_pawl" model="ir.sequence">
+    <record id="seq_c18_basic_erp_pawl" model="ir.sequence">
         <field name="name">Penyesuaian Awal Tahun</field>
         <field name="code">c18.account.journal.pawl</field>
         <field name="prefix">PAWL-%(year)s-%(month)s-</field>
@@ -30,7 +26,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_pakh" model="ir.sequence">
+    <record id="seq_c18_basic_erp_pakh" model="ir.sequence">
         <field name="name">Penyesuaian Akhir Tahun</field>
         <field name="code">c18.account.journal.pakh</field>
         <field name="prefix">PAKH-%(year)s-%(month)s-</field>
@@ -38,7 +34,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_tutb" model="ir.sequence">
+    <record id="seq_c18_basic_erp_tutb" model="ir.sequence">
         <field name="name">Tutup Buku</field>
         <field name="code">c18.account.journal.tutb</field>
         <field name="prefix">TUTB-%(year)s-%(month)s-</field>
@@ -48,7 +44,7 @@
     </record>
 
     <!-- Kas Bank (poin B) -->
-    <record id="seq_c18_account_km" model="ir.sequence">
+    <record id="seq_c18_basic_erp_km" model="ir.sequence">
         <field name="name">Kas Masuk</field>
         <field name="code">c18.account.journal.km</field>
         <field name="prefix">KM-%(year)s-%(month)s-</field>
@@ -56,7 +52,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_kk" model="ir.sequence">
+    <record id="seq_c18_basic_erp_kk" model="ir.sequence">
         <field name="name">Kas Keluar</field>
         <field name="code">c18.account.journal.kk</field>
         <field name="prefix">KK-%(year)s-%(month)s-</field>
@@ -64,7 +60,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_trf" model="ir.sequence">
+    <record id="seq_c18_basic_erp_trf" model="ir.sequence">
         <field name="name">Transfer Kas/Bank</field>
         <field name="code">c18.account.journal.trf</field>
         <field name="prefix">TRF-%(year)s-%(month)s-</field>
@@ -74,7 +70,7 @@
     </record>
 
     <!-- Siklus Pembelian (poin D) -->
-    <record id="seq_c18_account_po" model="ir.sequence">
+    <record id="seq_c18_basic_erp_po" model="ir.sequence">
         <field name="name">Purchase Order (ringan)</field>
         <field name="code">c18.account.journal.po</field>
         <field name="prefix">PO-%(year)s-%(month)s-</field>
@@ -82,7 +78,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_pnbr" model="ir.sequence">
+    <record id="seq_c18_basic_erp_pnbr" model="ir.sequence">
         <field name="name">Penerimaan Barang</field>
         <field name="code">c18.account.journal.pnbr</field>
         <field name="prefix">PNBR-%(year)s-%(month)s-</field>
@@ -90,7 +86,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_pb" model="ir.sequence">
+    <record id="seq_c18_basic_erp_pb" model="ir.sequence">
         <field name="name">Pembelian (Vendor Bill)</field>
         <field name="code">c18.account.journal.pb</field>
         <field name="prefix">PB-%(year)s-%(month)s-</field>
@@ -98,7 +94,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_umpb" model="ir.sequence">
+    <record id="seq_c18_basic_erp_umpb" model="ir.sequence">
         <field name="name">Uang Muka Pembelian</field>
         <field name="code">c18.account.journal.umpb</field>
         <field name="prefix">UMPB-%(year)s-%(month)s-</field>
@@ -106,7 +102,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_bpv" model="ir.sequence">
+    <record id="seq_c18_basic_erp_bpv" model="ir.sequence">
         <field name="name">Pembayaran Vendor</field>
         <field name="code">c18.account.journal.bpv</field>
         <field name="prefix">BPV-%(year)s-%(month)s-</field>
@@ -114,7 +110,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_rtbv" model="ir.sequence">
+    <record id="seq_c18_basic_erp_rtbv" model="ir.sequence">
         <field name="name">Retur Barang Vendor</field>
         <field name="code">c18.account.journal.rtbv</field>
         <field name="prefix">RTBV-%(year)s-%(month)s-</field>
@@ -122,7 +118,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_woht" model="ir.sequence">
+    <record id="seq_c18_basic_erp_woht" model="ir.sequence">
         <field name="name">Write-off Hutang</field>
         <field name="code">c18.account.journal.woht</field>
         <field name="prefix">WOHT-%(year)s-%(month)s-</field>
@@ -132,7 +128,7 @@
     </record>
 
     <!-- Siklus Penjualan (poin E) -->
-    <record id="seq_c18_account_so" model="ir.sequence">
+    <record id="seq_c18_basic_erp_so" model="ir.sequence">
         <field name="name">Sales Order (ringan)</field>
         <field name="code">c18.account.journal.so</field>
         <field name="prefix">SO-%(year)s-%(month)s-</field>
@@ -140,7 +136,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_pngb" model="ir.sequence">
+    <record id="seq_c18_basic_erp_pngb" model="ir.sequence">
         <field name="name">Pengiriman Barang</field>
         <field name="code">c18.account.journal.pngb</field>
         <field name="prefix">PNGB-%(year)s-%(month)s-</field>
@@ -148,7 +144,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_pj" model="ir.sequence">
+    <record id="seq_c18_basic_erp_pj" model="ir.sequence">
         <field name="name">Penjualan (Customer Invoice)</field>
         <field name="code">c18.account.journal.pj</field>
         <field name="prefix">PJ-%(year)s-%(month)s-</field>
@@ -156,7 +152,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_umpj" model="ir.sequence">
+    <record id="seq_c18_basic_erp_umpj" model="ir.sequence">
         <field name="name">Uang Muka Penjualan</field>
         <field name="code">c18.account.journal.umpj</field>
         <field name="prefix">UMPJ-%(year)s-%(month)s-</field>
@@ -164,7 +160,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_bpp" model="ir.sequence">
+    <record id="seq_c18_basic_erp_bpp" model="ir.sequence">
         <field name="name">Penerimaan Piutang</field>
         <field name="code">c18.account.journal.bpp</field>
         <field name="prefix">BPP-%(year)s-%(month)s-</field>
@@ -172,7 +168,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_rtbc" model="ir.sequence">
+    <record id="seq_c18_basic_erp_rtbc" model="ir.sequence">
         <field name="name">Retur Barang Customer</field>
         <field name="code">c18.account.journal.rtbc</field>
         <field name="prefix">RTBC-%(year)s-%(month)s-</field>
@@ -180,7 +176,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_wopt" model="ir.sequence">
+    <record id="seq_c18_basic_erp_wopt" model="ir.sequence">
         <field name="name">Write-off Piutang</field>
         <field name="code">c18.account.journal.wopt</field>
         <field name="prefix">WOPT-%(year)s-%(month)s-</field>
@@ -190,7 +186,7 @@
     </record>
 
     <!-- Persediaan (poin F) -->
-    <record id="seq_c18_account_pmks" model="ir.sequence">
+    <record id="seq_c18_basic_erp_pmks" model="ir.sequence">
         <field name="name">Pemakaian Sendiri (Consume)</field>
         <field name="code">c18.account.journal.pmks</field>
         <field name="prefix">PMKS-%(year)s-%(month)s-</field>
@@ -198,7 +194,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_sopn" model="ir.sequence">
+    <record id="seq_c18_basic_erp_sopn" model="ir.sequence">
         <field name="name">Stok Opname</field>
         <field name="code">c18.account.journal.sopn</field>
         <field name="prefix">SOPN-%(year)s-%(month)s-</field>
@@ -208,7 +204,7 @@
     </record>
 
     <!-- Aktiva Tetap (poin G) - 5 jenis transaksi, 5 sequence terpisah -->
-    <record id="seq_c18_account_akat" model="ir.sequence">
+    <record id="seq_c18_basic_erp_akat" model="ir.sequence">
         <field name="name">Aktiva Tetap - Pengakuan</field>
         <field name="code">c18.account.journal.akat</field>
         <field name="prefix">AKAT-%(year)s-%(month)s-</field>
@@ -216,7 +212,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_pnyt" model="ir.sequence">
+    <record id="seq_c18_basic_erp_pnyt" model="ir.sequence">
         <field name="name">Aktiva Tetap - Penyusutan</field>
         <field name="code">c18.account.journal.pnyt</field>
         <field name="prefix">PNYT-%(year)s-%(month)s-</field>
@@ -224,7 +220,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_haps" model="ir.sequence">
+    <record id="seq_c18_basic_erp_haps" model="ir.sequence">
         <field name="name">Aktiva Tetap - Penghapusan</field>
         <field name="code">c18.account.journal.haps</field>
         <field name="prefix">HAPS-%(year)s-%(month)s-</field>
@@ -232,7 +228,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_jlat" model="ir.sequence">
+    <record id="seq_c18_basic_erp_jlat" model="ir.sequence">
         <field name="name">Aktiva Tetap - Penjualan</field>
         <field name="code">c18.account.journal.jlat</field>
         <field name="prefix">JLAT-%(year)s-%(month)s-</field>
@@ -240,7 +236,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_rvls" model="ir.sequence">
+    <record id="seq_c18_basic_erp_rvls" model="ir.sequence">
         <field name="name">Aktiva Tetap - Revaluasi</field>
         <field name="code">c18.account.journal.rvls</field>
         <field name="prefix">RVLS-%(year)s-%(month)s-</field>
@@ -250,7 +246,7 @@
     </record>
 
     <!-- Payroll (poin H) -->
-    <record id="seq_c18_account_hgj" model="ir.sequence">
+    <record id="seq_c18_basic_erp_hgj" model="ir.sequence">
         <field name="name">Jurnal Pengakuan (Hutang Gaji)</field>
         <field name="code">c18.account.journal.hgj</field>
         <field name="prefix">HGJ-%(year)s-%(month)s-</field>
@@ -258,7 +254,7 @@
         <field name="implementation">no_gap</field>
         <field name="company_id" eval="False"/>
     </record>
-    <record id="seq_c18_account_bgj" model="ir.sequence">
+    <record id="seq_c18_basic_erp_bgj" model="ir.sequence">
         <field name="name">Jurnal Pembayaran (Bayar Gaji)</field>
         <field name="code">c18.account.journal.bgj</field>
         <field name="prefix">BGJ-%(year)s-%(month)s-</field>

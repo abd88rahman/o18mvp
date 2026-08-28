@@ -1,53 +1,53 @@
-# Titik Akhir Sesi Ini (2026-08-26, sesi lanjutan)
+# Titik Akhir Sesi Ini (2026-08-28, sesi lanjutan)
 
 ## Kalimat Penutup Sesi
-> (menunggu instruksi lanjutan dari user — sesi ini murni rincian `06-accounting-business.md` tier Basic, belum ada pertanyaan terbuka spesifik di akhir)
+> (menunggu instruksi lanjutan dari user — sesi ini murni coding + testing `c18_basic_erp`, belum ada pertanyaan terbuka spesifik di akhir)
 
 ## Ringkasan Progres Sesi Ini
-Fokus sesi ini: merinci gap "Detail requirement Basic tier" di `erd/00-tiering-produk.md` sampai tuntas, khusus modul `c18_account` (Accounting). Hasilnya jadi section besar baru **"Detail Requirement Tier Basic — Field-Level"** di [`erd/mvp/06-accounting-business.md`](../../erd/mvp/06-accounting-business.md), poin **A sampai K**:
+Sesi paling produktif sejauh ini — dari requirement lengkap (hasil sesi sebelumnya) sampai **modul jadi & lolos smoke test**.
 
-- **A.** Jurnal Umum (form spesifik).
-- **B.** Kas Bank — 3 form (Kas Masuk/Keluar pakai `line_ids`, Transfer flat).
-- **C.** Tutup Buku (baru, diriset dari pola Accurate Online) — Penyesuaian Awal Tahun (locked 1 Jan), Penyesuaian Akhir Tahun (locked 31 Des), Tutup Buku/closing entries (nolkan P&L langsung ke Laba Ditahan, bukan via Income Summary). Termasuk penjelasan dampak ke Laporan Laba Rugi (harus exclude jurnal penutup) vs Neraca (Laba Tahun Berjalan tetap tampil kalau tanggal laporan < tutup buku).
-- **D. Pembelian** — termasuk **PO ringan** (keputusan besar sesi ini: Basic ternyata butuh PO versi ringan + Product versi sederhana, bukan "tidak ada Purchase sama sekali" seperti draft awal — dikonfirmasi setelah diskusi pro-kontra, dianalogikan beda dari register Aktiva Tetap yang justru ditiadakan). 6 jenis jurnal dirinci lengkap: Penerimaan Barang, Pembelian (GRNI fleksibel + `product_id`/keterangan bebas per baris), Uang Muka Pembelian, Pembayaran Vendor (line_ids pilih invoice + wizard deduction multi-baris), Retur Barang Vendor (diriset: retur selalu sama caranya, status bayar cuma pengaruh follow-up lewat Pembayaran Vendor nominal negatif), Write-off Hutang (diriset maknanya: cuma utk hutang yang genuinely dibebaskan/gain, beda dari pelunasan non-kas yang masuk perluasan Pembayaran Vendor).
-- **E. Penjualan** — mirror penuh dari D, dengan 1 asimetri kunci: tidak ada akun perantara "Piutang Belum Difaktur" (Pengiriman Barang langsung akui HPP, bukan piutang).
-- **F. Persediaan** — mekanisme costing FIFO/Average (dipilih per company), penyimpanan (layer table utk FIFO, running qty+avg_cost utk Average), efek tiap mutasi, larangan stok negatif, laporan (Kartu Stok + Saldo Persediaan; Stok Minimum & per-Gudang dikonfirmasi TIDAK perlu). **F.1** Pemakaian Sendiri (Consume, jenis jurnal baru) dan **F.2** Stok Opname (jenis jurnal baru) — keduanya di luar 6+6 jenis resmi `tiering-versi.txt`.
-- **G.** Aktiva Tetap Basic — tanpa register aset (sengaja ditiadakan, alasan "kesan setengah jadi").
-- **H.** Payroll Basic — 2 jenis jurnal, relasi Pengakuan↔Pembayaran via pull (pilih di form Pembayaran) + push (tombol "Bayar" di form Pengakuan).
-- **I.** Partner Basic — field minimal.
-- **J.** Product/UoM di Basic — Product dipakai (versi sederhana: kode bebas format + tipe + is_purchaseable/is_saleable, TANPA UoM/kategori model), UoM tetap Standard+ saja.
-- **K.** Skema Nomor Dokumen — placeholder `ir.sequence` sudah **dibuat filenya** di [`app/mvp/c18_account/data/ir_sequence_data.xml`](../../app/mvp/c18_account/data/ir_sequence_data.xml) (~27 sequence, format `KODE-yyyy-mm-xxx`, kode prefix ≤4 huruf, `no_gap`) — belum terdaftar ke manifest krn module `c18_account` belum discaffold.
+1. **`c18_theme` dikonfirmasi user sudah smoke test** ke instance Odoo sungguhan, hasil sesuai ekspektasi (status di `erd/base/00-status-requirement.md` diupdate).
+2. **Custom paper format A5H** ditambahkan ke `c18_theme` (`data/report_paperformat_a5h.xml`) — hasil diskusi soal ukuran kertas landscape vs orientasi fisik printer.
+3. **Modul `c18_account` di-scaffold penuh, lalu di-rename jadi `c18_basic_erp`** (folder `app/mvp/c18_basic_erp/`) karena scope-nya jauh melebihi "accounting" — sekarang berisi **~35 model** mencakup SELURUH poin A-K dokumen `06-accounting-business.md`:
+   - Fondasi: CoA (42 akun termasuk "6-1600 Beban Sewa" yang ditambah sesi ini), Journal (30 jenis + sequence), Account Move/Move Line, Cost Center, Exchange Rate.
+   - Partner extend + Product tier Basic.
+   - Kas Bank (Kas Masuk/Keluar/Transfer).
+   - PO/SO ringan.
+   - Siklus Pembelian **lengkap**: Penerimaan Barang, Pembelian (Vendor Bill, GRNI), Uang Muka Pembelian, Pembayaran Vendor (deduction), Retur Barang Vendor, Write-off Hutang.
+   - Siklus Penjualan **lengkap** (mirror Pembelian) + costing FIFO/Average (`c18.account.stock.layer`).
+   - Aktiva Tetap Basic (form generik 1 model, 5 jenis transaksi).
+   - Payroll Basic (Pengakuan + Pembayaran, pull/push).
+   - Persediaan: Pemakaian Sendiri, Stok Opname.
+   - **Tutup Buku** (Penyesuaian Awal/Akhir Tahun dengan tanggal auto-locked, proses closing otomatis nolkan P&L ke Laba Ditahan, penguncian periode).
+4. **Smoke test fungsional via `odoo shell`** — 7 skenario end-to-end, semua PASS (Jurnal Umum, PO→Pembelian, SO→Penjualan dengan FIFO costing benar, Stok Opname, Tutup Buku, penguncian periode). Dijalankan di database terpisah (`test_c18_basic_erp`), bukan database kerja, lalu di-rollback.
+5. **Dataset testing realistis dibangun** — perusahaan fiktif "PT Roda Sejahtera" (distributor ban), 16+ bulan transaksi (Nov 2024-Apr 2026), 3 dokumen berjenjang di `testing/mvp/`:
+   - `00-skenario-distributor-ban.md` — profil, gaji (riset UMP DKI Jakarta 2024/2025/2026), asumsi.
+   - `01-transaksi-distributor-ban.md` — data transaksi kronologis lengkap + checkpoint stok/piutang-hutang.
+   - `02-prosedur-testing.md` — cara eksekusi di UI, ditulis untuk tester tanpa background akuntansi.
+   - Diperkaya 2 putaran: batch "Maret 2026" (Uang Muka, Retur Vendor, Write-off Hutang, Pemakaian Sendiri, Stok Opname, Aktiva Tetap 4 jenis sisanya, Payroll partial) + 7 transaksi penutup cakupan akun (Jaminan/Deposit, Pinjaman Bank+bunga, Leasing, Pendapatan Bunga, Beban Admin Bank/Denda) — cakupan akun sekarang 35/42 (83%).
+6. **Modul `c18_help` (prototype)** — root menu "Help" top-level (setara Apps/Settings, sengaja tidak direparent ke `c18_theme.menu_erp_root`), nampilin 3 dokumen testing di atas sebagai form Odoo biasa (breadcrumb/sidebar tetap kelihatan) via field `Html` yang compute on-the-fly baca file `.rst` (docutils, bukan Markdown — `markdown` py package tidak ada di image `odoo:18`, `docutils` sudah ada). File `.rst` disalin manual dari `.md` sumber di `testing/mvp/` (bukan auto-convert).
 
-## Dokumen Lain yang Ikut Diupdate
-- `erd/00-tiering-produk.md` — breakdown Basic dikoreksi (PO ringan + Product masuk Basic), tabel pemetaan tier diupdate.
-- `erd/mvp/02-common-master-data.md` — Product sekarang tier "semua tier" (bukan Standard+ saja), field level Basic dirinci, kode prefix **dikonfirmasi bebas karakter** (tidak divalidasi sistem).
-- `erd/mvp/04-purchase.md` — dicatat PO ringan sudah ada di Basic (`c18_account`), `c18_purchase` nanti `_inherit` model itu.
-- `erd/mvp/01-accounting-foundation.md` — **item "Belum Diputuskan" (sub-kategori 15 tipe akun) sudah diselesaikan**: tabel 41 baris (No, Kode & Nama Akun, Tipe Akun, Default Fitur?, Fitur Pemakai). Skema kode: segmen pertama = tipe (1 Aktiva, 2 Kewajiban, 3 Ekuitas, 4 Pendapatan, 5 Beban Pokok, 6 Beban Usaha, 8 Pendapatan di Luar Usaha, 9 Beban di Luar Usaha — **tidak ada prefix 7**, dikoreksi user), segmen kedua kelipatan 100.
+## Temuan Gap (Dicatat, Belum Diperbaiki)
+- **Multi-currency belum genuinely jalan**: field `currency_id`/`exchange_rate` ada di `c18.account.move`, tapi mesin akuntansinya (Trial Balance, Tutup Buku) belum konversi otomatis ke mata uang company saat agregasi. Kalau ada jurnal non-IDR, perhitungan saldo bakal salah. **Sengaja tidak dites** di skenario testing (dicatat di `00-skenario-distributor-ban.md` poin I) — perbaikan kode di luar scope sesi ini.
 
 ## Keputusan Besar yang Perlu Diingat
-1. **PO ringan + Product ada di Basic** (bukan Standard+) — keduanya tetap hidup di modul `c18_account` (bukan dipindah ke `c18_common`), supaya Basic cukup install 1 modul. Trade-off: `c18_account` jadi tidak murni "GL doang".
-2. **Metode costing (FIFO/Average) dipilih per company** (global, bukan per produk).
-3. **Stok negatif tidak diperbolehkan** — validasi wajib sebelum posting.
-4. **Laporan Stok Minimum dikonfirmasi TIDAK diperlukan** di MVP ini sama sekali.
+1. **`c18_common` resmi tidak dipakai** — sudah dikoreksi sesi sebelumnya, dikonfirmasi lagi sesi ini: Partner/Product Basic tetap bagian `c18_account`/`c18_basic_erp`.
+2. **Rename `c18_account` → `c18_basic_erp`** (2026-08-27) — nama model Odoo (`c18.account.*`) TIDAK berubah, cuma technical module name. Dokumen historis (`erd/00-tiering-produk.md`, dll) sengaja dibiarkan pakai nama lama di narasi, cukup diberi catatan rename di bagian atas.
+3. **Deduction Pembayaran Vendor/Penerimaan Piutang disederhanakan jadi level header** (bukan per-baris invoice + wizard popup) — efek jurnal tetap sama persis sesuai requirement, cuma UX-nya lebih simpel dari draft awal.
+4. **CoA nambah 1 akun**: "6-1600 Beban Sewa" (Beban Usaha) — ditemukan lewat proses bikin skenario testing (sewa kantor numpang ke akun generik sebelumnya), dianggap layak jadi default karena hampir semua bisnis punya beban sewa.
+5. **Testing procedure ditulis untuk tester non-akuntansi** — istilah awam, "Hasil yang Diharapkan" dalam bentuk observable (bukan istilah debit/kredit), checkpoint yang bisa dicocokkan tanpa hitung manual.
 
 ## Belum Dikerjakan / Masih Terbuka (Kandidat Sesi Berikutnya)
-- [ ] Field aging/umur hutang-piutang (bantu identifikasi kandidat Write-off) — dicatat sbg follow-up, belum wajib.
->jawab: tidak perlu, skip saja
-- [ ] Format Kartu Stok (kolom/layout persis) — isi sudah jelas, layout belum.
->jawab: buatkan layout yaa
-- [ ] Finalisasi skema nomor dokumen poin K (apakah `no_gap` sudah benar, apakah reset per bulan yang diinginkan) — placeholder XML sudah ada, tinggal dikonfirmasi/direvisi.
->jawab: nomor berlanjut seterusnya karna tier basic memang simple
-- [ ] Riset 3 repo referensi payroll (`odoo18-toso`, `odoo18-cep`, `odoo10-kp3`) utk `07-hris.md` — **masih menggantung dari sesi sebelumnya**, belum disentuh sesi ini.
->jawab: masih open
-- [ ] Rinci **05-sales.md** & **04-purchase.md** (Standard+) — masih level tinggi, belum sedetail Basic tier di `06`.
->jawab: masih open
-- [ ] Smoke test `c18_theme` + `app/docker/` ke instance Odoo sungguhan — masih menggantung dari sesi-sesi sebelumnya, belum pernah dijalankan sama sekali.
->jawab: masih open
-- [ ] Mulai scaffold kode modul `c18_account` — requirement Basic sudah sangat lengkap sekarang, tinggal mulai coding.
->jawab: masih open
+- [ ] **Jalankan skenario testing PT Roda Sejahtera secara manual di UI** (belum pernah dieksekusi tester sungguhan sama sekali — baru functional test via `odoo shell`).
+- [ ] Perbaiki gap multi-currency (konversi otomatis ke company currency saat agregasi).
+- [ ] Laporan Keuangan (Neraca/Laba Rugi/Trial Balance/Buku Besar) & Kartu Stok — belum ada modelnya sama sekali (tier Standard+, di luar scope Basic).
+- [ ] Modul `c18_stock`/`c18_purchase`/`c18_sale` (Standard tier) — belum dibuat sama sekali, requirement-nya (`03-inventory-foundation.md`, `04-purchase.md`, `05-sales.md`) masih level tinggi.
+- [ ] Riset 3 repo referensi payroll (`odoo18-toso`, `odoo18-cep`, `odoo10-kp3`) utk `07-hris.md` — **masih menggantung dari 2 sesi sebelumnya**.
+- [ ] `c18_help` masih prototype — belum diputuskan jadi fitur permanen atau dibuang, belum ada requirement/PRD resmi.
 
-## Peta Dokumen Penting (update dari sesi sebelumnya)
-- `erd/mvp/06-accounting-business.md` — sekarang dokumen PALING detail & PALING panjang, jadi rujukan utama field-level utk `c18_account`.
-- `erd/mvp/01-accounting-foundation.md` — tabel CoA 41 akun + kode sudah lengkap.
-- `app/mvp/c18_account/data/ir_sequence_data.xml` — **file kode pertama** yang sudah dibuat di `app/mvp/` (masih orphan, belum ada manifest/module).
-- Dokumen lain (`00-tiering-produk.md`, `02-common-master-data.md`, `04-purchase.md`) — sudah konsisten dengan keputusan sesi ini.
+## Peta Dokumen Penting
+- `app/mvp/c18_basic_erp/` — modul kode utama, ~35 model, sudah smoke test functional.
+- `testing/mvp/00-skenario-distributor-ban.md`, `01-transaksi-distributor-ban.md`, `02-prosedur-testing.md` — dataset & prosedur testing realistis, siap dieksekusi manual.
+- `app/base/c18_help/` — prototype viewer dokumentasi (root menu "Help").
+- `app/base/c18_theme/` — smoke test sudah confirmed, dianggap selesai.
+- `erd/mvp/00-status-requirement.md` — status tracking utama, sudah diupdate mengikuti semua progres sesi ini.

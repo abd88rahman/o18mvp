@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="guide_00_profile" model="c18.help.guide">
+        <field name="name">00 - Profile</field>
+        <field name="filename">00_skenario_distributor_ban.rst</field>
+    </record>
+    <record id="guide_01_transactions" model="c18.help.guide">
+        <field name="name">01 - Transactions</field>
+        <field name="filename">01_transaksi_distributor_ban.rst</field>
+    </record>
+    <record id="guide_02_procedure" model="c18.help.guide">
+        <field name="name">02 - Procedure</field>
+        <field name="filename">02_prosedur_testing.rst</field>
+    </record>
+</odoo>

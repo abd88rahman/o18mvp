@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    Root "Help" SENGAJA top-level (parent kosong), bukan direparent ke
+    c18_theme.menu_erp_root - beda karakter dari module bisnis (lihat
+    __manifest__.py). Prototype, belum ada icon custom.
+    -->
+    <menuitem id="menu_help_root" name="Help" sequence="100"/>
+
+    <menuitem id="menu_help_guide_00"
+              name="00 - Profile"
+              parent="menu_help_root"
+              action="action_help_guide_00"
+              sequence="10"/>
+
+    <menuitem id="menu_help_guide_01"
+              name="01 - Transactions"
+              parent="menu_help_root"
+              action="action_help_guide_01"
+              sequence="20"/>
+
+    <menuitem id="menu_help_guide_02"
+              name="02 - Procedure"
+              parent="menu_help_root"
+              action="action_help_guide_02"
+              sequence="30"/>
+</odoo>

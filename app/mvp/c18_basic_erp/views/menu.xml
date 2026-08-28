@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_c18_basic_erp_root"
+              name="Accounting"
+              parent="c18_theme.menu_erp_root"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_basic_erp_journal_entries"
+              name="Jurnal Umum"
+              parent="menu_c18_basic_erp_root"
+              action="action_c18_basic_erp_move"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_basic_erp_closing_root"
+              name="Tutup Buku"
+              parent="menu_c18_basic_erp_root"
+              sequence="80"/>
+
+    <menuitem id="menu_c18_basic_erp_move_pawl"
+              name="Penyesuaian Awal Tahun"
+              parent="menu_c18_basic_erp_closing_root"
+              action="action_c18_basic_erp_move_pawl"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_basic_erp_move_pakh"
+              name="Penyesuaian Akhir Tahun"
+              parent="menu_c18_basic_erp_closing_root"
+              action="action_c18_basic_erp_move_pakh"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_basic_erp_closing"
+              name="Tutup Buku"
+              parent="menu_c18_basic_erp_closing_root"
+              action="action_c18_basic_erp_closing"
+              sequence="30"/>
+
+    <menuitem id="menu_c18_basic_erp_cash_root"
+              name="Kas Bank"
+              parent="menu_c18_basic_erp_root"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_basic_erp_cash_in"
+              name="Kas Masuk"
+              parent="menu_c18_basic_erp_cash_root"
+              action="action_c18_basic_erp_cash_in"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_basic_erp_cash_out"
+              name="Kas Keluar"
+              parent="menu_c18_basic_erp_cash_root"
+              action="action_c18_basic_erp_cash_out"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_basic_erp_cash_transfer"
+              name="Transfer Kas/Bank"
+              parent="menu_c18_basic_erp_cash_root"
+              action="action_c18_basic_erp_cash_transfer"
+              sequence="30"/>
+
+    <menuitem id="menu_c18_basic_erp_purchase_root"
+              name="Pembelian"
+              parent="c18_theme.menu_erp_root"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_basic_erp_purchase_order"
+              name="Purchase Order"
+              parent="menu_c18_basic_erp_purchase_root"
+              action="action_c18_purchase_order"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_basic_erp_purchase_receipt"
+              name="Penerimaan Barang"
+              parent="menu_c18_basic_erp_purchase_root"
+              action="action_c18_purchase_receipt"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_basic_erp_purchase_bill"
+              name="Pembelian"
+              parent="menu_c18_basic_erp_purchase_root"
+              action="action_c18_purchase_bill"
+              sequence="30"/>
+
+    <menuitem id="menu_c18_basic_erp_purchase_advance"
+              name="Uang Muka Pembelian"
+              parent="menu_c18_basic_erp_purchase_root"
+              action="action_c18_purchase_advance"
+              sequence="40"/>
+
+    <menuitem id="menu_c18_basic_erp_purchase_payment"
+              name="Pembayaran Vendor"
+              parent="menu_c18_basic_erp_purchase_root"
+              action="action_c18_purchase_payment"
+              sequence="50"/>
+
+    <menuitem id="menu_c18_basic_erp_purchase_return"
+              name="Retur Barang Vendor"
+              parent="menu_c18_basic_erp_purchase_root"
+              action="action_c18_purchase_return"
+              sequence="60"/>
+
+    <menuitem id="menu_c18_basic_erp_purchase_writeoff"
+              name="Write-off Hutang"
+              parent="menu_c18_basic_erp_purchase_root"
+              action="action_c18_purchase_writeoff"
+              sequence="70"/>
+
+    <menuitem id="menu_c18_basic_erp_sale_root"
+              name="Penjualan"
+              parent="c18_theme.menu_erp_root"
+              sequence="30"/>
+
+    <menuitem id="menu_c18_basic_erp_sale_order"
+              name="Sales Order"
+              parent="menu_c18_basic_erp_sale_root"
+              action="action_c18_sale_order"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_basic_erp_sale_delivery"
+              name="Pengiriman Barang"
+              parent="menu_c18_basic_erp_sale_root"
+              action="action_c18_sale_delivery"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_basic_erp_sale_invoice"
+              name="Penjualan"
+              parent="menu_c18_basic_erp_sale_root"
+              action="action_c18_sale_invoice"
+              sequence="30"/>
+
+    <menuitem id="menu_c18_basic_erp_sale_advance"
+              name="Uang Muka Penjualan"
+              parent="menu_c18_basic_erp_sale_root"
+              action="action_c18_sale_advance"
+              sequence="40"/>
+
+    <menuitem id="menu_c18_basic_erp_sale_receipt"
+              name="Penerimaan Piutang"
+              parent="menu_c18_basic_erp_sale_root"
+              action="action_c18_sale_receipt"
+              sequence="50"/>
+
+    <menuitem id="menu_c18_basic_erp_sale_return"
+              name="Retur Barang Customer"
+              parent="menu_c18_basic_erp_sale_root"
+              action="action_c18_sale_return"
+              sequence="60"/>
+
+    <menuitem id="menu_c18_basic_erp_sale_writeoff"
+              name="Write-off Piutang"
+              parent="menu_c18_basic_erp_sale_root"
+              action="action_c18_sale_writeoff"
+              sequence="70"/>
+
+    <menuitem id="menu_c18_basic_erp_inventory_root"
+              name="Persediaan"
+              parent="c18_theme.menu_erp_root"
+              sequence="40"/>
+
+    <menuitem id="menu_c18_basic_erp_stock_consume"
+              name="Pemakaian Sendiri"
+              parent="menu_c18_basic_erp_inventory_root"
+              action="action_c18_basic_erp_stock_consume"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_basic_erp_stock_opname"
+              name="Stok Opname"
+              parent="menu_c18_basic_erp_inventory_root"
+              action="action_c18_basic_erp_stock_opname"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_fixed_asset"
+              name="Aktiva Tetap"
+              parent="menu_c18_basic_erp_root"
+              action="action_c18_fixed_asset_entry"
+              sequence="60"/>
+
+    <menuitem id="menu_c18_payroll_root"
+              name="Payroll"
+              parent="c18_theme.menu_erp_root"
+              sequence="50"/>
+
+    <menuitem id="menu_c18_payroll_accrual"
+              name="Jurnal Pengakuan (Hutang Gaji)"
+              parent="menu_c18_payroll_root"
+              action="action_c18_payroll_accrual"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_payroll_payment"
+              name="Jurnal Pembayaran (Bayar Gaji)"
+              parent="menu_c18_payroll_root"
+              action="action_c18_payroll_payment"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_basic_erp_reports_root"
+              name="Laporan"
+              parent="c18_theme.menu_erp_root"
+              sequence="80"/>
+
+    <menuitem id="menu_c18_fixed_asset_report"
+              name="Daftar Aktiva Tetap"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_fixed_asset_report"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_basic_erp_config"
+              name="Konfigurasi"
+              parent="c18_theme.menu_erp_root"
+              sequence="90"/>
+
+    <menuitem id="menu_c18_basic_erp_chart_of_accounts"
+              name="Chart of Accounts"
+              parent="menu_c18_basic_erp_config"
+              action="action_c18_basic_erp_account"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_basic_erp_journals"
+              name="Journals"
+              parent="menu_c18_basic_erp_config"
+              action="action_c18_basic_erp_journal"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_basic_erp_cost_center"
+              name="Cost Center"
+              parent="menu_c18_basic_erp_config"
+              action="action_c18_basic_erp_cost_center"
+              sequence="30"/>
+
+    <menuitem id="menu_c18_basic_erp_exchange_rate"
+              name="Kurs Harian"
+              parent="menu_c18_basic_erp_config"
+              action="action_c18_basic_erp_exchange_rate"
+              sequence="40"/>
+
+    <menuitem id="menu_c18_product"
+              name="Product"
+              parent="menu_c18_basic_erp_config"
+              action="action_c18_product"
+              sequence="50"/>
+
+    <menuitem id="menu_c18_fixed_asset_tag"
+              name="Kode Aset"
+              parent="menu_c18_basic_erp_config"
+              action="action_c18_fixed_asset_tag"
+              sequence="60"/>
+</odoo>

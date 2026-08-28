@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="c18_theme.HomeDashboard">
+        <div class="o_erp_home_dashboard d-flex flex-column align-items-center justify-content-center h-100 text-center p-5">
+            <img class="o_erp_home_logo mb-4"
+                 t-att-src="'/web/image/res.company/' + company.id + '/logo'"
+                 alt="Company Logo"/>
+            <h1 class="mb-2">Selamat Datang<t t-if="user.name">, <t t-esc="user.name"/></t></h1>
+            <h4 class="text-muted fw-normal mb-0" t-if="company.name">
+                <t t-esc="company.name"/>
+            </h4>
+            <p class="text-muted mt-4">Pilih menu di bagian atas untuk mulai bekerja.</p>
+        </div>
+    </t>
+</templates>

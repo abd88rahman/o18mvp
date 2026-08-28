@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_c18_basic_erp_journal_list" model="ir.ui.view">
+        <field name="name">c18.account.journal.list</field>
+        <field name="model">c18.account.journal</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="sequence_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_c18_basic_erp_journal_form" model="ir.ui.view">
+        <field name="name">c18.account.journal.form</field>
+        <field name="model">c18.account.journal</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="sequence_id"/>
+                        <field name="active"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_c18_basic_erp_journal" model="ir.actions.act_window">
+        <field name="name">Journals</field>
+        <field name="res_model">c18.account.journal</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
