@@ -37,6 +37,9 @@ Belum melewati smoke test end-to-end - lihat erd/base/00-status-requirement.md.
             'c18_theme/static/src/js/messaging_menu_patch.js',
             'c18_theme/static/src/js/home_dashboard.js',
             'c18_theme/static/src/scss/home_dashboard.scss',
+            'c18_theme/static/src/js/list_renderer_row_number_patch.js',
+            'c18_theme/static/src/xml/list_renderer_row_number_patch.xml',
+            'c18_theme/static/src/scss/list_view_tweaks.scss',
         ],
     },
     # auto_install=True (bukan list parsial ['web']) - dicek langsung: di

@@ -21,6 +21,7 @@
             <form>
                 <header>
                     <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_print_pdf" type="object" string="Print" invisible="state != 'confirmed'"/>
                     <button name="action_reset_to_draft" type="object" string="Reset to Draft" invisible="state != 'confirmed'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                 </header>

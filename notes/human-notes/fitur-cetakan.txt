@@ -1,0 +1,6 @@
+butuh tombol cetak tiap form, terutama yg berkaitan dg bisnis penting:
+1. purchase order = karna akan dicetak dan dikirim ke vendor
+2. sales order = bisa buat penawaran harga ke calon pembeli
+3. customer invoice = sudah pasti keunggulan utama
+
+setidaknya 3 itu dulu deh

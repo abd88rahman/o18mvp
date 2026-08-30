@@ -136,6 +136,7 @@ class AccountMoveLine(models.Model):
     company_currency_id = fields.Many2one(related='company_id.currency_id', store=True)
     date = fields.Date(related='move_id.date', store=True)
     state = fields.Selection(related='move_id.state', store=True)
+    journal_id = fields.Many2one(related='move_id.journal_id', store=True)
 
     # Konversi ke company currency pakai exchange_rate jurnal (erd/mvp/01 poin 5) - WAJIB
     # dipakai di setiap kalkulasi yang menjumlah debit/credit lintas baris jurnal

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="c18_basic_erp.AnalysisReport">
+        <div class="o_c18_analysis_report p-4">
+            <h3 class="mb-3" t-esc="title"/>
+
+            <div class="d-flex align-items-end gap-3 mb-3 o_c18_report_filters">
+                <div>
+                    <label class="form-label mb-0">Group By</label>
+                    <select class="form-select" t-on-change="onGroupByChange">
+                        <option value="partner" t-att-selected="state.groupBy === 'partner'">
+                            <t t-esc="analysisType === 'purchase' ? 'Vendor' : 'Customer'"/>
+                        </option>
+                        <option value="product" t-att-selected="state.groupBy === 'product'">Product</option>
+                        <option value="period" t-att-selected="state.groupBy === 'period'">Period</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label mb-0">Dari Tanggal</label>
+                    <input type="date" class="form-control" t-att-value="state.dateFrom" t-on-change="onDateFromChange"/>
+                </div>
+                <div>
+                    <label class="form-label mb-0">Sampai Tanggal</label>
+                    <input type="date" class="form-control" t-att-value="state.dateTo" t-on-change="onDateToChange"/>
+                </div>
+            </div>
+
+            <div t-if="state.loading" class="text-muted">Memuat...</div>
+
+            <t t-if="!state.loading and state.data">
+                <table class="table table-sm table-bordered o_c18_report_table" style="max-width: 600px;">
+                    <thead>
+                        <tr>
+                            <th t-esc="keyColumnLabel"/>
+                            <th t-if="showQty" class="text-end">Qty</th>
+                            <th class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="state.data.rows" t-as="row" t-key="row.key">
+                            <td t-esc="row.label"/>
+                            <td t-if="showQty" class="text-end" t-esc="row.qty"/>
+                            <td class="text-end" t-esc="row.amount_fmt"/>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bold">
+                            <td t-att-colspan="showQty ? 2 : 1">Total</td>
+                            <td class="text-end" t-esc="state.data.total_amount_fmt"/>
+                        </tr>
+                    </tfoot>
+                </table>
+            </t>
+        </div>
+    </t>
+</templates>

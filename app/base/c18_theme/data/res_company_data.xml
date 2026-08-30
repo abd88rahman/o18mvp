@@ -8,6 +8,10 @@ Belum smoke test cetak report dengan data ini.
 -->
 <odoo>
     <record id="base.main_company" model="res.company">
-        <field name="report_footer">Dokumen ini sah tanpa tanda tangan basah.</field>
+        <!-- Kosong sengaja - dokumen cetak (PO/SO/Invoice) sekarang punya
+             placeholder tanda tangan Direktur, jadi disclaimer "sah tanpa
+             ttd" ini sudah tidak relevan. -->
+        <field name="report_footer"></field>
+        <field name="external_report_layout_id" ref="web.external_layout_bold"/>
     </record>
 </odoo>

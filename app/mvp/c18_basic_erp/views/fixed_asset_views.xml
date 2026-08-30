@@ -77,10 +77,14 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="code"/>
-                        <field name="name"/>
-                        <field name="active"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
                     </group>
                 </sheet>
             </form>

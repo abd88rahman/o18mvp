@@ -1,4 +1,5 @@
 import calendar
+from collections import defaultdict
 from datetime import date, timedelta
 
 from odoo import api, fields, models
@@ -467,6 +468,130 @@ class FinancialReport(models.AbstractModel):
             'date_to': fields.Date.to_string(date_to),
             'rows': rows,
             'total_fmt': self._fmt(total),
+        }
+
+    AGING_BUCKETS = [
+        ('current', 0, 0), ('d1_30', 1, 30), ('d31_60', 31, 60),
+        ('d61_90', 61, 90), ('d90_plus', 91, None),
+    ]
+
+    @api.model
+    def get_aging_report_data(self, aging_type=None, date_to=None, hide_zero=True):
+        """Umur Piutang/Hutang - bucket per partner dari dokumen yang masih
+        outstanding (amount_residual > 0), BUKAN dari move line - tidak ada
+        cara melacak move line balik ke invoice/bill mana yang masih terbuka
+        selain res_model/res_id generik, dan amount_residual per dokumen
+        sudah dijaga akurat oleh Customer Receipt/Vendor Payment.
+
+        Tidak ada field due_date tersimpan di mana pun - dihitung dari
+        date dokumen + res_partner.payment_term_days.
+        """
+        company = self.env.company
+        aging_type = aging_type if aging_type in self.SUBSIDIARY_LEDGER_ACCOUNTS else 'receivable'
+        model = 'c18.sale.invoice' if aging_type == 'receivable' else 'c18.purchase.bill'
+        account = self.env.ref(self.SUBSIDIARY_LEDGER_ACCOUNTS[aging_type])
+        date_to = fields.Date.from_string(date_to) if date_to else fields.Date.context_today(self)
+
+        docs = self.env[model].search([
+            ('state', '=', 'posted'),
+            ('date', '<=', date_to),
+            ('amount_residual', '>', 0),
+        ])
+
+        buckets = defaultdict(lambda: {key: 0.0 for key, _lo, _hi in self.AGING_BUCKETS})
+        for doc in docs:
+            due_date = doc.date + timedelta(days=doc.partner_id.payment_term_days)
+            days_overdue = (date_to - due_date).days
+            for key, lo, hi in self.AGING_BUCKETS:
+                if days_overdue >= lo and (hi is None or days_overdue <= hi):
+                    buckets[doc.partner_id][key] += doc.amount_residual
+                    break
+
+        rows = []
+        totals = {key: 0.0 for key, _lo, _hi in self.AGING_BUCKETS}
+        totals['total'] = 0.0
+        for partner, b in buckets.items():
+            row_total = sum(b.values())
+            if hide_zero and company.currency_id.is_zero(row_total):
+                continue
+            for key in b:
+                totals[key] += b[key]
+            totals['total'] += row_total
+            rows.append({
+                'partner_id': partner.id,
+                'partner_name': partner.name,
+                'account_id': account.id,
+                **{f'{key}_fmt': self._fmt(v) for key, v in b.items()},
+                'total_fmt': self._fmt(row_total),
+            })
+        rows.sort(key=lambda r: r['partner_name'])
+
+        return {
+            'aging_type': aging_type,
+            'date_to': fields.Date.to_string(date_to),
+            'rows': rows,
+            'totals': {key: self._fmt(v) for key, v in totals.items()},
+        }
+
+    @api.model
+    def get_analysis_report_data(self, analysis_type=None, group_by=None, date_from=None, date_to=None):
+        """Sales/Purchase Analysis - rekap qty & nilai dari invoice/bill line
+        yang posted (angka tertagih, sejalan dengan konvensi laporan lain di
+        modul ini yang bersumber dari move line posted, bukan dari SO/PO draft),
+        dikelompokkan per Customer/Vendor, Produk, atau Periode (bulanan).
+        """
+        analysis_type = analysis_type if analysis_type in ('sales', 'purchase') else 'sales'
+        group_by = group_by if group_by in ('partner', 'product', 'period') else 'partner'
+        line_model = 'c18.sale.invoice.line' if analysis_type == 'sales' else 'c18.purchase.bill.line'
+        parent_field = 'invoice_id' if analysis_type == 'sales' else 'bill_id'
+        today = fields.Date.context_today(self)
+        date_from = fields.Date.from_string(date_from) if date_from else today.replace(month=1, day=1)
+        date_to = fields.Date.from_string(date_to) if date_to else today
+
+        lines = self.env[line_model].search([
+            (f'{parent_field}.state', '=', 'posted'),
+            (f'{parent_field}.date', '>=', date_from),
+            (f'{parent_field}.date', '<=', date_to),
+        ])
+
+        agg = defaultdict(lambda: {'qty': 0.0, 'amount': 0.0})
+        labels = {}
+        for line in lines:
+            parent = line[parent_field]
+            if group_by == 'partner':
+                key = parent.partner_id.id
+                labels[key] = parent.partner_id.name
+            elif group_by == 'product':
+                key = line.product_id.id
+                labels[key] = f'{line.product_id.code} {line.product_id.name}' if line.product_id else '(No Product)'
+            else:  # period
+                key = f'{parent.date.year}-{parent.date.month:02d}'
+                labels[key] = key
+            agg[key]['qty'] += line.qty
+            agg[key]['amount'] += line.subtotal
+
+        rows = []
+        total_qty = 0.0
+        total_amount = 0.0
+        for key, vals in agg.items():
+            total_qty += vals['qty']
+            total_amount += vals['amount']
+            rows.append({
+                'key': key,
+                'label': labels[key],
+                'qty': vals['qty'],
+                'amount_fmt': self._fmt(vals['amount']),
+            })
+        rows.sort(key=lambda r: r['key'] if group_by == 'period' else r['label'])
+
+        return {
+            'analysis_type': analysis_type,
+            'group_by': group_by,
+            'date_from': fields.Date.to_string(date_from),
+            'date_to': fields.Date.to_string(date_to),
+            'rows': rows,
+            'total_qty': total_qty,
+            'total_amount_fmt': self._fmt(total_amount),
         }
 
     @api.model

@@ -36,6 +36,16 @@ class C18FinancialReportController(http.Controller):
         return request.env['c18.account.financial.report'].get_subsidiary_ledger_data(
             ledger_type=ledger_type, date_to=date_to, hide_zero=hide_zero)
 
+    @http.route('/c18_basic_erp/report/aging', type='json', auth='user')
+    def aging_report_data(self, aging_type=None, date_to=None, hide_zero=True, **kwargs):
+        return request.env['c18.account.financial.report'].get_aging_report_data(
+            aging_type=aging_type, date_to=date_to, hide_zero=hide_zero)
+
+    @http.route('/c18_basic_erp/report/analysis', type='json', auth='user')
+    def analysis_report_data(self, analysis_type=None, group_by=None, date_from=None, date_to=None, **kwargs):
+        return request.env['c18.account.financial.report'].get_analysis_report_data(
+            analysis_type=analysis_type, group_by=group_by, date_from=date_from, date_to=date_to)
+
     @http.route('/c18_basic_erp/report/equity_changes', type='json', auth='user')
     def equity_changes_data(self, date_from=None, date_to=None, **kwargs):
         return request.env['c18.account.financial.report'].get_equity_changes_data(

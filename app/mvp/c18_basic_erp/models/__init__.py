@@ -33,3 +33,4 @@ from . import account_closing
 from . import demo_generator
 from . import financial_report
 from . import stock_report
+from . import dashboard

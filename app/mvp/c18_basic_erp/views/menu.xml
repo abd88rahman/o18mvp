@@ -196,134 +196,209 @@
               parent="c18_theme.menu_erp_root"
               sequence="80"/>
 
-    <menuitem id="menu_c18_fixed_asset_report"
-              name="Fixed Asset Register"
+    <menuitem id="menu_c18_reports_ledger"
+              name="Ledger"
               parent="menu_c18_basic_erp_reports_root"
-              action="action_c18_fixed_asset_report"
               sequence="10"/>
 
-    <menuitem id="menu_c18_trial_balance_report"
-              name="Trial Balance"
-              parent="menu_c18_basic_erp_reports_root"
-              action="action_c18_trial_balance_report"
-              sequence="20"/>
+    <menuitem id="menu_c18_basic_erp_journal_entries_all"
+              name="Journal Entries"
+              parent="menu_c18_reports_ledger"
+              action="action_c18_basic_erp_move_all"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_account_move_line"
+              name="Journal Items"
+              parent="menu_c18_reports_ledger"
+              action="action_c18_account_move_line"
+              sequence="15"/>
 
     <menuitem id="menu_c18_general_ledger_report"
               name="General Ledger"
-              parent="menu_c18_basic_erp_reports_root"
+              parent="menu_c18_reports_ledger"
               action="action_c18_general_ledger_report"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_reports_sales"
+              name="Sales Reports"
+              parent="menu_c18_basic_erp_reports_root"
+              sequence="15"/>
+
+    <menuitem id="menu_c18_subsidiary_ledger_receivable"
+              name="Subsidiary Ledger - Receivable"
+              parent="menu_c18_reports_sales"
+              action="action_c18_subsidiary_ledger_receivable"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_aging_receivable"
+              name="Receivable Aging"
+              parent="menu_c18_reports_sales"
+              action="action_c18_aging_receivable"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_sales_analysis"
+              name="Sales Analysis"
+              parent="menu_c18_reports_sales"
+              action="action_c18_sales_analysis"
               sequence="30"/>
+
+    <menuitem id="menu_c18_reports_purchase"
+              name="Purchase Reports"
+              parent="menu_c18_basic_erp_reports_root"
+              sequence="16"/>
+
+    <menuitem id="menu_c18_subsidiary_ledger_payable"
+              name="Subsidiary Ledger - Payable"
+              parent="menu_c18_reports_purchase"
+              action="action_c18_subsidiary_ledger_payable"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_aging_payable"
+              name="Payable Aging"
+              parent="menu_c18_reports_purchase"
+              action="action_c18_aging_payable"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_purchase_analysis"
+              name="Purchase Analysis"
+              parent="menu_c18_reports_purchase"
+              action="action_c18_purchase_analysis"
+              sequence="30"/>
+
+    <menuitem id="menu_c18_reports_financial"
+              name="Financial Reports"
+              parent="menu_c18_basic_erp_reports_root"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_trial_balance_report"
+              name="Trial Balance"
+              parent="menu_c18_reports_financial"
+              action="action_c18_trial_balance_report"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_trial_balance_yearly_report"
+              name="Trial Balance - 12 Months"
+              parent="menu_c18_reports_financial"
+              action="action_c18_trial_balance_yearly_report"
+              sequence="20"/>
 
     <menuitem id="menu_c18_balance_sheet_report"
               name="Balance Sheet"
-              parent="menu_c18_basic_erp_reports_root"
+              parent="menu_c18_reports_financial"
               action="action_c18_balance_sheet_report"
+              sequence="30"/>
+
+    <menuitem id="menu_c18_balance_sheet_yearly_report"
+              name="Balance Sheet - 12 Months"
+              parent="menu_c18_reports_financial"
+              action="action_c18_balance_sheet_yearly_report"
               sequence="40"/>
 
     <menuitem id="menu_c18_income_statement_report"
               name="Income Statement"
-              parent="menu_c18_basic_erp_reports_root"
+              parent="menu_c18_reports_financial"
               action="action_c18_income_statement_report"
               sequence="50"/>
 
-    <menuitem id="menu_c18_subsidiary_ledger_receivable"
-              name="Subsidiary Ledger - Receivable"
-              parent="menu_c18_basic_erp_reports_root"
-              action="action_c18_subsidiary_ledger_receivable"
+    <menuitem id="menu_c18_income_statement_yearly_report"
+              name="Income Statement - 12 Months"
+              parent="menu_c18_reports_financial"
+              action="action_c18_income_statement_yearly_report"
               sequence="60"/>
-
-    <menuitem id="menu_c18_subsidiary_ledger_payable"
-              name="Subsidiary Ledger - Payable"
-              parent="menu_c18_basic_erp_reports_root"
-              action="action_c18_subsidiary_ledger_payable"
-              sequence="70"/>
 
     <menuitem id="menu_c18_equity_changes_report"
               name="Statement of Changes in Equity"
-              parent="menu_c18_basic_erp_reports_root"
+              parent="menu_c18_reports_financial"
               action="action_c18_equity_changes_report"
-              sequence="80"/>
+              sequence="70"/>
 
-    <menuitem id="menu_c18_trial_balance_yearly_report"
-              name="Trial Balance - 12 Months"
+    <menuitem id="menu_c18_reports_inventory"
+              name="Inventory Reports"
               parent="menu_c18_basic_erp_reports_root"
-              action="action_c18_trial_balance_yearly_report"
-              sequence="90"/>
-
-    <menuitem id="menu_c18_balance_sheet_yearly_report"
-              name="Balance Sheet - 12 Months"
-              parent="menu_c18_basic_erp_reports_root"
-              action="action_c18_balance_sheet_yearly_report"
-              sequence="100"/>
-
-    <menuitem id="menu_c18_income_statement_yearly_report"
-              name="Income Statement - 12 Months"
-              parent="menu_c18_basic_erp_reports_root"
-              action="action_c18_income_statement_yearly_report"
-              sequence="110"/>
+              sequence="30"/>
 
     <menuitem id="menu_c18_stock_card_report"
               name="Stock Card"
-              parent="menu_c18_basic_erp_reports_root"
+              parent="menu_c18_reports_inventory"
               action="action_c18_stock_card_report"
-              sequence="120"/>
+              sequence="10"/>
 
     <menuitem id="menu_c18_inventory_balance_report"
               name="Inventory Balance"
-              parent="menu_c18_basic_erp_reports_root"
+              parent="menu_c18_reports_inventory"
               action="action_c18_inventory_balance_report"
-              sequence="130"/>
+              sequence="20"/>
 
-    <menuitem id="menu_c18_basic_erp_journal_entries_all"
-              name="Journal Entries"
+    <menuitem id="menu_c18_reports_fixed_asset"
+              name="Fixed Asset Reports"
               parent="menu_c18_basic_erp_reports_root"
-              action="action_c18_basic_erp_move_all"
-              sequence="140"/>
+              sequence="40"/>
+
+    <menuitem id="menu_c18_fixed_asset_report"
+              name="Fixed Asset Register"
+              parent="menu_c18_reports_fixed_asset"
+              action="action_c18_fixed_asset_report"
+              sequence="10"/>
 
     <menuitem id="menu_c18_basic_erp_config"
               name="Configuration"
               parent="c18_theme.menu_erp_root"
               sequence="90"/>
 
+    <menuitem id="menu_c18_config_accounting_setup"
+              name="Accounting"
+              parent="menu_c18_basic_erp_config"
+              sequence="10"/>
+
     <menuitem id="menu_c18_basic_erp_chart_of_accounts"
               name="Chart of Accounts"
-              parent="menu_c18_basic_erp_config"
+              parent="menu_c18_config_accounting_setup"
               action="action_c18_basic_erp_account"
               sequence="10"/>
 
     <menuitem id="menu_c18_basic_erp_journals"
-              name="Journals"
-              parent="menu_c18_basic_erp_config"
+              name="Journal Types"
+              parent="menu_c18_config_accounting_setup"
               action="action_c18_basic_erp_journal"
               sequence="20"/>
 
-    <menuitem id="menu_c18_basic_erp_cost_center"
-              name="Cost Center"
-              parent="menu_c18_basic_erp_config"
-              action="action_c18_basic_erp_cost_center"
-              sequence="30"/>
-
     <menuitem id="menu_c18_basic_erp_exchange_rate"
               name="Daily Exchange Rate"
-              parent="menu_c18_basic_erp_config"
+              parent="menu_c18_config_accounting_setup"
               action="action_c18_basic_erp_exchange_rate"
-              sequence="40"/>
-
-    <menuitem id="menu_c18_product"
-              name="Product"
-              parent="menu_c18_basic_erp_config"
-              action="action_c18_product"
-              sequence="50"/>
+              sequence="30"/>
 
     <menuitem id="menu_c18_fixed_asset_tag"
               name="Asset Code"
-              parent="menu_c18_basic_erp_config"
+              parent="menu_c18_config_accounting_setup"
               action="action_c18_fixed_asset_tag"
-              sequence="60"/>
+              sequence="40"/>
+
+    <menuitem id="menu_c18_config_master_data"
+              name="Master Data"
+              parent="menu_c18_basic_erp_config"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_product"
+              name="Product"
+              parent="menu_c18_config_master_data"
+              action="action_c18_product"
+              sequence="10"/>
+
+    <menuitem id="menu_c18_basic_erp_cost_center"
+              name="Cost Center"
+              parent="menu_c18_config_master_data"
+              action="action_c18_basic_erp_cost_center"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_config_company"
+              name="Company"
+              parent="menu_c18_basic_erp_config"
+              sequence="30"/>
 
     <menuitem id="menu_c18_basic_erp_company_settings"
               name="Company Settings"
-              parent="menu_c18_basic_erp_config"
-              action="base.action_res_company_form"
-              sequence="70"/>
+              parent="menu_c18_config_company"
+              action="action_c18_basic_erp_company_settings"
+              sequence="10"/>
 </odoo>

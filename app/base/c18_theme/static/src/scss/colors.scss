@@ -1,8 +1,10 @@
-// Ganti warna primary Odoo (ungu) jadi lime green - lihat erd/base/02-tema-menu.md poin 1.
+// Ganti warna primary Odoo (ungu) jadi hijau - lihat erd/base/02-tema-menu.md poin 1.
 // Harus dimuat SEBELUM web/static/src/scss/primary_variables.scss (lihat
 // directive 'before' di __manifest__.py, bundle web._assets_primary_variables)
 // supaya nilai !default di file itu tidak menimpa balik punya kita.
 // Warna/layout lain SENGAJA tidak diubah - lihat erd/base/01-branding-atribut.md.
+// Emerald #0F9D58 (2026-08-30) - ganti dari LimeGreen #32cd32 sebelumnya,
+// terlalu silau/saturasi tinggi buat dipakai lama di layar.
 
-$o-community-color: #32cd32;
-$o-brand-primary: #32cd32;
+$o-community-color: #0f9d58;
+$o-brand-primary: #0f9d58;

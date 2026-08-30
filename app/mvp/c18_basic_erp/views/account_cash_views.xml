@@ -46,8 +46,8 @@
                     </group>
                     <field name="line_ids" readonly="state != 'draft'" invisible="is_transfer">
                         <list editable="bottom">
-                            <field name="account_id" domain="[('account_type', '!=', 'cash_bank')]"/>
                             <field name="name"/>
+                            <field name="account_id" domain="[('account_type', '!=', 'cash_bank')]"/>
                             <field name="amount"/>
                         </list>
                     </field>

@@ -1,0 +1,28 @@
+// Zebra-stripe list view rows. Odoo core sudah pasang class "table-striped"
+// di SEMUA list view ungrouped (list_renderer.xml), tapi warnanya nyaris
+// tidak kelihatan (--table-striped-bg default cuma 1% opacity) - jadi cukup
+// override variable-nya di sini, bukan bikin mekanisme striping baru.
+// Target ".o_list_table" langsung (bukan :root) - Bootstrap re-declare
+// variable ini persis di elemen <table> sendiri (selector ".table"), jadi
+// override di :root kalah krn cuma diwariskan, bukan nempel di elemen yg sama.
+.o_list_renderer .o_list_table {
+    --table-striped-bg: rgba(0, 0, 0, 0.06);
+    // "Magic column width" dimatikan (list_renderer_row_number_patch.js,
+    // useMagicColumnWidths=false) - jadi tidak ada lagi width per-kolom
+    // dihitung/di-set otomatis. table-layout:fixed bikin browser bagi RATA
+    // sisa lebar ke semua kolom yang tidak punya width eksplisit - kecuali
+    // .o_c18_row_number di bawah, yang memang sengaja dikasih width tetap.
+    table-layout: fixed !important;
+}
+
+// Kolom nomor baris (list_renderer_row_number_patch.js/.xml). Satu-satunya
+// kolom dgn width eksplisit sekarang (magic width mati) - !important wajib
+// supaya table-layout:fixed di atas tetap hormati angka ini, bukan ikut
+// dibagi rata juga.
+.o_c18_row_number {
+    width: 32px !important;
+    max-width: 32px !important;
+    min-width: 32px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+}

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_c18_sale_order" model="ir.actions.report">
+        <field name="name">Sales Order</field>
+        <field name="model">c18.sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">c18_basic_erp.report_sale_order_document</field>
+        <field name="report_file">c18_basic_erp.report_sale_order_document</field>
+        <field name="print_report_name">'Sales Order - %s' % (object.name)</field>
+    </record>
+
+    <template id="report_sale_order_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Sales Order</h2>
+                        <h4 class="text-muted">No: <span t-field="o.name"/></h4>
+                        <div class="row mt-4 mb-4">
+                            <div class="col-6">
+                                <strong>Customer</strong>
+                                <div t-field="o.partner_id"
+                                     t-options="{'widget': 'contact', 'fields': ['name', 'address', 'phone', 'email']}"/>
+                                <div t-if="o.partner_id.npwp">NPWP: <span t-field="o.partner_id.npwp"/></div>
+                            </div>
+                            <div class="col-6 text-end">
+                                <div>Date: <span t-field="o.date"/></div>
+                                <div t-if="o.cost_center_id">Cost Center: <span t-field="o.cost_center_id.name"/></div>
+                            </div>
+                        </div>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Product</th>
+                                    <th class="text-end">Qty</th>
+                                    <th class="text-end">Unit Price</th>
+                                    <th class="text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids" t-as="line">
+                                    <td><span t-esc="line_index + 1"/></td>
+                                    <td><span t-field="line.product_id.code"/> <span t-field="line.product_id.name"/></td>
+                                    <td class="text-end"><span t-field="line.qty"/></td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_unit" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="fw-bold">
+                                    <td colspan="4" class="text-end">Total</td>
+                                    <td class="text-end">
+                                        <span t-field="o.amount_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <p t-if="o.note"><strong>Note:</strong> <span t-field="o.note"/></p>
+                        <div class="row" style="margin-top: 3rem;">
+                            <div class="col-6"/>
+                            <div class="col-6 text-center">
+                                <p class="mb-0">Direktur</p>
+                                <div style="height: 4rem;"/>
+                                <p class="mb-0" style="border-top: 1px solid #000; display: inline-block; min-width: 200px; padding-top: 2px;">( ......................... )</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

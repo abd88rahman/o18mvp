@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.ListRenderer" t-inherit-mode="extension">
+        <xpath expr="//th[hasclass('o_list_record_selector')]" position="after">
+            <th class="o_c18_row_number text-center text-muted">#</th>
+        </xpath>
+        <xpath expr="//tfoot//td[@t-if='hasSelectors']" position="after">
+            <td class="o_c18_row_number"/>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="extension">
+        <xpath expr="//td[hasclass('o_list_record_selector')]" position="after">
+            <td class="o_c18_row_number text-center text-muted" t-esc="this.getRowNumber(list, record)"/>
+        </xpath>
+    </t>
+</templates>

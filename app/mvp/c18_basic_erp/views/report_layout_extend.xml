@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Nama company muncul dobel di kop surat Bold layout (widget contact
+         sudah menampilkan nama, terpisah dari kebutuhan kita bikin nama itu
+         besar+tebal). Solusi: patch template ini langsung (bukan lewat CSS
+         bundle terpisah - path fetch CSS-nya wkhtmltopdf gagal 404 di setup
+         ini, jadi styling lewat CSS eksternal tidak reliable). Inline style
+         di sini jalan tanpa bergantung ke asset bundle apa pun.
+         Berlaku global (bukan mode="primary") - konsisten dgn keputusan
+         perusahaan sudah pilih Bold sbg default layout (c18_theme/data/
+         res_company_data.xml), single-company tier Basic, jadi tidak ada
+         concern lintas-tenant. -->
+    <record id="view_external_layout_bold_c18_company_name" model="ir.ui.view">
+        <field name="name">web.external_layout.bold.c18.company.name</field>
+        <field name="inherit_id" ref="web.external_layout_bold"/>
+        <field name="arch" type="xml">
+            <xpath expr="//li[@t-if='company.is_company_details_empty']/span" position="attributes">
+                <attribute name="t-options">{'widget': 'contact', 'fields': ['address'], 'no_marker': True}</attribute>
+            </xpath>
+            <xpath expr="//ul[@name='company_address_list']" position="before">
+                <div style="font-size: 1.75rem; font-weight: bold;" t-field="company.name"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

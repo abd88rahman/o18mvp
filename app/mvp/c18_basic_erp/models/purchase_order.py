@@ -43,6 +43,18 @@ class PurchaseOrder(models.Model):
     def action_reset_to_draft(self):
         self.write({'state': 'draft'})
 
+    def action_print_pdf(self):
+        """Buka PDF di tab baru via /report/pdf (bukan route /report/download
+        yang dipakai action manager utk ir.actions.report qweb-pdf) - route
+        ini tidak set Content-Disposition, jadi browser tampilkan inline pakai
+        native PDF viewer (rasio halaman A4 asli), bukan langsung men-download."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/report/pdf/c18_basic_erp.report_purchase_order_document/{self.id}',
+            'target': 'new',
+        }
+
 
 class PurchaseOrderLine(models.Model):
     _name = 'c18.purchase.order.line'

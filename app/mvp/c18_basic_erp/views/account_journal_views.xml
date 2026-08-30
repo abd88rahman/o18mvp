@@ -20,11 +20,15 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="sequence_id"/>
-                        <field name="active"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="sequence_id"/>
+                            <field name="active"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
@@ -32,7 +36,7 @@
     </record>
 
     <record id="action_c18_basic_erp_journal" model="ir.actions.act_window">
-        <field name="name">Journals</field>
+        <field name="name">Journal Types</field>
         <field name="res_model">c18.account.journal</field>
         <field name="view_mode">list,form</field>
     </record>

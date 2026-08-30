@@ -42,10 +42,10 @@
                     </group>
                     <field name="line_ids" readonly="state != 'draft'">
                         <list editable="bottom">
+                            <field name="name"/>
                             <field name="account_id"/>
                             <field name="partner_id"/>
                             <field name="cost_center_id"/>
-                            <field name="name"/>
                             <field name="debit"/>
                             <field name="credit"/>
                         </list>
@@ -105,10 +105,10 @@
                     </group>
                     <field name="line_ids">
                         <list>
+                            <field name="name"/>
                             <field name="account_id"/>
                             <field name="partner_id"/>
                             <field name="cost_center_id"/>
-                            <field name="name"/>
                             <field name="debit"/>
                             <field name="credit"/>
                         </list>
@@ -130,6 +130,61 @@
             (0, 0, {'view_mode': 'list', 'view_id': ref('view_c18_basic_erp_move_list_readonly')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('view_c18_basic_erp_move_form_readonly')})]"/>
         <field name="help" type="html"><p class="o_view_nocontent_smiling_face">All posted/draft journal entries across every journal type (Cash/Bank, Purchases, Sales, Payroll, Fixed Assets, Period Closing, etc.) - read-only browsing/drill-down. "General Journal" is the only menu where General Journal (JU) entries can be created/edited.</p></field>
+    </record>
+
+    <record id="view_c18_account_move_line_list" model="ir.ui.view">
+        <field name="name">c18.account.move.line.list</field>
+        <field name="model">c18.account.move.line</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0" default_order="date desc, move_id desc, sequence">
+                <field name="date"/>
+                <field name="journal_id"/>
+                <field name="move_id"/>
+                <field name="account_id"/>
+                <field name="partner_id"/>
+                <field name="cost_center_id" optional="hide"/>
+                <field name="name"/>
+                <field name="debit" sum="Total"/>
+                <field name="credit" sum="Total"/>
+                <field name="state" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_c18_account_move_line_search" model="ir.ui.view">
+        <field name="name">c18.account.move.line.search</field>
+        <field name="model">c18.account.move.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="move_id"/>
+                <field name="account_id"/>
+                <field name="partner_id"/>
+                <field name="journal_id"/>
+                <field name="cost_center_id"/>
+                <field name="name"/>
+                <filter name="posted" string="Posted" domain="[('state', '=', 'posted')]"/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter name="date" string="Date" date="date"/>
+                <group string="Group By">
+                    <filter name="group_account" string="Account" context="{'group_by': 'account_id'}"/>
+                    <filter name="group_journal" string="Journal" context="{'group_by': 'journal_id'}"/>
+                    <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_cost_center" string="Cost Center" context="{'group_by': 'cost_center_id'}"/>
+                    <filter name="group_date" string="Date" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_c18_account_move_line" model="ir.actions.act_window">
+        <field name="name">Journal Items</field>
+        <field name="res_model">c18.account.move.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_c18_account_move_line_list"/>
+        <field name="search_view_id" ref="view_c18_account_move_line_search"/>
+        <field name="context">{'search_default_posted': 1}</field>
+        <field name="help" type="html"><p class="o_view_nocontent_smiling_face">All journal entry lines across every account/journal - flat, filterable, groupable. For account-scoped detail with a running balance, use General Ledger instead.</p></field>
     </record>
 
     <record id="action_c18_basic_erp_move_pawl" model="ir.actions.act_window">

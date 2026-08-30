@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="c18_theme.HomeDashboard" t-inherit-mode="extension">
+        <xpath expr="//p[hasclass('text-muted')][last()]" position="after">
+            <div t-if="dashboardState.sections" class="o_c18_dashboard_sections mt-4 w-100" style="max-width: 960px; text-align: left;">
+                <div class="row">
+                    <t t-foreach="dashboardSectionList" t-as="section" t-key="section.label">
+                        <div class="col-md-4 mb-4">
+                            <h6 class="fw-bold border-bottom pb-1 mb-2"><t t-esc="section.label"/></h6>
+                            <div t-foreach="section.items" t-as="item" t-key="item.label"
+                                 class="o_c18_dashboard_item d-flex justify-content-between"
+                                 style="cursor: pointer;"
+                                 t-on-click="() => this.openDashboardItem(item.action)">
+                                <span class="text-muted small" t-esc="item.label"/>
+                                <span class="fw-bold small" t-esc="item.count"/>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

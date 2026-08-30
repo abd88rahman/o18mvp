@@ -112,6 +112,18 @@ class SaleInvoice(models.Model):
             move.action_post()
             rec.write({'move_id': move.id, 'name': move.name, 'state': 'posted'})
 
+    def action_print_pdf(self):
+        """Buka PDF di tab baru via /report/pdf (bukan route /report/download
+        yang dipakai action manager utk ir.actions.report qweb-pdf) - route
+        ini tidak set Content-Disposition, jadi browser tampilkan inline pakai
+        native PDF viewer (rasio halaman A4 asli), bukan langsung men-download."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/report/pdf/c18_basic_erp.report_sale_invoice_document/{self.id}',
+            'target': 'new',
+        }
+
 
 class SaleInvoiceLine(models.Model):
     _name = 'c18.sale.invoice.line'

@@ -21,13 +21,17 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="code"/>
-                        <field name="name"/>
-                        <field name="product_type"/>
-                        <field name="is_purchaseable"/>
-                        <field name="is_saleable"/>
-                        <field name="active"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="product_type"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="is_purchaseable"/>
+                            <field name="is_saleable"/>
+                            <field name="active"/>
+                        </group>
                     </group>
                 </sheet>
             </form>

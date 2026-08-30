@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="c18_basic_erp.AgingReport">
+        <div class="o_c18_aging_report p-4">
+            <h3 class="mb-3" t-esc="title"/>
+
+            <div class="d-flex align-items-end gap-3 mb-3 o_c18_report_filters">
+                <div>
+                    <label class="form-label mb-0">Per Tanggal</label>
+                    <input type="date" class="form-control" t-att-value="state.dateTo" t-on-change="onDateChange"/>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="c18_aging_hide_zero"
+                           t-att-checked="state.hideZero" t-on-change="onHideZeroChange"/>
+                    <label class="form-check-label" for="c18_aging_hide_zero">Sembunyikan saldo nol</label>
+                </div>
+            </div>
+
+            <div t-if="state.loading" class="text-muted">Memuat...</div>
+
+            <t t-if="!state.loading and state.data">
+                <table class="table table-sm table-bordered o_c18_report_table">
+                    <thead>
+                        <tr>
+                            <th>Partner</th>
+                            <th class="text-end">Current</th>
+                            <th class="text-end">1-30 Hari</th>
+                            <th class="text-end">31-60 Hari</th>
+                            <th class="text-end">61-90 Hari</th>
+                            <th class="text-end">&gt;90 Hari</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="state.data.rows" t-as="row" t-key="row.partner_id">
+                            <td>
+                                <a href="#" t-on-click.prevent="() => this.openGeneralLedger(row)" t-esc="row.partner_name"/>
+                            </td>
+                            <td class="text-end" t-esc="row.current_fmt"/>
+                            <td class="text-end" t-esc="row.d1_30_fmt"/>
+                            <td class="text-end" t-esc="row.d31_60_fmt"/>
+                            <td class="text-end" t-esc="row.d61_90_fmt"/>
+                            <td class="text-end" t-esc="row.d90_plus_fmt"/>
+                            <td class="text-end" t-esc="row.total_fmt"/>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bold">
+                            <td>Total</td>
+                            <td class="text-end" t-esc="state.data.totals.current"/>
+                            <td class="text-end" t-esc="state.data.totals.d1_30"/>
+                            <td class="text-end" t-esc="state.data.totals.d31_60"/>
+                            <td class="text-end" t-esc="state.data.totals.d61_90"/>
+                            <td class="text-end" t-esc="state.data.totals.d90_plus"/>
+                            <td class="text-end" t-esc="state.data.totals.total"/>
+                        </tr>
+                    </tfoot>
+                </table>
+            </t>
+        </div>
+    </t>
+</templates>

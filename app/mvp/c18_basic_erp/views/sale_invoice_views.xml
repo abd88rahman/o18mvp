@@ -22,6 +22,7 @@
             <form>
                 <header>
                     <button name="action_post" type="object" string="Post" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_print_pdf" type="object" string="Print" invisible="state != 'posted'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                 </header>
                 <sheet>

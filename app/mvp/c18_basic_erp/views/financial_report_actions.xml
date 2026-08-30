@@ -32,6 +32,30 @@
         <field name="params" eval="{'ledger_type': 'payable'}"/>
     </record>
 
+    <record id="action_c18_aging_receivable" model="ir.actions.client">
+        <field name="name">Receivable Aging</field>
+        <field name="tag">c18_aging_report_receivable</field>
+        <field name="params" eval="{'aging_type': 'receivable'}"/>
+    </record>
+
+    <record id="action_c18_aging_payable" model="ir.actions.client">
+        <field name="name">Payable Aging</field>
+        <field name="tag">c18_aging_report_payable</field>
+        <field name="params" eval="{'aging_type': 'payable'}"/>
+    </record>
+
+    <record id="action_c18_sales_analysis" model="ir.actions.client">
+        <field name="name">Sales Analysis</field>
+        <field name="tag">c18_sales_analysis_report</field>
+        <field name="params" eval="{'analysis_type': 'sales'}"/>
+    </record>
+
+    <record id="action_c18_purchase_analysis" model="ir.actions.client">
+        <field name="name">Purchase Analysis</field>
+        <field name="tag">c18_purchase_analysis_report</field>
+        <field name="params" eval="{'analysis_type': 'purchase'}"/>
+    </record>
+
     <record id="action_c18_equity_changes_report" model="ir.actions.client">
         <field name="name">Statement of Changes in Equity</field>
         <field name="tag">c18_equity_changes_report</field>
