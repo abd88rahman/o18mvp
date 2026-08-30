@@ -2,7 +2,7 @@
 
 Catatan pelacakan status tiap dokumen requirement di folder ini, supaya gampang lanjut sesi berikutnya tanpa perlu baca ulang semua file. Update manual tiap kali ada progres/keputusan baru.
 
-Terakhir diupdate: 2026-08-27 (`c18_theme` sudah **lolos smoke test** ke instance Odoo sungguhan, hasil sesuai ekspektasi. Rename dari `erp_base_theme` ke `c18_theme` mengikuti konvensi baru, lihat `notes/human-notes/master-plan.txt`.).
+Terakhir diupdate: 2026-08-30 (`c18_help` diputuskan jadi **permanen** — status prototype dilepas, PRD ditulis di [06](06-qa-guide-viewer.md), label menu di-rename "Help" → "QA Guide" biar jelas internal-only). Update sebelumnya: 2026-08-27 (`c18_theme` sudah **lolos smoke test** ke instance Odoo sungguhan, hasil sesuai ekspektasi. Rename dari `erp_base_theme` ke `c18_theme` mengikuti konvensi baru, lihat `notes/human-notes/master-plan.txt`.).
 
 ## Sudah Selesai / Cukup
 
@@ -13,6 +13,7 @@ Terakhir diupdate: 2026-08-27 (`c18_theme` sudah **lolos smoke test** ke instanc
 | **Template Email** ([04](04-template-email.md)) | Override `mail.mail_notification_layout` & `mail.mail_notification_light` (2 layout dasar, cover mayoritas email) + `auth_signup` + `portal`. Footer diganti teks berisi `brand_name`. `hr_expense` dikonfirmasi di luar scope. |
 | **Template Report PDF** ([05](05-template-report.md)) | Tidak perlu override kode — pemilihan `external_report_layout_id` bebas (semua narik dari `res.company`). Data `res.company` diisi placeholder XML polos di `c18_theme`, admin edit lagi lewat Settings > Companies. |
 | **URL Rewrite `/odoo/` → `/erp/`** ([03](03-url-rewrite.md)) | Reverse proxy nginx + `proxy_redirect` (bukan sekadar rewrite path, karena beberapa controller Odoo redirect balik ke `/odoo` sebagai path relatif). Draft config: [`app/docker/nginx/odoo-erp.conf`](../../app/docker/nginx/odoo-erp.conf). Detail TODO (hostname/SSL/nama service) sengaja ditunda ke tahap `app/docker/`. |
+| **QA Guide Viewer** ([06](06-qa-guide-viewer.md)) | `c18_help` — viewer dokumen testing (`.rst`, sinkron manual dari `testing/mvp/*.md`) langsung di dalam Odoo, menu "QA Guide". **Internal tester/QA only** — tidak boleh ter-install di database demo/client (tidak ada pembatasan hak akses, murni disiplin operasional). Tidak auto-install, category Hidden. |
 
 ## Belum Dibahas / Belum Lengkap
 _(tidak ada — semua dokumen requirement app/base sudah lengkap/cukup)_

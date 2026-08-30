@@ -33,6 +33,7 @@
                         <group>
                             <field name="account_id" readonly="state != 'draft'"/>
                             <field name="cost_center_id" readonly="state != 'draft'"/>
+                            <field name="move_id" readonly="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -62,7 +63,7 @@
     </record>
 
     <record id="action_c18_sale_receipt" model="ir.actions.act_window">
-        <field name="name">Penerimaan Piutang</field>
+        <field name="name">Customer Receipt</field>
         <field name="res_model">c18.sale.receipt</field>
         <field name="view_mode">list,form</field>
     </record>

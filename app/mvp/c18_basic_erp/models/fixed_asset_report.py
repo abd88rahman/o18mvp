@@ -4,18 +4,18 @@ from odoo import _, fields, models
 class FixedAssetReportWizard(models.TransientModel):
     _name = 'c18.fixed.asset.report.wizard'
     _description = (
-        'Laporan Daftar Aktiva Tetap (tier Basic) - murni rekap SUM dari jurnal '
-        'manual per kode_aset, bukan hasil kalkulasi otomatis. Lihat '
-        'notes/human-notes/fitur-laporan.txt baris 19 & '
-        'erd/mvp/06-accounting-business.md poin G.'
+        'Fixed Asset Register Report (Basic tier) - a pure SUM rollup of manual '
+        'journal entries per asset code, not an automatic calculation result. See '
+        'notes/human-notes/fitur-laporan.txt line 19 & '
+        'erd/mvp/06-accounting-business.md point G.'
     )
 
     date_from = fields.Date(required=True, default=lambda self: fields.Date.context_today(self).replace(month=1, day=1))
     date_to = fields.Date(required=True, default=fields.Date.context_today)
     line_ids = fields.One2many('c18.fixed.asset.report.line', 'wizard_id', readonly=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
-    total_harga_perolehan = fields.Monetary(string='Total Harga Perolehan (Daftar Aktiva)', readonly=True)
-    total_saldo_coa = fields.Monetary(string='Total Saldo Akun Aktiva Tetap (COA)', readonly=True)
+    total_harga_perolehan = fields.Monetary(string='Total Acquisition Cost (Asset Register)', readonly=True)
+    total_saldo_coa = fields.Monetary(string='Total Fixed Asset Account Balance (COA)', readonly=True)
     is_mismatch = fields.Boolean(readonly=True)
     mismatch_message = fields.Char(readonly=True)
 
@@ -30,9 +30,9 @@ class FixedAssetReportWizard(models.TransientModel):
         self.total_saldo_coa = total_coa
         self.is_mismatch = mismatch
         self.mismatch_message = _(
-            'Total harga perolehan di Daftar Aktiva (%(register)s) TIDAK SAMA dengan total saldo '
-            'debit akun bertipe Aktiva Tetap di COA (%(coa)s) - kemungkinan ada jurnal yang '
-            'posting langsung ke akun Aktiva Tetap tanpa lewat form Aktiva Tetap/tanpa Kode Aset.',
+            'The total acquisition cost in the Asset Register (%(register)s) does NOT MATCH the total '
+            'debit balance of Fixed Assets type accounts in the COA (%(coa)s) - there may be journal entries '
+            'posted directly to a Fixed Assets account without going through the Fixed Asset form/without an Asset Code.',
             register=total_register, coa=total_coa,
         ) if mismatch else False
 
@@ -51,9 +51,11 @@ class FixedAssetReportWizard(models.TransientModel):
                 lambda e, self=self: e.transaction_type == 'penyusutan' and e.date < self.date_from)
             penyusutan_periode = tag_entries.filtered(
                 lambda e, self=self: e.transaction_type == 'penyusutan' and self.date_from <= e.date <= self.date_to)
-            harga_perolehan = sum(pengakuan.mapped('amount'))
-            akumulasi_awal = sum(penyusutan_awal.mapped('amount'))
-            beban_periode = sum(penyusutan_periode.mapped('amount'))
+            # Konversi ke company currency dulu (erd/mvp/01 poin 5) - jangan
+            # jumlah amount mentah, bisa campur currency lintas entry.
+            harga_perolehan = sum(e.amount * (e.exchange_rate or 1.0) for e in pengakuan)
+            akumulasi_awal = sum(e.amount * (e.exchange_rate or 1.0) for e in penyusutan_awal)
+            beban_periode = sum(e.amount * (e.exchange_rate or 1.0) for e in penyusutan_periode)
             akumulasi_akhir = akumulasi_awal + beban_periode
             lines.append((0, 0, {
                 'asset_tag_id': tag.id,
@@ -77,15 +79,15 @@ class FixedAssetReportWizard(models.TransientModel):
 
 class FixedAssetReportLine(models.TransientModel):
     _name = 'c18.fixed.asset.report.line'
-    _description = 'Baris Laporan Daftar Aktiva Tetap'
+    _description = 'Fixed Asset Register Report Line'
     _order = 'asset_tag_id'
 
     wizard_id = fields.Many2one('c18.fixed.asset.report.wizard', required=True, ondelete='cascade')
-    asset_tag_id = fields.Many2one('c18.fixed.asset.tag', string='Kode Aset', required=True)
-    tanggal_perolehan = fields.Date(string='Tanggal Perolehan')
+    asset_tag_id = fields.Many2one('c18.fixed.asset.tag', string='Asset Code', required=True)
+    tanggal_perolehan = fields.Date(string='Acquisition Date')
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
-    harga_perolehan = fields.Monetary(string='Harga Perolehan')
-    akumulasi_awal = fields.Monetary(string='Akumulasi Penyusutan Awal Periode')
-    beban_periode = fields.Monetary(string='Beban Penyusutan Periode Ini')
-    akumulasi_akhir = fields.Monetary(string='Akumulasi Penyusutan Akhir Periode')
-    nilai_buku = fields.Monetary(string='Nilai Buku')
+    harga_perolehan = fields.Monetary(string='Acquisition Cost')
+    akumulasi_awal = fields.Monetary(string='Accumulated Depreciation - Beginning of Period')
+    beban_periode = fields.Monetary(string='Depreciation Expense - Current Period')
+    akumulasi_akhir = fields.Monetary(string='Accumulated Depreciation - End of Period')
+    nilai_buku = fields.Monetary(string='Book Value')

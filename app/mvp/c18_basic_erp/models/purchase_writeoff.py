@@ -4,18 +4,18 @@ from odoo.exceptions import UserError
 
 class PurchaseWriteoff(models.Model):
     _name = 'c18.purchase.writeoff'
-    _description = 'Write-off Hutang'
+    _description = 'Accounts Payable Write-off'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
-    bill_id = fields.Many2one('c18.purchase.bill', required=True, string='Pembelian',
+    bill_id = fields.Many2one('c18.purchase.bill', required=True, string='Vendor Bill',
                                domain=[('state', '=', 'posted'), ('amount_residual', '>', 0)])
     partner_id = fields.Many2one('res.partner', related='bill_id.partner_id', store=True, readonly=True)
     amount = fields.Monetary(currency_field='currency_id', required=True,
-                              help='Default sisa hutang, boleh diedit tapi tidak boleh lebih dari sisa.')
+                              help='Defaults to the outstanding balance, editable but cannot exceed it.')
     cost_center_id = fields.Many2one('c18.account.cost.center')
-    note = fields.Char(string='Keterangan')
+    note = fields.Char(string='Notes')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted')], default='draft', copy=False, required=True)
@@ -39,7 +39,7 @@ class PurchaseWriteoff(models.Model):
             if rec.state != 'draft':
                 continue
             if rec.amount > rec.bill_id.amount_residual + 0.001:
-                raise UserError(_('Jumlah write-off tidak boleh lebih dari sisa hutang (%s).', rec.bill_id.name))
+                raise UserError(_('The write-off amount cannot exceed the outstanding payable balance (%s).', rec.bill_id.name))
             move = self.env['c18.account.move'].create({
                 'journal_id': self.env.ref('c18_basic_erp.journal_woht').id,
                 'date': rec.date,

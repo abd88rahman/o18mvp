@@ -4,18 +4,18 @@ from odoo.exceptions import UserError
 
 class SaleWriteoff(models.Model):
     _name = 'c18.sale.writeoff'
-    _description = 'Write-off Piutang'
+    _description = 'Accounts Receivable Write-off'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
-    invoice_id = fields.Many2one('c18.sale.invoice', required=True, string='Penjualan',
+    invoice_id = fields.Many2one('c18.sale.invoice', required=True, string='Customer Invoice',
                                   domain=[('state', '=', 'posted'), ('amount_residual', '>', 0)])
     partner_id = fields.Many2one('res.partner', related='invoice_id.partner_id', store=True, readonly=True)
     amount = fields.Monetary(currency_field='currency_id', required=True,
-                              help='Default sisa piutang, boleh diedit tapi tidak boleh lebih dari sisa.')
+                              help='Defaults to the outstanding balance, editable but cannot exceed it.')
     cost_center_id = fields.Many2one('c18.account.cost.center')
-    note = fields.Char(string='Keterangan')
+    note = fields.Char(string='Notes')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted')], default='draft', copy=False, required=True)
@@ -39,7 +39,7 @@ class SaleWriteoff(models.Model):
             if rec.state != 'draft':
                 continue
             if rec.amount > rec.invoice_id.amount_residual + 0.001:
-                raise UserError(_('Jumlah write-off tidak boleh lebih dari sisa piutang (%s).', rec.invoice_id.name))
+                raise UserError(_('The write-off amount cannot exceed the outstanding receivable balance (%s).', rec.invoice_id.name))
             move = self.env['c18.account.move'].create({
                 'journal_id': self.env.ref('c18_basic_erp.journal_wopt').id,
                 'date': rec.date,

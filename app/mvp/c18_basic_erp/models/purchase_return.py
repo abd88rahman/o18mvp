@@ -4,14 +4,14 @@ from odoo.exceptions import UserError
 
 class PurchaseReturn(models.Model):
     _name = 'c18.purchase.return'
-    _description = 'Retur Barang Vendor'
+    _description = 'Vendor Return'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True)
-    grni_ref_id = fields.Many2one('c18.purchase.receipt', string='Penerimaan Barang (sebelum invoice)')
-    bill_id = fields.Many2one('c18.purchase.bill', string='Pembelian (sesudah invoice)')
+    grni_ref_id = fields.Many2one('c18.purchase.receipt', string='Goods Receipt (before invoice)')
+    bill_id = fields.Many2one('c18.purchase.bill', string='Vendor Bill (after invoice)')
     cost_center_id = fields.Many2one('c18.account.cost.center')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
@@ -38,13 +38,17 @@ class PurchaseReturn(models.Model):
             if rec.state != 'draft':
                 continue
             if not rec.line_ids:
-                raise UserError(_('Retur tidak boleh kosong.'))
+                raise UserError(_('The Return cannot be empty.'))
             if not rec.grni_ref_id and not rec.bill_id:
-                raise UserError(_('Retur wajib referensi Penerimaan Barang (belum invoice) atau Pembelian (sudah invoice).'))
+                raise UserError(_('The Return must reference a Goods Receipt (not yet invoiced) or a Vendor Bill (already invoiced).'))
             debit_account = self.env.ref('c18_basic_erp.acc_2_1000') if rec.bill_id else self.env.ref('c18_basic_erp.acc_2_1100')
+            credit_account = (self.env.ref('c18_basic_erp.acc_5_1100')
+                               if rec.company_id.inventory_system == 'periodic'
+                               else self.env.ref('c18_basic_erp.acc_1_1300'))
             for line in rec.line_ids:
                 if line.product_id.product_type == 'barang_stok':
-                    line.cost_amount = line.product_id._stock_consume_latest(line.qty)
+                    line.cost_amount = line.product_id._stock_consume_latest(
+                        line.qty, res_model=rec._name, res_id=rec.id, date=rec.date)
             move = self.env['c18.account.move'].create({
                 'journal_id': self.env.ref('c18_basic_erp.journal_rtbv').id,
                 'date': rec.date,
@@ -59,7 +63,7 @@ class PurchaseReturn(models.Model):
                         'cost_center_id': rec.cost_center_id.id,
                     }),
                     (0, 0, {
-                        'account_id': self.env.ref('c18_basic_erp.acc_1_1300').id,
+                        'account_id': credit_account.id,
                         'credit': rec.amount_total,
                         'partner_id': rec.partner_id.id,
                         'cost_center_id': rec.cost_center_id.id,
@@ -75,7 +79,7 @@ class PurchaseReturn(models.Model):
 
 class PurchaseReturnLine(models.Model):
     _name = 'c18.purchase.return.line'
-    _description = 'Retur Barang Vendor Line'
+    _description = 'Vendor Return Line'
     _order = 'sequence, id'
 
     return_id = fields.Many2one('c18.purchase.return', required=True, ondelete='cascade')
@@ -83,5 +87,5 @@ class PurchaseReturnLine(models.Model):
     product_id = fields.Many2one('c18.product', required=True)
     qty = fields.Float(default=1.0)
     cost_amount = fields.Monetary(currency_field='currency_id', readonly=True,
-                                   help='Nilai keluar dari Persediaan, dihitung saat posting dari costing engine.')
+                                   help='Value removed from Inventory, calculated at posting time by the costing engine.')
     currency_id = fields.Many2one(related='return_id.currency_id')

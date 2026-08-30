@@ -4,24 +4,24 @@ from odoo.exceptions import UserError
 
 class AccountCash(models.Model):
     _name = 'c18.account.cash'
-    _description = 'Kas Bank (Kas Masuk/Keluar/Transfer)'
+    _description = 'Cash/Bank (Cash In/Cash Out/Transfer)'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
     journal_id = fields.Many2one('c18.account.journal', required=True, domain=[('code', 'in', ['KM', 'KK', 'TRF'])])
     is_transfer = fields.Boolean(compute='_compute_is_transfer', store=True)
-    account_id = fields.Many2one('c18.account.account', required=True, string='Akun Kas/Bank',
-                                  domain=[('account_type', '=', 'kas_bank')])
-    account_id_dest = fields.Many2one('c18.account.account', string='Akun Tujuan',
-                                       domain=[('account_type', '=', 'kas_bank')])
-    partner_id = fields.Many2one('res.partner', help='Opsional - bisa karyawan/pihak lain non-piutang/hutang formal.')
+    account_id = fields.Many2one('c18.account.account', required=True, string='Cash/Bank Account',
+                                  domain=[('account_type', '=', 'cash_bank')])
+    account_id_dest = fields.Many2one('c18.account.account', string='Destination Account',
+                                       domain=[('account_type', '=', 'cash_bank')])
+    partner_id = fields.Many2one('res.partner', help='Optional - can be an employee or other party without a formal receivable/payable.')
     cost_center_id = fields.Many2one('c18.account.cost.center')
-    amount = fields.Monetary(currency_field='currency_id', help='Nominal transfer (khusus jenis Transfer).')
-    note = fields.Char(string='Keterangan')
+    amount = fields.Monetary(currency_field='currency_id', help='Transfer amount (Transfer type only).')
+    note = fields.Char(string='Notes')
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
-    line_ids = fields.One2many('c18.account.cash.line', 'cash_id', string='Akun Lawan')
+    line_ids = fields.One2many('c18.account.cash.line', 'cash_id', string='Contra Account')
     amount_total = fields.Monetary(compute='_compute_amount_total', currency_field='currency_id')
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted')], default='draft', copy=False, required=True)
     move_id = fields.Many2one('c18.account.move', readonly=True, copy=False)
@@ -51,7 +51,9 @@ class AccountCash(models.Model):
             move_line_vals = []
             if rec.is_transfer:
                 if not rec.account_id_dest or not rec.amount:
-                    raise UserError(_('Transfer butuh Akun Tujuan dan Jumlah.'))
+                    raise UserError(_('A Transfer requires a Destination Account and an Amount.'))
+                if rec.account_id_dest == rec.account_id:
+                    raise UserError(_('The Destination Account cannot be the same as the source Cash/Bank Account.'))
                 move_line_vals.append((0, 0, {
                     'account_id': rec.account_id_dest.id,
                     'debit': rec.amount,
@@ -66,7 +68,9 @@ class AccountCash(models.Model):
                 }))
             else:
                 if not rec.line_ids:
-                    raise UserError(_('Kas Masuk/Keluar butuh minimal 1 baris akun lawan.'))
+                    raise UserError(_('Cash In/Cash Out requires at least 1 contra account line.'))
+                if any(line.account_id.account_type == 'cash_bank' for line in rec.line_ids):
+                    raise UserError(_('The Contra Account cannot be a Cash/Bank account - use the Cash/Bank Transfer type for cash-to-cash movements.'))
                 total = sum(rec.line_ids.mapped('amount'))
                 header_side = 'debit' if rec.journal_id.code == 'KM' else 'credit'
                 line_side = 'credit' if rec.journal_id.code == 'KM' else 'debit'
@@ -105,12 +109,12 @@ class AccountCash(models.Model):
 
 class AccountCashLine(models.Model):
     _name = 'c18.account.cash.line'
-    _description = 'Kas Bank Line (akun lawan Kas Masuk/Keluar)'
+    _description = 'Cash/Bank Line (contra account for Cash In/Cash Out)'
     _order = 'sequence, id'
 
     cash_id = fields.Many2one('c18.account.cash', required=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
-    account_id = fields.Many2one('c18.account.account', required=True, string='Akun Lawan')
-    name = fields.Char(string='Keterangan')
+    account_id = fields.Many2one('c18.account.account', required=True, string='Contra Account')
+    name = fields.Char(string='Description')
     amount = fields.Monetary(currency_field='currency_id')
     currency_id = fields.Many2one(related='cash_id.currency_id')

@@ -43,6 +43,7 @@ Field `cost_center_id` (Many2one) di level **move line** — dipakai untuk anali
 Dibutuhkan dari awal (bukan ditunda). 2 bagian:
 - **Kurs transaksi** — tiap jurnal/transaksi punya field nilai kurs yang berlaku saat transaksi itu terjadi (disimpan waktu itu juga, bukan dihitung ulang belakangan).
 - **Kurs periodik** — tabel master kurs harian (`c18.account.exchange.rate` atau serupa) untuk menyatakan ulang nilai dalam mata uang asal di laporan (Neraca, Laba Rugi, dll) pada tanggal tertentu.
+- **Aturan konversi saat agregasi lintas jurnal** — setiap kalkulasi yang menjumlahkan `debit`/`credit` dari banyak baris jurnal sekaligus (Trial Balance, Tutup Buku, rekonsiliasi Aktiva Tetap, dan laporan sejenis yang akan dibuat di tier Standard+) **wajib** konversi tiap baris ke company currency terlebih dahulu — pakai `exchange_rate` yang tersimpan di jurnal (`c18.account.move`) baris itu — sebelum dijumlah. **Tidak boleh** menjumlah nilai `debit`/`credit` mentah lintas currency yang berbeda, karena hasilnya tidak bermakna secara akuntansi. Ini berlaku terpisah dari "kurs periodik" di atas (yang untuk restate ke mata uang asal transaksi demi tampilan laporan, bukan untuk kalkulasi saldo internal).
 
 ### 6. Periode Akuntansi (Fiscal Period)
 Tidak pakai `account.fiscal.year` bawaan Odoo (zero dependency). **Tanpa field tambahan** di move line — deteksi periode murni dari tanggal transaksi tiap kali validasi (tidak ada `period_id` disimpan). Kalau tanggal transaksi jatuh di periode yang sudah ditutup, blokir tambah/edit/hapus jurnal di tanggal itu.

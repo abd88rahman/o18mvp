@@ -2,11 +2,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 TRANSACTION_TYPES = [
-    ('pengakuan', 'Pengakuan'),
-    ('penyusutan', 'Penyusutan'),
-    ('penghapusan', 'Penghapusan'),
-    ('penjualan', 'Penjualan'),
-    ('revaluasi', 'Revaluasi'),
+    ('pengakuan', 'Acquisition'),
+    ('penyusutan', 'Depreciation'),
+    ('penghapusan', 'Disposal'),
+    ('penjualan', 'Sale'),
+    ('revaluasi', 'Revaluation'),
 ]
 
 JOURNAL_XMLID_BY_TYPE = {
@@ -21,19 +21,19 @@ JOURNAL_XMLID_BY_TYPE = {
 class FixedAssetTag(models.Model):
     _name = 'c18.fixed.asset.tag'
     _description = (
-        'Kode Aset - tag ringan buat kelompokkan transaksi Aktiva Tetap per aset '
-        '(bukan register aset penuh, tidak ada kategori/umur ekonomis/kalkulasi '
-        'penyusutan - lihat erd/mvp/06-accounting-business.md poin G)'
+        'Asset Code - lightweight tag to group Fixed Asset transactions per asset '
+        '(not a full asset register, no category/useful life/depreciation '
+        'calculation - see erd/mvp/06-accounting-business.md point G)'
     )
     _order = 'code'
 
-    code = fields.Char(string='Kode', required=True)
-    name = fields.Char(string='Nama Aset', required=True)
+    code = fields.Char(string='Code', required=True)
+    name = fields.Char(string='Asset Name', required=True)
     active = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
 
     _sql_constraints = [
-        ('code_company_uniq', 'unique(code, company_id)', 'Kode aset sudah dipakai.'),
+        ('code_company_uniq', 'unique(code, company_id)', 'Asset code is already in use.'),
     ]
 
     def name_get(self):
@@ -42,23 +42,27 @@ class FixedAssetTag(models.Model):
 
 class FixedAsset(models.Model):
     _name = 'c18.fixed.asset.entry'
-    _description = 'Aktiva Tetap (tier Basic - form generik, tanpa register aset)'
+    _description = 'Fixed Asset (Basic tier - generic form, no asset register)'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
     transaction_type = fields.Selection(TRANSACTION_TYPES, required=True, default='pengakuan')
     asset_tag_id = fields.Many2one(
-        'c18.fixed.asset.tag', string='Kode Aset',
-        help='Grouping key buat laporan Daftar Aktiva Tetap - pilih dari daftar existing, bukan free text.')
-    debit_account_id = fields.Many2one('c18.account.account', string='Akun Debit', required=True)
-    credit_account_id = fields.Many2one('c18.account.account', string='Akun Kredit', required=True)
+        'c18.fixed.asset.tag', string='Asset Code',
+        help='Grouping key for the Fixed Asset Register report - pick from the existing list, not free text.')
+    debit_account_id = fields.Many2one('c18.account.account', string='Debit Account', required=True)
+    credit_account_id = fields.Many2one('c18.account.account', string='Credit Account', required=True)
     partner_id = fields.Many2one('res.partner')
     cost_center_id = fields.Many2one('c18.account.cost.center')
     amount = fields.Monetary(currency_field='currency_id', required=True)
-    note = fields.Char(string='Keterangan')
+    note = fields.Char(string='Notes')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
+    exchange_rate = fields.Float(
+        digits=(12, 6), default=1.0,
+        help='Exchange rate at the time of the transaction (erd/mvp/01 point 5) - same as c18.account.move.exchange_rate, '
+             'used when generating the journal entry so reconciliation to the COA is correct when currency_id is not the company currency.')
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted')], default='draft', copy=False, required=True)
     move_id = fields.Many2one('c18.account.move', readonly=True, copy=False)
 
@@ -86,15 +90,17 @@ class FixedAsset(models.Model):
             ('company_id', '=', company.id),
             ('date', '<=', date_to),
         ])
-        total_register = sum(entries.mapped('amount'))
+        # Konversi ke company currency dulu (erd/mvp/01 poin 5) - jangan jumlah
+        # amount/debit mentah, bisa campur currency lintas entry/jurnal.
+        total_register = sum(e.amount * (e.exchange_rate or 1.0) for e in entries)
         gl_lines = self.env['c18.account.move.line'].search([
-            ('account_id.account_type', '=', 'aktiva_tetap'),
+            ('account_id.account_type', '=', 'fixed_asset'),
             ('company_id', '=', company.id),
             ('state', '=', 'posted'),
             ('date', '<=', date_to),
             ('debit', '>', 0),
         ])
-        total_coa = sum(gl_lines.mapped('debit'))
+        total_coa = sum(gl_lines.mapped('debit_company_currency'))
         mismatch = company.currency_id.compare_amounts(total_register, total_coa) != 0
         return total_register, total_coa, mismatch
 
@@ -103,7 +109,7 @@ class FixedAsset(models.Model):
             if rec.state != 'draft':
                 continue
             if not rec.amount:
-                raise UserError(_('Jumlah wajib diisi.'))
+                raise UserError(_('Amount is required.'))
             # Harga perolehan (Pengakuan) wajib nyambung ke akun tipe Aktiva
             # Tetap & wajib ada asset_tag_id - supaya total di laporan Daftar
             # Aktiva Tetap otomatis cocok dengan saldo akun Aktiva Tetap di
@@ -111,9 +117,9 @@ class FixedAsset(models.Model):
             # Lihat erd/mvp/06-accounting-business.md poin G.
             if rec.transaction_type == 'pengakuan':
                 if not rec.asset_tag_id:
-                    raise UserError(_('Kode Aset wajib diisi untuk transaksi Pengakuan.'))
-                if rec.debit_account_id.account_type != 'aktiva_tetap':
-                    raise UserError(_('Akun Debit untuk Pengakuan harus akun bertipe Aktiva Tetap.'))
+                    raise UserError(_('Asset Code is required for Acquisition transactions.'))
+                if rec.debit_account_id.account_type != 'fixed_asset':
+                    raise UserError(_('The Debit Account for an Acquisition must be a Fixed Assets type account.'))
             journal = self.env.ref(JOURNAL_XMLID_BY_TYPE[rec.transaction_type])
             move = self.env['c18.account.move'].create({
                 'journal_id': journal.id,
@@ -121,6 +127,7 @@ class FixedAsset(models.Model):
                 'ref': rec.note or rec.name,
                 'company_id': rec.company_id.id,
                 'currency_id': rec.currency_id.id,
+                'exchange_rate': rec.exchange_rate,
                 'line_ids': [
                     (0, 0, {
                         'account_id': rec.debit_account_id.id,
@@ -146,11 +153,11 @@ class FixedAsset(models.Model):
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                    'title': _('Peringatan: Aktiva Tetap Tidak Rekonsiliasi'),
+                    'title': _('Warning: Fixed Assets Not Reconciled'),
                     'message': _(
-                        'Total harga perolehan di register (%(register)s) TIDAK SAMA dengan total '
-                        'saldo debit akun bertipe Aktiva Tetap di COA (%(coa)s) - cek Laporan > '
-                        'Daftar Aktiva Tetap.', register=total_register, coa=total_coa,
+                        'The total acquisition cost in the register (%(register)s) does NOT MATCH the total '
+                        'debit balance of Fixed Assets type accounts in the COA (%(coa)s) - check Reports > '
+                        'Fixed Asset Register.', register=total_register, coa=total_coa,
                     ),
                     'type': 'warning',
                     'sticky': True,

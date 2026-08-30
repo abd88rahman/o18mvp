@@ -1,11 +1,18 @@
 {
-    'name': 'ERP Help',
+    'name': 'ERP QA Guide',
     'version': '18.0.1.0.0',
-    'summary': 'Root menu "Help" - viewer dokumen .rst on-the-fly (prototype)',
+    'summary': 'Root menu "QA Guide" - viewer dokumen .rst on-the-fly, PANDUAN TESTING INTERNAL',
     'description': """
-Prototype: root menu top-level "Help" (setara Apps/Settings di app switcher,
+Root menu top-level "QA Guide" (setara Apps/Settings di app switcher,
 sengaja TIDAK direparent ke c18_theme.menu_erp_root - beda karakter dari
-module bisnis, ini utility/dokumentasi).
+module bisnis, ini utility/dokumentasi internal).
+
+PENTING - INTERNAL ONLY: isi modul ini panduan testing/QA (checkpoint,
+istilah verifikasi, skenario perusahaan fiktif) untuk tester internal,
+BUKAN dokumentasi/tutorial untuk client/end-user. Tidak ada pembatasan hak
+akses di modul ini - JANGAN install modul ini di database demo atau
+database yang diakses client. Requirement lengkap & alasan keputusan ini
+ada di erd/base/06-qa-guide-viewer.md.
 
 Ditampilkan lewat form Odoo biasa (`c18.help.guide`, field Html, 1 record per
 dokumen) - bukan ir.actions.act_url (full page, keluar dari shell Odoo) -
@@ -17,10 +24,11 @@ diubah/ditulis ulang - murni dibaca & di-render tiap kali form dibuka.
 
 3 dokumen (00 Profile, 01 Transactions, 02 Procedure) - salinan RST dari
 testing/mvp/*.md di root repo (sumber aslinya tetap Markdown, ini cuma
-salinan buat ditampilkan di Odoo).
+salinan buat ditampilkan di Odoo, disinkronkan manual - lihat catatan
+"Cara Sinkronisasi .rst" di erd/base/06-qa-guide-viewer.md).
 
-Requirement/PRD belum ditulis - ini spike/prototype atas permintaan user,
-belum diputuskan jadi fitur permanen.
+Status: PERMANEN (diputuskan 2026-08-30, sebelumnya prototype) - scope
+internal tester/QA saja, bukan bagian produk yang dijual ke client.
 """,
     'category': 'Hidden',
     'depends': ['base', 'web'],

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="c18_basic_erp.SubsidiaryLedgerReport">
+        <div class="o_c18_subsidiary_ledger p-4">
+            <h3 class="mb-3" t-esc="title"/>
+
+            <div class="d-flex align-items-end gap-3 mb-3 o_c18_report_filters">
+                <div>
+                    <label class="form-label mb-0">Per Tanggal</label>
+                    <input type="date" class="form-control" t-att-value="state.dateTo" t-on-change="onDateChange"/>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="c18_sl_hide_zero"
+                           t-att-checked="state.hideZero" t-on-change="onHideZeroChange"/>
+                    <label class="form-check-label" for="c18_sl_hide_zero">Sembunyikan saldo nol</label>
+                </div>
+            </div>
+
+            <div t-if="state.loading" class="text-muted">Memuat...</div>
+
+            <t t-if="!state.loading and state.data">
+                <h5 t-esc="state.data.account_label"/>
+                <table class="table table-sm table-bordered o_c18_report_table" style="max-width: 500px;">
+                    <thead>
+                        <tr>
+                            <th>Partner</th>
+                            <th class="text-end">Saldo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="state.data.rows" t-as="row" t-key="row.partner_id or row.partner_name">
+                            <td>
+                                <a href="#" t-on-click.prevent="() => this.openGeneralLedger(row)" t-esc="row.partner_name"/>
+                            </td>
+                            <td class="text-end" t-esc="row.amount_fmt"/>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bold">
+                            <td>Total</td>
+                            <td class="text-end" t-esc="state.data.total_fmt"/>
+                        </tr>
+                    </tfoot>
+                </table>
+            </t>
+        </div>
+    </t>
+</templates>

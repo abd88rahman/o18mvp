@@ -4,10 +4,10 @@ from odoo.exceptions import UserError
 
 class SaleDelivery(models.Model):
     _name = 'c18.sale.delivery'
-    _description = 'Pengiriman Barang'
+    _description = 'Delivery'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
     so_ref_id = fields.Many2one('c18.sale.order', string='SO', domain=[('state', '=', 'confirmed')])
     partner_id = fields.Many2one('res.partner', string='Customer', required=True)
@@ -16,7 +16,7 @@ class SaleDelivery(models.Model):
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
     line_ids = fields.One2many('c18.sale.delivery.line', 'delivery_id', copy=True)
     amount_total = fields.Monetary(compute='_compute_amount_total', currency_field='currency_id', store=True,
-                                    help='Nilai HPP (cost), bukan harga jual - dihitung saat posting dari costing engine.')
+                                    help='COGS value (cost), not the sale price - calculated at posting time by the costing engine.')
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted')], default='draft', copy=False, required=True)
     move_id = fields.Many2one('c18.account.move', readonly=True, copy=False)
 
@@ -48,11 +48,16 @@ class SaleDelivery(models.Model):
             if rec.state != 'draft':
                 continue
             if not rec.line_ids:
-                raise UserError(_('Pengiriman Barang tidak boleh kosong.'))
+                raise UserError(_('The Delivery cannot be empty.'))
             for line in rec.line_ids:
                 if line.product_id.product_type != 'barang_stok':
-                    raise UserError(_('Pengiriman Barang cuma relevan utk produk tipe Barang Stok.'))
-                line.cost_amount = line.product_id._stock_consume(line.qty_delivered)
+                    raise UserError(_('Delivery only applies to Stockable Product type products.'))
+                line.cost_amount = line.product_id._stock_consume(
+                    line.qty_delivered, res_model=rec._name, res_id=rec.id, date=rec.date)
+            if not rec.amount_total:
+                # Mode Periodik (erd/mvp/06 poin F.3) - qty berkurang tapi tanpa nilai/jurnal.
+                rec.write({'state': 'posted'})
+                continue
             move = self.env['c18.account.move'].create({
                 'journal_id': self.env.ref('c18_basic_erp.journal_pngb').id,
                 'date': rec.date,
@@ -79,12 +84,12 @@ class SaleDelivery(models.Model):
             rec.write({'move_id': move.id, 'name': move.name, 'state': 'posted'})
 
     def action_reset_to_draft(self):
-        raise UserError(_('Pengiriman Barang yang sudah posted tidak bisa dibatalkan (mempengaruhi Persediaan) - buat dokumen koreksi terpisah.'))
+        raise UserError(_('A posted Delivery cannot be reset to draft (it affects Inventory) - create a separate correction document instead.'))
 
 
 class SaleDeliveryLine(models.Model):
     _name = 'c18.sale.delivery.line'
-    _description = 'Pengiriman Barang Line'
+    _description = 'Delivery Line'
     _order = 'sequence, id'
 
     delivery_id = fields.Many2one('c18.sale.delivery', required=True, ondelete='cascade')
@@ -93,5 +98,5 @@ class SaleDeliveryLine(models.Model):
     product_id = fields.Many2one('c18.product', required=True)
     qty_delivered = fields.Float(default=1.0)
     cost_amount = fields.Monetary(currency_field='currency_id', readonly=True,
-                                   help='HPP hasil konsumsi stok saat posting (FIFO layer / avg_cost).')
+                                   help='COGS resulting from stock consumption at posting time (FIFO layer / avg_cost).')
     currency_id = fields.Many2one(related='delivery_id.currency_id')

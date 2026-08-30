@@ -38,6 +38,7 @@
                             <field name="cost_center_id" readonly="state != 'draft'"/>
                             <field name="amount_paid" readonly="1"/>
                             <field name="amount_residual" readonly="1"/>
+                            <field name="move_id" readonly="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -59,7 +60,7 @@
     </record>
 
     <record id="action_c18_sale_invoice" model="ir.actions.act_window">
-        <field name="name">Penjualan (Customer Invoice)</field>
+        <field name="name">Customer Invoice</field>
         <field name="res_model">c18.sale.invoice</field>
         <field name="view_mode">list,form</field>
     </record>

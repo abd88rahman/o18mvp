@@ -2,7 +2,7 @@ from odoo import fields, models
 
 
 class StockLayer(models.Model):
-    _name = 'c18.account.stock.layer'
+    _name = 'c18.stock.layer'
     _description = 'FIFO Stock Layer'
     _order = 'date, id'
 

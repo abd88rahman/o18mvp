@@ -21,7 +21,7 @@
             <form>
                 <header>
                     <button name="action_post" type="object" string="Post" class="oe_highlight" invisible="state != 'draft'"/>
-                    <button name="action_pay" type="object" string="Bayar" invisible="state != 'posted' or amount_residual == 0"/>
+                    <button name="action_pay" type="object" string="Pay" invisible="state != 'posted' or amount_residual == 0"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                 </header>
                 <sheet>
@@ -37,6 +37,7 @@
                             <field name="amount_residual" readonly="1"/>
                             <field name="cost_center_id" readonly="state != 'draft'"/>
                             <field name="note" readonly="state != 'draft'"/>
+                            <field name="move_id" readonly="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -45,7 +46,7 @@
     </record>
 
     <record id="action_c18_payroll_accrual" model="ir.actions.act_window">
-        <field name="name">Jurnal Pengakuan (Hutang Gaji)</field>
+        <field name="name">Accrual Entry (Salaries Payable)</field>
         <field name="res_model">c18.payroll.accrual</field>
         <field name="view_mode">list,form</field>
     </record>
@@ -82,6 +83,7 @@
                         <group>
                             <field name="account_id" readonly="state != 'draft'"/>
                             <field name="cost_center_id" readonly="state != 'draft'"/>
+                            <field name="move_id" readonly="1"/>
                         </group>
                     </group>
                     <field name="line_ids" readonly="state != 'draft'">
@@ -101,7 +103,7 @@
     </record>
 
     <record id="action_c18_payroll_payment" model="ir.actions.act_window">
-        <field name="name">Jurnal Pembayaran (Bayar Gaji)</field>
+        <field name="name">Payment Entry (Salary Payment)</field>
         <field name="res_model">c18.payroll.payment</field>
         <field name="view_mode">list,form</field>
     </record>

@@ -6,7 +6,7 @@ class CostCenter(models.Model):
     _description = 'Cost Center'
     _order = 'name'
 
-    name = fields.Char(required=True, help='Bebas isi nama departemen atau nama project, sesuai kebutuhan.')
+    name = fields.Char(required=True, help='Free text - department name or project name, as needed.')
     code = fields.Char()
     active = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)

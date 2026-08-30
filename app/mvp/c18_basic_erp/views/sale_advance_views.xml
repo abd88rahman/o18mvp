@@ -37,6 +37,7 @@
                             <field name="amount" readonly="state != 'draft'"/>
                             <field name="cost_center_id" readonly="state != 'draft'"/>
                             <field name="note" readonly="state != 'draft'"/>
+                            <field name="move_id" readonly="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -45,7 +46,7 @@
     </record>
 
     <record id="action_c18_sale_advance" model="ir.actions.act_window">
-        <field name="name">Uang Muka Penjualan</field>
+        <field name="name">Sales Advance</field>
         <field name="res_model">c18.sale.advance</field>
         <field name="view_mode">list,form</field>
     </record>

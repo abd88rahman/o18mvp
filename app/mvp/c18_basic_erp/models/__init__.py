@@ -8,6 +8,8 @@ from . import res_partner
 from . import res_company
 from . import product
 from . import stock_layer
+from . import stock_consumption
+from . import stock_movement
 from . import purchase_order
 from . import purchase_receipt
 from . import purchase_bill
@@ -28,3 +30,6 @@ from . import payroll
 from . import stock_consume
 from . import stock_opname
 from . import account_closing
+from . import demo_generator
+from . import financial_report
+from . import stock_report

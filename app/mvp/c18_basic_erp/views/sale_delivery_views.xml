@@ -34,6 +34,7 @@
                         </group>
                         <group>
                             <field name="cost_center_id" readonly="state != 'draft'"/>
+                            <field name="move_id" readonly="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -45,7 +46,7 @@
                         </list>
                     </field>
                     <group class="oe_subtotal_footer">
-                        <field name="amount_total" string="Total HPP"/>
+                        <field name="amount_total" string="Total COGS"/>
                     </group>
                 </sheet>
             </form>
@@ -53,7 +54,7 @@
     </record>
 
     <record id="action_c18_sale_delivery" model="ir.actions.act_window">
-        <field name="name">Pengiriman Barang</field>
+        <field name="name">Delivery</field>
         <field name="res_model">c18.sale.delivery</field>
         <field name="view_mode">list,form</field>
     </record>

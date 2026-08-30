@@ -1,0 +1,10 @@
+saya udah deploy di server cloud
+rencananya mau ada beberapa container docker
+saya udah buat domain juga
+
+kira2 gini:
+1. sub1.domain.id = utk odoo1 = buat repo ini
+2. sub2.domain.id = utk odoo2 = repo lain
+
+bantu buatkan petunjuk setting nginx dan certbot utk atur ssl domain dan port ya, 
+buatkan filenya di folder claude-notes terkait file coretan ini

@@ -4,23 +4,23 @@ from odoo.exceptions import UserError
 
 class SaleInvoice(models.Model):
     _name = 'c18.sale.invoice'
-    _description = 'Penjualan (Customer Invoice)'
+    _description = 'Customer Invoice'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
     partner_id = fields.Many2one('res.partner', string='Customer', required=True)
     so_ref_id = fields.Many2one('c18.sale.order', string='SO')
-    delivery_ref_id = fields.Many2one('c18.sale.delivery', string='Pengiriman Barang',
-                                       help='Opsional, cuma buat auto-fill line & audit trail - tidak mengubah akun kredit.')
-    credit_account_id = fields.Many2one('c18.account.account', string='Akun Pendapatan', required=True)
+    delivery_ref_id = fields.Many2one('c18.sale.delivery', string='Delivery',
+                                       help='Optional, only used to auto-fill lines & the audit trail - does not change the credit account.')
+    credit_account_id = fields.Many2one('c18.account.account', string='Revenue Account', required=True)
     cost_center_id = fields.Many2one('c18.account.cost.center')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
     line_ids = fields.One2many('c18.sale.invoice.line', 'invoice_id', copy=True)
     amount_total = fields.Monetary(compute='_compute_amount_total', currency_field='currency_id', store=True)
     amount_paid = fields.Monetary(default=0.0, currency_field='currency_id', copy=False,
-                                   help='Total sudah diterima via Penerimaan Piutang - diupdate dari sana.')
+                                   help='Total already received via Customer Receipt - updated from there.')
     amount_residual = fields.Monetary(compute='_compute_amount_residual', currency_field='currency_id', store=True)
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted')], default='draft', copy=False, required=True)
     move_id = fields.Many2one('c18.account.move', readonly=True, copy=False)
@@ -64,7 +64,7 @@ class SaleInvoice(models.Model):
             if rec.state != 'draft':
                 continue
             if not rec.line_ids:
-                raise UserError(_('Penjualan tidak boleh kosong.'))
+                raise UserError(_('The Invoice cannot be empty.'))
             move_line_vals = [
                 (0, 0, {
                     'account_id': self.env.ref('c18_basic_erp.acc_1_1200').id,
@@ -83,7 +83,8 @@ class SaleInvoice(models.Model):
                 total_cogs = 0.0
                 for line in rec.line_ids:
                     if line.product_id and line.product_id.product_type == 'barang_stok':
-                        total_cogs += line.product_id._stock_consume(line.qty)
+                        total_cogs += line.product_id._stock_consume(
+                            line.qty, res_model=rec._name, res_id=rec.id, date=rec.date)
                 if total_cogs:
                     move_line_vals += [
                         (0, 0, {
@@ -114,15 +115,15 @@ class SaleInvoice(models.Model):
 
 class SaleInvoiceLine(models.Model):
     _name = 'c18.sale.invoice.line'
-    _description = 'Penjualan Line'
+    _description = 'Customer Invoice Line'
     _order = 'sequence, id'
 
     invoice_id = fields.Many2one('c18.sale.invoice', required=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
     product_id = fields.Many2one('c18.product')
-    name = fields.Char(string='Keterangan')
+    name = fields.Char(string='Description')
     qty = fields.Float(default=1.0)
-    price_unit = fields.Float(string='Harga Jual Satuan')
+    price_unit = fields.Float(string='Unit Selling Price')
     subtotal = fields.Monetary(compute='_compute_subtotal', currency_field='currency_id', store=True)
     currency_id = fields.Many2one(related='invoice_id.currency_id')
 

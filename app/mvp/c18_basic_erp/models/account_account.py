@@ -1,21 +1,21 @@
 from odoo import fields, models
 
 ACCOUNT_TYPES = [
-    ('kas_bank', 'Kas Bank'),
-    ('piutang_usaha', 'Piutang Usaha'),
-    ('persediaan', 'Persediaan'),
-    ('aktiva_lancar_lainnya', 'Aktiva Lancar Lainnya'),
-    ('aktiva_tetap', 'Aktiva Tetap'),
-    ('aktiva_lain', 'Aktiva Lain'),
-    ('hutang_usaha', 'Hutang Usaha'),
-    ('hutang_lancar_lainnya', 'Hutang Lancar Lainnya'),
-    ('hutang_jangka_panjang', 'Hutang Jangka Panjang'),
-    ('ekuitas', 'Ekuitas'),
-    ('pendapatan', 'Pendapatan'),
-    ('beban_pokok_pendapatan', 'Beban Pokok Pendapatan'),
-    ('beban_usaha', 'Beban Usaha'),
-    ('pendapatan_luar_usaha', 'Pendapatan di Luar Usaha'),
-    ('beban_luar_usaha', 'Beban di Luar Usaha'),
+    ('cash_bank', 'Cash/Bank'),
+    ('receivable', 'Accounts Receivable'),
+    ('inventory', 'Inventory'),
+    ('other_current_asset', 'Other Current Assets'),
+    ('fixed_asset', 'Fixed Assets'),
+    ('other_asset', 'Other Assets'),
+    ('payable', 'Accounts Payable'),
+    ('other_current_liability', 'Other Current Liabilities'),
+    ('long_term_liability', 'Long-term Liabilities'),
+    ('equity', 'Equity'),
+    ('revenue', 'Revenue'),
+    ('cost_of_revenue', 'Cost of Revenue'),
+    ('expense', 'Operating Expenses'),
+    ('other_revenue', 'Other Income'),
+    ('other_expense', 'Other Expenses'),
 ]
 
 
@@ -31,7 +31,7 @@ class AccountAccount(models.Model):
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
 
     _sql_constraints = [
-        ('code_company_uniq', 'unique(code, company_id)', 'Kode akun harus unik per company.'),
+        ('code_company_uniq', 'unique(code, company_id)', 'Account code must be unique per company.'),
     ]
 
     def name_get(self):

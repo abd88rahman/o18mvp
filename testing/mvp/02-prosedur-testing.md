@@ -2,7 +2,7 @@
 
 Dokumen ini untuk tester yang **tidak punya background akuntansi**. Ikuti 1 cerita utuh: perusahaan distributor ban **PT Roda Sejahtera**, berdiri November 2024, datanya sudah lengkap disiapkan di [01-transaksi-distributor-ban.md](01-transaksi-distributor-ban.md) (baca [00-skenario-distributor-ban.md](00-skenario-distributor-ban.md) dulu kalau mau tahu latar belakang perusahaannya).
 
-Status: draft awal (2026-08-27, ditambah gap-coverage 2026-08-28), belum pernah dijalankan tester sungguhan.
+Status: **sudah dieksekusi penuh via script (2026-08-30)** di 4 kombinasi Perpetual/Periodik × FIFO/Average, semua PASS & LABA — lihat "Ringkasan Checklist" di bawah. Klik-manual sungguhan di browser (tujuan asli dokumen ini) belum dilakukan.
 
 **Cara pakai 2 dokumen ini bareng**: dokumen **01** isinya tabel tanggal+nominal (data mentah, urut kronologis). Dokumen **ini (02)** isinya cara menginput tiap jenis dokumen ke sistem (menu, field mana diisi apa). Kerjakan tabel di 01 **baris demi baris sesuai tanggal**, sambil rujuk bagian "Cara Input" di bawah sesuai jenis dokumennya.
 
@@ -124,10 +124,12 @@ Kerjakan [01-transaksi-distributor-ban.md](01-transaksi-distributor-ban.md) **bu
 1. **31 Des 2024** — sebelum lanjut ke Januari 2025, cek dulu saldo "1-1420 Biaya Dibayar Dimuka" = **Rp 100.000.000** (lihat checkpoint di 01).
 2. **Setelah semua transaksi Des 2024 selesai** — proses **Tutup Buku Fiscal Year 2024** (lihat instruksi di akhir bagian "2024" pada 01). **Jangan tutup buku tahun 2026** (tahun berjalan sekarang) — cuma tahun yang sudah lewat penuh (2024, 2025) yang boleh ditutup.
 3. **Setelah PO 5 Feb 2025** — cek produk BAN-A1 sekarang punya 2 harga beli berbeda tersimpan di sistem (2 layer). Kalau nanti ada transaksi Pengiriman Barang untuk A1 dengan qty yang melewati sisa stok dari harga lama, HPP-nya harus otomatis gabungan 2 harga itu — ini bukti FIFO jalan benar, **tidak perlu dihitung manual**, cukup pastikan tidak error saat posting.
-4. **31 Agustus 2025** — cek saldo "1-1420 Biaya Dibayar Dimuka" = **Rp 0** (sewa tahun 1 sudah habis diamortisasi).
+4. **31 Oktober 2025** — cek saldo "1-1420 Biaya Dibayar Dimuka" = **Rp 0** (sewa tahun 1 sudah habis diamortisasi penuh 12 bulan, Nov24-Okt25 — dikoreksi 2026-08-30, sebelumnya salah tulis "31 Agustus" yang cuma 10 bulan/100jt, lihat catatan di 01).
 5. **18 Agustus 2025** — skenario Retur setelah invoice sudah lunas (kasus unik: piutang jadi minus, harus di-refund).
 6. **15 Desember 2025** — skenario Write-off piutang yang sudah 4 bulan tidak dibayar.
-7. **Setelah semua transaksi Des 2025 selesai** — proses **Tutup Buku Fiscal Year 2025**.
+7. **Setelah transaksi Des 2025 selesai, JANGAN dulu proses Tutup Buku Fiscal Year 2025** — lanjut dulu ke Januari 2026 dengan buku 2025 masih terbuka (sengaja, lihat catatan "Tutup Buku 2025 SENGAJA DITUNDA" di 01). Ini buat mengamati efeknya ke akun "3-1100 Laba Ditahan" sebelum vs sesudah ditutup.
+7a. **Akhir Januari 2026** — sebelum lanjut Februari, cek dulu saldo "3-1100 Laba Ditahan" (checkpoint "SEBELUM Tutup Buku 2025" di 01) — harus masih cuma refleksi hasil Tutup Buku 2024, belum termasuk 2025.
+7b. **Akhir Februari 2026** — baru proses **Tutup Buku Fiscal Year 2025** di titik ini, lalu cek lagi saldo "3-1100 Laba Ditahan" — sekarang harus sudah berubah sebesar hasil bersih 2025.
 8. **Akhir Februari 2026** — cocokkan **Qty On Hand** tiap 9 produk dengan tabel "Checkpoint Interim" di 01.
 9. **Maret 2026** — batch khusus penutup gap coverage fitur (Uang Muka, Retur Vendor, Write-off Hutang, Pemakaian Sendiri, Stok Opname, 4 jenis Aktiva Tetap sisanya, Payroll partial). Ikuti sub-bagian G.1-G.6 di 01 **berurutan** (G.1 dan G.2 masing-masing punya beberapa dokumen berantai yang harus dikerjakan sesuai urutan tanggal, jangan diacak). **Perhatikan khusus G.1**: setelah Retur Barang Vendor, jangan lupa Pembayaran Vendor #3 (refund, nominal negatif) - kalau kelewat, saldo tagihan bakal menggantung negatif.
 10. **2 April 2026** — lunasi sisa gaji Maret (payroll partial dari poin 9).
@@ -162,14 +164,19 @@ Field kurs/mata uang asing (`currency_id`/`exchange_rate`) ada di `c18.account.m
 
 ## Ringkasan Checklist
 
+**Status (2026-08-30)**: skenario ini sudah dijalankan **penuh via script `odoo shell`** (bukan klik manual di browser), di **4 kombinasi Perpetual/Periodik × FIFO/Average** (lihat [01-transaksi-distributor-ban.md poin "4 Tema"](01-transaksi-distributor-ban.md#4-tema-perpetualperiodik--fifoaverage-2026-08-30)) — semua PASS, semua **LABA kedua tahun** (angka bervariasi sedikit sesuai metode costing/pencatatan). Ini memvalidasi **logic/data backend end-to-end** (jurnal benar, saldo cocok, semua validasi jalan sesuai harapan) tapi **belum** memvalidasi UI/UX (rendering form, tombol, alur klik) karena tidak ada browser automation yang dipakai. Baris "Pass/Fail" di bawah pakai angka Tema 1 (Perpetual-FIFO, database `test-roda-perpetual-fifo`) sbg acuan.
+
+4 database (1 per tema): `test-roda-perpetual-fifo` (Perpetual-FIFO), `test-roda-perpetual-avg` (Perpetual-Average), `test-roda-periodik-fifo` (Periodik-FIFO), `test-roda-periodik-avg` (Periodik-Average — terbukti identik dgn Periodik-FIFO, `costing_method` diabaikan total saat Periodik aktif). Ini jadi validasi pertama fitur Periodik lewat skenario bisnis nyata (sebelumnya cuma unit test kecil).
+
 | No | Skenario | Pass/Fail | Catatan |
 |---|---|---|---|
-| Bagian 0 | Setup data master | | |
-| Nov-Des 2024 | Setup awal + transaksi pertama + Tutup Buku 2024 | | |
-| Jan-Agu 2025 | Transaksi bulanan + cek FIFO layering + prepaid rent habis | | |
-| Agu-Des 2025 | Retur, Write-off, Sewa tahun 2, Tutup Buku 2025 | | |
-| Jan-Feb 2026 | Transaksi bulanan + checkpoint interim stok | | |
-| Mar-Apr 2026 (G.1-G.6) | Uang Muka, Retur Vendor, Write-off Hutang, Pemakaian Sendiri, Stok Opname, Aktiva Tetap 4 jenis sisanya, Payroll partial + checkpoint akhir | | |
-| X1-X3 | Edge case (database terpisah) | | |
+| Bagian 0 | Setup data master | Pass | 9 produk, 1 vendor, 4 customer, 2 cost center |
+| Nov-Des 2024 | Setup awal + transaksi pertama + Tutup Buku 2024 | Pass | Checkpoint prepaid 100.000.000 cocok; Tutup Buku 2024 → Laba 6.817.000 (semua tema, identik) |
+| Jan-Okt 2025 | Transaksi bulanan + cek FIFO layering + prepaid rent habis | Pass | FIFO A1 kebentuk 2 layer (700rb sisa + 710rb) sesuai skenario. Checkpoint prepaid rent 31 Okt = Rp 0 (12 bulan penuh) |
+| Nov-Des 2025 | Retur, Write-off, Sewa tahun 2 (Tutup Buku 2025 DITUNDA) | Pass | Retur+refund nominal negatif residual balik ke 0; Write-off 48.384.000 tepat |
+| Jan 2026 | Transaksi bulanan + checkpoint Laba Ditahan SEBELUM Tutup Buku 2025 | Pass | Tema 1: dicatat refleksi laba 6.817.000 (baseline, cuma efek Tutup Buku 2024) |
+| Feb 2026 | Transaksi bulanan + checkpoint interim stok + Tutup Buku 2025 + checkpoint Laba Ditahan SESUDAH | Pass | Tema 1: Laba Ditahan berubah (bertambah 3.386.868, hasil bersih 2025) setelah Tutup Buku 2025 diproses; 9 SKU checkpoint interim cocok semua |
+| Mar-Apr 2026 (G.1-G.6) | Uang Muka, Retur Vendor, Write-off Hutang, Pemakaian Sendiri, Stok Opname, Aktiva Tetap 4 jenis sisanya, Payroll partial + checkpoint akhir | Pass | Semua sub-alur G.1-G.6 cocok; 9 SKU checkpoint akhir cocok; tidak ada Piutang/Hutang menggantung |
+| X1/X3 | Edge case (database terpisah) | Pass | X1 stok tidak cukup ditolak; X3 penguncian periode ditolak utk tanggal periode tertutup, diterima utk periode terbuka |
 
-Kalau semua Pass, modul `c18_basic_erp` lolos smoke test manual skenario realistis. Laporkan yang Fail pakai format bug report di atas.
+**Semua Pass di keempat tema** - `c18_basic_erp` lolos smoke test skenario realistis end-to-end (jalur backend). 2 bug nyata ditemukan & diperbaiki selama eksekusi (bukan di sisi skenario, di sisi modul): lihat [`notes/claude-notes/last-session.md`](../../notes/claude-notes/last-session.md) - (1) `res_company_views.xml` referensi menu parent yang di-load belakangan, bikin **instalasi database baru manapun crash total**; (2) `c18.sale.writeoff`/`c18.purchase.writeoff` field `amount` cuma keisi lewat `onchange` UI - aman dipakai manual di browser (onchange jalan normal), cuma perlu diisi eksplisit kalau bikin record programatik (script/API) tanpa lewat form.

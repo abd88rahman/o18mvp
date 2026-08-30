@@ -4,18 +4,18 @@ from odoo.exceptions import UserError
 
 class SaleAdvance(models.Model):
     _name = 'c18.sale.advance'
-    _description = 'Uang Muka Penjualan'
+    _description = 'Sales Advance'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
     so_ref_id = fields.Many2one('c18.sale.order', string='SO', required=True, domain=[('state', '=', 'confirmed')])
     partner_id = fields.Many2one('res.partner', string='Customer', required=True)
-    account_id = fields.Many2one('c18.account.account', string='Akun Kas/Bank', required=True,
-                                  domain=[('account_type', '=', 'kas_bank')])
+    account_id = fields.Many2one('c18.account.account', string='Cash/Bank Account', required=True,
+                                  domain=[('account_type', '=', 'cash_bank')])
     cost_center_id = fields.Many2one('c18.account.cost.center')
     amount = fields.Monetary(currency_field='currency_id', required=True)
-    note = fields.Char(string='Keterangan')
+    note = fields.Char(string='Notes')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted')], default='draft', copy=False, required=True)
@@ -39,7 +39,7 @@ class SaleAdvance(models.Model):
             if rec.state != 'draft':
                 continue
             if not rec.amount:
-                raise UserError(_('Jumlah wajib diisi.'))
+                raise UserError(_('Amount is required.'))
             move = self.env['c18.account.move'].create({
                 'journal_id': self.env.ref('c18_basic_erp.journal_umpj').id,
                 'date': rec.date,

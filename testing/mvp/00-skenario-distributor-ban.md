@@ -34,26 +34,26 @@ Nominal di file transaksi detail nanti dibulatkan ke ribuan terdekat.
 
 ## D. Master Produk - 9 SKU Ban
 
-| Kode | Merk/Tipe | Harga Beli Awal (Nov 2024) | Harga Jual |
+| Kode | Merk/Tipe | Harga Beli Dasar (Nov 2024) | Harga Jual (markup 40%) |
 |---|---|---|---|
-| BAN-A1 | Merk A Tipe 1 | 700.000 | 850.000 |
-| BAN-A2 | Merk A Tipe 2 | 750.000 | 900.000 |
-| BAN-A3 | Merk A Tipe 3 | 800.000 | 950.000 |
-| BAN-B1 | Merk B Tipe 1 | 650.000 | 800.000 |
-| BAN-B2 | Merk B Tipe 2 | 700.000 | 850.000 |
-| BAN-B3 | Merk B Tipe 3 | 720.000 | 870.000 |
-| BAN-B4 | Merk B Tipe 4 | 780.000 | 930.000 |
-| BAN-C1 | Merk C Tipe 1 | 900.000 | 1.080.000 |
-| BAN-C2 | Merk C Tipe 2 | 950.000 | 1.140.000 |
+| BAN-A1 | Merk A Tipe 1 | 700.000 | 980.000 |
+| BAN-A2 | Merk A Tipe 2 | 750.000 | 1.050.000 |
+| BAN-A3 | Merk A Tipe 3 | 800.000 | 1.120.000 |
+| BAN-B1 | Merk B Tipe 1 | 650.000 | 910.000 |
+| BAN-B2 | Merk B Tipe 2 | 700.000 | 980.000 |
+| BAN-B3 | Merk B Tipe 3 | 720.000 | 1.008.000 |
+| BAN-B4 | Merk B Tipe 4 | 780.000 | 1.092.000 |
+| BAN-C1 | Merk C Tipe 1 | 900.000 | 1.260.000 |
+| BAN-C2 | Merk C Tipe 2 | 950.000 | 1.330.000 |
 
-Harga beli naik bertahap tiap beberapa bulan di 2025 (ditentukan bebas saat nulis file transaksi detail) — supaya kelihatan efek FIFO (layer harga beda-beda), tapi tidak setiap SKU naik bulan yang sama (lebih realistis).
+Harga jual **fixed** sepanjang skenario (tidak ikut naik walau harga beli naik). Harga beli naik bertahap ~1-2% per ~3 bulan tiap beberapa bulan di 2025 (skema detail di 01) — supaya kelihatan efek FIFO (layer harga beda-beda), tapi tidak setiap SKU naik bulan yang sama (lebih realistis).
 
 ## E. Pola Transaksi 2025
 
-- **Minimal 1x pembelian & 2x penjualan per bulan** (Jan-Des 2025).
-- **Amortisasi sewa kantor**: jalan tiap bulan Jan-Okt 2025 (10 bulan, melunasi sisa Sewa Dibayar Dimuka dari poin C.2). **Sewa tahun kedua** dibayar Nov 2025 untuk periode Nov 2025-Okt 2026 — supaya amortisasi tetap jalan sampai cakupan skenario (Feb 2026), konsisten dengan pola "sewa tahunan".
+- **Minimal 1x pembelian & 2x penjualan per bulan** (Jan-Des 2025), qty per baris relatif besar (puluhan-ratusan unit) — dipilih supaya laba kotor bulanan menutup beban tetap, bukan angka sembarang (detail qty tiap baris di 01).
+- **Amortisasi sewa kantor**: jalan tiap bulan Nov 2024-Okt 2025 (12 bulan penuh, melunasi Sewa Dibayar Dimuka dari poin C.2). **Sewa tahun kedua** dibayar Nov 2025 untuk periode Nov 2025-Okt 2026 — supaya amortisasi tetap jalan sampai cakupan skenario (Feb 2026), konsisten dengan pola "sewa tahunan".
 - **Biaya operasional bulanan lain**: listrik & internet (asumsi flat Rp 1.500.000 listrik + Rp 500.000 internet/bulan, naik dikit di 2026), gaji 2 karyawan (sesuai tabel B).
-- **Persediaan**: FIFO, pencatatan **Perpetual** (`costing_method = fifo`, sudah sesuai default konvensi Basic).
+- **Persediaan — costing & sistem pencatatan** (2026-08-30): dijalankan di **4 kombinasi/"tema"** FIFO/Average (`costing_method`) × Perpetual/Periodik (`inventory_system`). Detail desain & hasil tiap tema (termasuk fakta teknis "Periodik mengabaikan setting costing_method total") ada di [01-transaksi-distributor-ban.md poin "4 Tema"](01-transaksi-distributor-ban.md#4-tema-perpetualperiodik--fifoaverage-2026-08-30).
 
 ## F. Skenario Kas/Bank
 
@@ -65,9 +65,15 @@ Harga beli naik bertahap tiap beberapa bulan di 2025 (ditentukan bebas saat nuli
 
 ## G. Cakupan Waktu
 
-- **Nov 2024 - Des 2024**: setup awal + pembelian pertama + penjualan pertama + amortisasi sewa 2 bulan + gaji Nov & Des.
-- **Jan - Des 2025**: pola bulanan (1+ pembelian, 2+ penjualan, sewa amortisasi 10 bulan sampai Okt, sewa tahun ke-2 mulai Nov, listrik/internet/gaji tiap bulan).
-- **Jan - Feb 2026**: lanjutan pola yang sama, 2 bulan saja.
+- **Nov 2024 - Des 2024**: setup awal + pembelian pertama + penjualan pertama + amortisasi sewa 2 bulan + gaji Nov & Des. Ditutup dengan **Tutup Buku Fiscal Year 2024** (langsung, tidak ditunda).
+- **Jan - Des 2025**: pola bulanan (1+ pembelian, 2+ penjualan, sewa amortisasi 10 bulan sampai Okt, sewa tahun ke-2 mulai Nov, listrik/internet/gaji tiap bulan). **Tutup Buku Fiscal Year 2025 SENGAJA DITUNDA** (ditambah 2026-08-30) — tidak langsung diproses di akhir Des 2025, baru diproses setelah transaksi Feb 2026 berjalan (lihat detail & alasan di poin bawah).
+- **Jan - Feb 2026**: lanjutan pola yang sama, 2 bulan saja, **dengan buku 2025 masih terbuka** (belum ditutup) selama periode ini.
+
+### Kenapa Tutup Buku 2025 Ditunda (ditambah 2026-08-30)
+
+Tujuannya buat mengamati efek akun **"3-1100 Laba Ditahan"** sebelum vs sesudah proses Tutup Buku — hal yang tidak kelihatan kalau Tutup Buku langsung diproses begitu tahunnya selesai (pola yang dipakai untuk 2024). Urutannya: transaksi Jan 2026 jalan dulu → cek saldo Laba Ditahan (harusnya masih cuma refleksi hasil 2024, belum termasuk 2025) → transaksi Feb 2026 jalan → baru proses Tutup Buku Fiscal Year 2025 → cek lagi saldo Laba Ditahan (sekarang harus berubah sebesar hasil bersih 2025). Detail checkpoint & langkah lengkap ada di [01-transaksi-distributor-ban.md](01-transaksi-distributor-ban.md) (akhir Januari & akhir Februari 2026) dan [02-prosedur-testing.md](02-prosedur-testing.md) poin 7-7b.
+
+Aman secara sistem — penguncian periode cuma memblokir tanggal ≤ tanggal Tutup Buku terakhir yang sudah posted, jadi menunda Tutup Buku 2025 tidak menghalangi input transaksi 2026.
 - **Maret 2026** (ditambah 2026-08-28): batch transaksi khusus buat menutup gap coverage fitur yang belum pernah dilewati skenario reguler (lihat poin H & I) — Uang Muka Pembelian/Penjualan, Retur Barang Vendor, Write-off Hutang, Pemakaian Sendiri, Stok Opname, 4 jenis Aktiva Tetap sisanya, Payroll pembayaran sebagian.
 
 ## H. Cost Center (ditambah 2026-08-28)
@@ -84,7 +90,8 @@ Field `currency_id`/`exchange_rate` di `c18.account.move` ada, tapi **mesin akun
 ## Status Kelengkapan
 - [x] Detail tanggal & nominal per baris transaksi — [01-transaksi-distributor-ban.md](01-transaksi-distributor-ban.md).
 - [x] Nama-nama reseller/vendor spesifik — 1 vendor (PT Ban Nusantara Distribusi), 4 customer (Toko Ban Makmur, UD Roda Mas, Bengkel Sinar Jaya, Toko Onderdil Abadi), lihat 01.
-- [x] Skema kenaikan harga beli per SKU per bulan — lihat tabel "Skema Kenaikan Harga Beli" di 01.
+- [x] Skema kenaikan harga beli per SKU per bulan — lihat tabel "Skema Harga" di 01.
 - [x] Prosedur eksekusi di UI — [02-prosedur-testing.md](02-prosedur-testing.md).
 - [x] Gap coverage fitur (Uang Muka, Retur Vendor, Write-off Hutang, Pemakaian Sendiri, Stok Opname, Aktiva Tetap 4 jenis sisanya, Payroll partial) — batch Maret 2026, lihat poin G.
-- [ ] Belum pernah dijalankan tester sungguhan ke instance Odoo.
+- [x] **Dieksekusi penuh (2026-08-30)** — via script `odoo shell` (backend end-to-end, bukan klik manual UI), 4 kombinasi Perpetual/Periodik × FIFO/Average, semua PASS & LABA kedua tahun. 4 database (1 per tema): `test-roda-perpetual-fifo`, `test-roda-perpetual-avg`, `test-roda-periodik-fifo`, `test-roda-periodik-avg`. Detail hasil di 01, jejak keputusan (termasuk iterasi harga sebelum ketemu angka final) di `notes/claude-notes/last-session.md` poin 13-15.
+- [ ] Klik-manual sungguhan di browser (validasi UI/UX, bukan cuma backend) — belum dilakukan, database sudah berisi data live yang bisa dibuka kapan saja utk spot-check tanpa perlu re-generate.

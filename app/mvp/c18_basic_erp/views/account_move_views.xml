@@ -9,7 +9,8 @@
                 <field name="date"/>
                 <field name="journal_id"/>
                 <field name="ref"/>
-                <field name="amount_total"/>
+                <field name="total_debit"/>
+                <field name="total_credit"/>
                 <field name="state"/>
             </list>
         </field>
@@ -50,7 +51,8 @@
                         </list>
                     </field>
                     <group class="oe_subtotal_footer">
-                        <field name="amount_total"/>
+                        <field name="total_debit"/>
+                        <field name="total_credit"/>
                     </group>
                 </sheet>
             </form>
@@ -58,15 +60,80 @@
     </record>
 
     <record id="action_c18_basic_erp_move" model="ir.actions.act_window">
-        <field name="name">Jurnal Umum</field>
+        <field name="name">General Journal</field>
         <field name="res_model">c18.account.move</field>
         <field name="view_mode">list,form</field>
         <field name="domain" eval="[('journal_id.code', '=', 'JU')]"/>
         <field name="context" eval="{'default_journal_id': ref('journal_ju')}"/>
     </record>
 
+    <record id="view_c18_basic_erp_move_list_readonly" model="ir.ui.view">
+        <field name="name">c18.account.move.list.readonly</field>
+        <field name="model">c18.account.move</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="journal_id"/>
+                <field name="ref"/>
+                <field name="total_debit"/>
+                <field name="total_credit"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_c18_basic_erp_move_form_readonly" model="ir.ui.view">
+        <field name="name">c18.account.move.form.readonly</field>
+        <field name="model">c18.account.move</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="journal_id"/>
+                            <field name="date"/>
+                            <field name="ref"/>
+                        </group>
+                        <group>
+                            <field name="currency_id"/>
+                            <field name="exchange_rate"/>
+                            <field name="state"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <list>
+                            <field name="account_id"/>
+                            <field name="partner_id"/>
+                            <field name="cost_center_id"/>
+                            <field name="name"/>
+                            <field name="debit"/>
+                            <field name="credit"/>
+                        </list>
+                    </field>
+                    <group class="oe_subtotal_footer">
+                        <field name="total_debit"/>
+                        <field name="total_credit"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_c18_basic_erp_move_all" model="ir.actions.act_window">
+        <field name="name">Journal Entries</field>
+        <field name="res_model">c18.account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_c18_basic_erp_move_list_readonly')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_c18_basic_erp_move_form_readonly')})]"/>
+        <field name="help" type="html"><p class="o_view_nocontent_smiling_face">All posted/draft journal entries across every journal type (Cash/Bank, Purchases, Sales, Payroll, Fixed Assets, Period Closing, etc.) - read-only browsing/drill-down. "General Journal" is the only menu where General Journal (JU) entries can be created/edited.</p></field>
+    </record>
+
     <record id="action_c18_basic_erp_move_pawl" model="ir.actions.act_window">
-        <field name="name">Penyesuaian Awal Tahun</field>
+        <field name="name">Beginning of Year Adjustment</field>
         <field name="res_model">c18.account.move</field>
         <field name="view_mode">list,form</field>
         <field name="domain" eval="[('journal_id.code', '=', 'PAWL')]"/>
@@ -74,7 +141,7 @@
     </record>
 
     <record id="action_c18_basic_erp_move_pakh" model="ir.actions.act_window">
-        <field name="name">Penyesuaian Akhir Tahun</field>
+        <field name="name">End of Year Adjustment</field>
         <field name="res_model">c18.account.move</field>
         <field name="view_mode">list,form</field>
         <field name="domain" eval="[('journal_id.code', '=', 'PAKH')]"/>

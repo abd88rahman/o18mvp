@@ -6,59 +6,59 @@
               sequence="10"/>
 
     <menuitem id="menu_c18_basic_erp_journal_entries"
-              name="Jurnal Umum"
+              name="General Journal"
               parent="menu_c18_basic_erp_root"
               action="action_c18_basic_erp_move"
               sequence="10"/>
 
     <menuitem id="menu_c18_basic_erp_closing_root"
-              name="Tutup Buku"
+              name="Period Closing"
               parent="menu_c18_basic_erp_root"
               sequence="80"/>
 
     <menuitem id="menu_c18_basic_erp_move_pawl"
-              name="Penyesuaian Awal Tahun"
+              name="Beginning of Year Adjustment"
               parent="menu_c18_basic_erp_closing_root"
               action="action_c18_basic_erp_move_pawl"
               sequence="10"/>
 
     <menuitem id="menu_c18_basic_erp_move_pakh"
-              name="Penyesuaian Akhir Tahun"
+              name="End of Year Adjustment"
               parent="menu_c18_basic_erp_closing_root"
               action="action_c18_basic_erp_move_pakh"
               sequence="20"/>
 
     <menuitem id="menu_c18_basic_erp_closing"
-              name="Tutup Buku"
+              name="Period Closing"
               parent="menu_c18_basic_erp_closing_root"
               action="action_c18_basic_erp_closing"
               sequence="30"/>
 
     <menuitem id="menu_c18_basic_erp_cash_root"
-              name="Kas Bank"
+              name="Cash/Bank"
               parent="menu_c18_basic_erp_root"
               sequence="20"/>
 
     <menuitem id="menu_c18_basic_erp_cash_in"
-              name="Kas Masuk"
+              name="Cash In"
               parent="menu_c18_basic_erp_cash_root"
               action="action_c18_basic_erp_cash_in"
               sequence="10"/>
 
     <menuitem id="menu_c18_basic_erp_cash_out"
-              name="Kas Keluar"
+              name="Cash Out"
               parent="menu_c18_basic_erp_cash_root"
               action="action_c18_basic_erp_cash_out"
               sequence="20"/>
 
     <menuitem id="menu_c18_basic_erp_cash_transfer"
-              name="Transfer Kas/Bank"
+              name="Cash/Bank Transfer"
               parent="menu_c18_basic_erp_cash_root"
               action="action_c18_basic_erp_cash_transfer"
               sequence="30"/>
 
     <menuitem id="menu_c18_basic_erp_purchase_root"
-              name="Pembelian"
+              name="Purchase"
               parent="c18_theme.menu_erp_root"
               sequence="20"/>
 
@@ -69,43 +69,43 @@
               sequence="10"/>
 
     <menuitem id="menu_c18_basic_erp_purchase_receipt"
-              name="Penerimaan Barang"
+              name="Goods Receipt"
               parent="menu_c18_basic_erp_purchase_root"
               action="action_c18_purchase_receipt"
               sequence="20"/>
 
     <menuitem id="menu_c18_basic_erp_purchase_bill"
-              name="Pembelian"
+              name="Vendor Bill"
               parent="menu_c18_basic_erp_purchase_root"
               action="action_c18_purchase_bill"
               sequence="30"/>
 
     <menuitem id="menu_c18_basic_erp_purchase_advance"
-              name="Uang Muka Pembelian"
+              name="Purchase Advance"
               parent="menu_c18_basic_erp_purchase_root"
               action="action_c18_purchase_advance"
               sequence="40"/>
 
     <menuitem id="menu_c18_basic_erp_purchase_payment"
-              name="Pembayaran Vendor"
+              name="Vendor Payment"
               parent="menu_c18_basic_erp_purchase_root"
               action="action_c18_purchase_payment"
               sequence="50"/>
 
     <menuitem id="menu_c18_basic_erp_purchase_return"
-              name="Retur Barang Vendor"
+              name="Vendor Return"
               parent="menu_c18_basic_erp_purchase_root"
               action="action_c18_purchase_return"
               sequence="60"/>
 
     <menuitem id="menu_c18_basic_erp_purchase_writeoff"
-              name="Write-off Hutang"
+              name="Accounts Payable Write-off"
               parent="menu_c18_basic_erp_purchase_root"
               action="action_c18_purchase_writeoff"
               sequence="70"/>
 
     <menuitem id="menu_c18_basic_erp_sale_root"
-              name="Penjualan"
+              name="Sales"
               parent="c18_theme.menu_erp_root"
               sequence="30"/>
 
@@ -116,60 +116,60 @@
               sequence="10"/>
 
     <menuitem id="menu_c18_basic_erp_sale_delivery"
-              name="Pengiriman Barang"
+              name="Delivery"
               parent="menu_c18_basic_erp_sale_root"
               action="action_c18_sale_delivery"
               sequence="20"/>
 
     <menuitem id="menu_c18_basic_erp_sale_invoice"
-              name="Penjualan"
+              name="Customer Invoice"
               parent="menu_c18_basic_erp_sale_root"
               action="action_c18_sale_invoice"
               sequence="30"/>
 
     <menuitem id="menu_c18_basic_erp_sale_advance"
-              name="Uang Muka Penjualan"
+              name="Sales Advance"
               parent="menu_c18_basic_erp_sale_root"
               action="action_c18_sale_advance"
               sequence="40"/>
 
     <menuitem id="menu_c18_basic_erp_sale_receipt"
-              name="Penerimaan Piutang"
+              name="Customer Receipt"
               parent="menu_c18_basic_erp_sale_root"
               action="action_c18_sale_receipt"
               sequence="50"/>
 
     <menuitem id="menu_c18_basic_erp_sale_return"
-              name="Retur Barang Customer"
+              name="Customer Return"
               parent="menu_c18_basic_erp_sale_root"
               action="action_c18_sale_return"
               sequence="60"/>
 
     <menuitem id="menu_c18_basic_erp_sale_writeoff"
-              name="Write-off Piutang"
+              name="Accounts Receivable Write-off"
               parent="menu_c18_basic_erp_sale_root"
               action="action_c18_sale_writeoff"
               sequence="70"/>
 
     <menuitem id="menu_c18_basic_erp_inventory_root"
-              name="Persediaan"
+              name="Inventory"
               parent="c18_theme.menu_erp_root"
               sequence="40"/>
 
     <menuitem id="menu_c18_basic_erp_stock_consume"
-              name="Pemakaian Sendiri"
+              name="Internal Consumption"
               parent="menu_c18_basic_erp_inventory_root"
               action="action_c18_basic_erp_stock_consume"
               sequence="10"/>
 
     <menuitem id="menu_c18_basic_erp_stock_opname"
-              name="Stok Opname"
+              name="Physical Inventory Count"
               parent="menu_c18_basic_erp_inventory_root"
               action="action_c18_basic_erp_stock_opname"
               sequence="20"/>
 
     <menuitem id="menu_c18_fixed_asset"
-              name="Aktiva Tetap"
+              name="Fixed Asset"
               parent="menu_c18_basic_erp_root"
               action="action_c18_fixed_asset_entry"
               sequence="60"/>
@@ -180,30 +180,108 @@
               sequence="50"/>
 
     <menuitem id="menu_c18_payroll_accrual"
-              name="Jurnal Pengakuan (Hutang Gaji)"
+              name="Accrual Entry (Salaries Payable)"
               parent="menu_c18_payroll_root"
               action="action_c18_payroll_accrual"
               sequence="10"/>
 
     <menuitem id="menu_c18_payroll_payment"
-              name="Jurnal Pembayaran (Bayar Gaji)"
+              name="Payment Entry (Salary Payment)"
               parent="menu_c18_payroll_root"
               action="action_c18_payroll_payment"
               sequence="20"/>
 
     <menuitem id="menu_c18_basic_erp_reports_root"
-              name="Laporan"
+              name="Reports"
               parent="c18_theme.menu_erp_root"
               sequence="80"/>
 
     <menuitem id="menu_c18_fixed_asset_report"
-              name="Daftar Aktiva Tetap"
+              name="Fixed Asset Register"
               parent="menu_c18_basic_erp_reports_root"
               action="action_c18_fixed_asset_report"
               sequence="10"/>
 
+    <menuitem id="menu_c18_trial_balance_report"
+              name="Trial Balance"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_trial_balance_report"
+              sequence="20"/>
+
+    <menuitem id="menu_c18_general_ledger_report"
+              name="General Ledger"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_general_ledger_report"
+              sequence="30"/>
+
+    <menuitem id="menu_c18_balance_sheet_report"
+              name="Balance Sheet"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_balance_sheet_report"
+              sequence="40"/>
+
+    <menuitem id="menu_c18_income_statement_report"
+              name="Income Statement"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_income_statement_report"
+              sequence="50"/>
+
+    <menuitem id="menu_c18_subsidiary_ledger_receivable"
+              name="Subsidiary Ledger - Receivable"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_subsidiary_ledger_receivable"
+              sequence="60"/>
+
+    <menuitem id="menu_c18_subsidiary_ledger_payable"
+              name="Subsidiary Ledger - Payable"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_subsidiary_ledger_payable"
+              sequence="70"/>
+
+    <menuitem id="menu_c18_equity_changes_report"
+              name="Statement of Changes in Equity"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_equity_changes_report"
+              sequence="80"/>
+
+    <menuitem id="menu_c18_trial_balance_yearly_report"
+              name="Trial Balance - 12 Months"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_trial_balance_yearly_report"
+              sequence="90"/>
+
+    <menuitem id="menu_c18_balance_sheet_yearly_report"
+              name="Balance Sheet - 12 Months"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_balance_sheet_yearly_report"
+              sequence="100"/>
+
+    <menuitem id="menu_c18_income_statement_yearly_report"
+              name="Income Statement - 12 Months"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_income_statement_yearly_report"
+              sequence="110"/>
+
+    <menuitem id="menu_c18_stock_card_report"
+              name="Stock Card"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_stock_card_report"
+              sequence="120"/>
+
+    <menuitem id="menu_c18_inventory_balance_report"
+              name="Inventory Balance"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_inventory_balance_report"
+              sequence="130"/>
+
+    <menuitem id="menu_c18_basic_erp_journal_entries_all"
+              name="Journal Entries"
+              parent="menu_c18_basic_erp_reports_root"
+              action="action_c18_basic_erp_move_all"
+              sequence="140"/>
+
     <menuitem id="menu_c18_basic_erp_config"
-              name="Konfigurasi"
+              name="Configuration"
               parent="c18_theme.menu_erp_root"
               sequence="90"/>
 
@@ -226,7 +304,7 @@
               sequence="30"/>
 
     <menuitem id="menu_c18_basic_erp_exchange_rate"
-              name="Kurs Harian"
+              name="Daily Exchange Rate"
               parent="menu_c18_basic_erp_config"
               action="action_c18_basic_erp_exchange_rate"
               sequence="40"/>
@@ -238,8 +316,14 @@
               sequence="50"/>
 
     <menuitem id="menu_c18_fixed_asset_tag"
-              name="Kode Aset"
+              name="Asset Code"
               parent="menu_c18_basic_erp_config"
               action="action_c18_fixed_asset_tag"
               sequence="60"/>
+
+    <menuitem id="menu_c18_basic_erp_company_settings"
+              name="Company Settings"
+              parent="menu_c18_basic_erp_config"
+              action="base.action_res_company_form"
+              sequence="70"/>
 </odoo>

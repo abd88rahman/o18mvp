@@ -12,7 +12,9 @@ access_c18_purchase_order,c18.purchase.order,model_c18_purchase_order,,1,1,1,1
 access_c18_purchase_order_line,c18.purchase.order.line,model_c18_purchase_order_line,,1,1,1,1
 access_c18_sale_order,c18.sale.order,model_c18_sale_order,,1,1,1,1
 access_c18_sale_order_line,c18.sale.order.line,model_c18_sale_order_line,,1,1,1,1
-access_c18_account_stock_layer,c18.account.stock.layer,model_c18_account_stock_layer,,1,1,1,1
+access_c18_stock_layer,c18.stock.layer,model_c18_stock_layer,,1,1,1,1
+access_c18_stock_consumption,c18.stock.consumption,model_c18_stock_consumption,,1,1,1,1
+access_c18_stock_movement,c18.stock.movement,model_c18_stock_movement,,1,1,1,1
 access_c18_purchase_receipt,c18.purchase.receipt,model_c18_purchase_receipt,,1,1,1,1
 access_c18_purchase_receipt_line,c18.purchase.receipt.line,model_c18_purchase_receipt_line,,1,1,1,1
 access_c18_purchase_bill,c18.purchase.bill,model_c18_purchase_bill,,1,1,1,1
@@ -42,6 +44,6 @@ access_c18_fixed_asset_report_line,c18.fixed.asset.report.line,model_c18_fixed_a
 access_c18_payroll_accrual,c18.payroll.accrual,model_c18_payroll_accrual,,1,1,1,1
 access_c18_payroll_payment,c18.payroll.payment,model_c18_payroll_payment,,1,1,1,1
 access_c18_payroll_payment_line,c18.payroll.payment.line,model_c18_payroll_payment_line,,1,1,1,1
-access_c18_account_stock_consume,c18.account.stock.consume,model_c18_account_stock_consume,,1,1,1,1
-access_c18_account_stock_opname,c18.account.stock.opname,model_c18_account_stock_opname,,1,1,1,1
+access_c18_stock_consume,c18.stock.consume,model_c18_stock_consume,,1,1,1,1
+access_c18_stock_opname,c18.stock.opname,model_c18_stock_opname,,1,1,1,1
 access_c18_account_closing,c18.account.closing,model_c18_account_closing,,1,1,1,1

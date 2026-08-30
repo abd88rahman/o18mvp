@@ -4,10 +4,10 @@ from odoo.exceptions import UserError
 
 class PurchaseReceipt(models.Model):
     _name = 'c18.purchase.receipt'
-    _description = 'Penerimaan Barang'
+    _description = 'Goods Receipt'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
     po_ref_id = fields.Many2one('c18.purchase.order', string='PO', domain=[('state', '=', 'confirmed')])
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True)
@@ -49,11 +49,14 @@ class PurchaseReceipt(models.Model):
             if rec.state != 'draft':
                 continue
             if not rec.line_ids:
-                raise UserError(_('Penerimaan Barang tidak boleh kosong.'))
+                raise UserError(_('The Goods Receipt cannot be empty.'))
             for line in rec.line_ids:
                 if line.product_id.product_type == 'barang_stok':
                     line.product_id._stock_receive(line.qty_received, line.price_unit,
                                                      rec._name, rec.id, date=rec.date)
+            debit_account = (self.env.ref('c18_basic_erp.acc_5_1100')
+                              if rec.company_id.inventory_system == 'periodic'
+                              else self.env.ref('c18_basic_erp.acc_1_1300'))
             move = self.env['c18.account.move'].create({
                 'journal_id': self.env.ref('c18_basic_erp.journal_pnbr').id,
                 'date': rec.date,
@@ -62,7 +65,7 @@ class PurchaseReceipt(models.Model):
                 'currency_id': rec.currency_id.id,
                 'line_ids': [
                     (0, 0, {
-                        'account_id': self.env.ref('c18_basic_erp.acc_1_1300').id,
+                        'account_id': debit_account.id,
                         'debit': rec.amount_total,
                         'partner_id': rec.partner_id.id,
                         'cost_center_id': rec.cost_center_id.id,
@@ -80,7 +83,7 @@ class PurchaseReceipt(models.Model):
             rec.write({'move_id': move.id, 'name': move.name, 'state': 'posted'})
 
     def action_reset_to_draft(self):
-        raise UserError(_('Penerimaan Barang yang sudah posted tidak bisa dibatalkan (mempengaruhi Persediaan) - buat dokumen koreksi terpisah.'))
+        raise UserError(_('A posted Goods Receipt cannot be reset to draft (it affects Inventory) - create a separate correction document instead.'))
 
     def action_create_bill(self):
         self.ensure_one()
@@ -107,7 +110,7 @@ class PurchaseReceipt(models.Model):
 
 class PurchaseReceiptLine(models.Model):
     _name = 'c18.purchase.receipt.line'
-    _description = 'Penerimaan Barang Line'
+    _description = 'Goods Receipt Line'
     _order = 'sequence, id'
 
     receipt_id = fields.Many2one('c18.purchase.receipt', required=True, ondelete='cascade')
@@ -115,7 +118,7 @@ class PurchaseReceiptLine(models.Model):
     po_line_id = fields.Many2one('c18.purchase.order.line')
     product_id = fields.Many2one('c18.product', required=True)
     qty_received = fields.Float(default=1.0)
-    price_unit = fields.Float(string='Harga Satuan')
+    price_unit = fields.Float(string='Unit Price')
     subtotal = fields.Monetary(compute='_compute_subtotal', currency_field='currency_id', store=True)
     currency_id = fields.Many2one(related='receipt_id.currency_id')
 

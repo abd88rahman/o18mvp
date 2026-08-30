@@ -4,24 +4,24 @@ from odoo.exceptions import UserError
 
 class PurchaseBill(models.Model):
     _name = 'c18.purchase.bill'
-    _description = 'Pembelian (Vendor Bill)'
+    _description = 'Vendor Bill'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True)
     po_ref_id = fields.Many2one('c18.purchase.order', string='PO')
-    grni_ref_id = fields.Many2one('c18.purchase.receipt', string='Penerimaan Barang',
-                                   help='Diisi = tutup GRNI (debit otomatis Hutang Belum Difaktur). Kosong = debit bebas dipilih user.')
-    debit_account_id = fields.Many2one('c18.account.account', string='Akun Debit',
-                                        help='Wajib diisi kalau tidak referensi GRNI (mis. Beban/Persediaan langsung).')
+    grni_ref_id = fields.Many2one('c18.purchase.receipt', string='Goods Receipt',
+                                   help='Filled in = closes the GRNI (auto-debits Goods Received Not Invoiced). Empty = debit account freely chosen by the user.')
+    debit_account_id = fields.Many2one('c18.account.account', string='Debit Account',
+                                        help='Required when not referencing a GRNI (e.g. direct Expense/Inventory posting).')
     cost_center_id = fields.Many2one('c18.account.cost.center')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
     line_ids = fields.One2many('c18.purchase.bill.line', 'bill_id', copy=True)
     amount_total = fields.Monetary(compute='_compute_amount_total', currency_field='currency_id', store=True)
     amount_paid = fields.Monetary(default=0.0, currency_field='currency_id', copy=False,
-                                   help='Total sudah dibayar via Pembayaran Vendor - diupdate dari sana.')
+                                   help='Total already paid via Vendor Payment - updated from there.')
     amount_residual = fields.Monetary(compute='_compute_amount_residual', currency_field='currency_id', store=True)
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted')], default='draft', copy=False, required=True)
     move_id = fields.Many2one('c18.account.move', readonly=True, copy=False)
@@ -62,12 +62,12 @@ class PurchaseBill(models.Model):
             if rec.state != 'draft':
                 continue
             if not rec.line_ids:
-                raise UserError(_('Pembelian tidak boleh kosong.'))
+                raise UserError(_('The Vendor Bill cannot be empty.'))
             if rec.grni_ref_id:
                 debit_account = self.env.ref('c18_basic_erp.acc_2_1100')
             else:
                 if not rec.debit_account_id:
-                    raise UserError(_('Akun Debit wajib diisi kalau tidak referensi Penerimaan Barang (GRNI).'))
+                    raise UserError(_('The Debit Account is required when not referencing a Goods Receipt (GRNI).'))
                 debit_account = rec.debit_account_id
             move = self.env['c18.account.move'].create({
                 'journal_id': self.env.ref('c18_basic_erp.journal_pb').id,
@@ -97,15 +97,15 @@ class PurchaseBill(models.Model):
 
 class PurchaseBillLine(models.Model):
     _name = 'c18.purchase.bill.line'
-    _description = 'Pembelian Line'
+    _description = 'Vendor Bill Line'
     _order = 'sequence, id'
 
     bill_id = fields.Many2one('c18.purchase.bill', required=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
     product_id = fields.Many2one('c18.product')
-    name = fields.Char(string='Keterangan')
+    name = fields.Char(string='Description')
     qty = fields.Float(default=1.0)
-    price_unit = fields.Float(string='Harga Satuan')
+    price_unit = fields.Float(string='Unit Price')
     subtotal = fields.Monetary(compute='_compute_subtotal', currency_field='currency_id', store=True)
     currency_id = fields.Many2one(related='bill_id.currency_id')
 

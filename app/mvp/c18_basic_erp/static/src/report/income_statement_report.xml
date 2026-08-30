@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="c18_basic_erp.IncomeStatementReport">
+        <div class="o_c18_income_statement p-4">
+            <h3 class="mb-3">Laba Rugi (Income Statement)</h3>
+
+            <div class="d-flex align-items-end gap-3 mb-3 o_c18_report_filters">
+                <div>
+                    <label class="form-label mb-0">Dari Tanggal</label>
+                    <input type="date" class="form-control" t-att-value="state.dateFrom" t-on-change="onDateFromChange"/>
+                </div>
+                <div>
+                    <label class="form-label mb-0">Sampai Tanggal</label>
+                    <input type="date" class="form-control" t-att-value="state.dateTo" t-on-change="onDateToChange"/>
+                </div>
+                <div>
+                    <label class="form-label mb-0">Cost Center</label>
+                    <select class="form-select" t-on-change="onCostCenterChange">
+                        <option value="">Semua Cost Center</option>
+                        <t t-foreach="costCenterOptions" t-as="opt" t-key="opt.value">
+                            <option t-att-value="opt.value" t-esc="opt.label"/>
+                        </t>
+                    </select>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="c18_is_hide_zero"
+                           t-att-checked="state.hideZero" t-on-change="onHideZeroChange"/>
+                    <label class="form-check-label" for="c18_is_hide_zero">Sembunyikan saldo nol</label>
+                </div>
+            </div>
+
+            <div t-if="state.loading" class="text-muted">Memuat...</div>
+
+            <t t-if="!state.loading and state.data">
+                <table class="table table-sm o_c18_report_table" style="max-width: 720px;">
+                    <tbody>
+                        <tr t-foreach="state.data.sections.pendapatan.rows" t-as="row" t-key="row.code">
+                            <td><span t-esc="row.code"/> <span t-esc="row.name"/></td>
+                            <td class="text-end" t-esc="row.amount_fmt"/>
+                        </tr>
+                        <tr class="fw-bold border-top">
+                            <td>Pendapatan Bersih</td>
+                            <td class="text-end" t-esc="state.data.pendapatan_bersih_fmt"/>
+                        </tr>
+
+                        <tr t-foreach="state.data.sections.hpp.rows" t-as="row" t-key="row.code">
+                            <td>(-) <span t-esc="row.code"/> <span t-esc="row.name"/></td>
+                            <td class="text-end" t-esc="row.amount_fmt"/>
+                        </tr>
+                        <tr class="fw-bold border-top">
+                            <td>Laba Kotor</td>
+                            <td class="text-end" t-esc="state.data.laba_kotor_fmt"/>
+                        </tr>
+
+                        <tr t-foreach="state.data.sections.beban_usaha.rows" t-as="row" t-key="row.code">
+                            <td>(-) <span t-esc="row.code"/> <span t-esc="row.name"/></td>
+                            <td class="text-end" t-esc="row.amount_fmt"/>
+                        </tr>
+                        <tr class="fw-bold border-top">
+                            <td>Laba Usaha (Operating Income)</td>
+                            <td class="text-end" t-esc="state.data.laba_usaha_fmt"/>
+                        </tr>
+
+                        <tr t-foreach="state.data.sections.pendapatan_lain.rows" t-as="row" t-key="row.code">
+                            <td>(+) <span t-esc="row.code"/> <span t-esc="row.name"/></td>
+                            <td class="text-end" t-esc="row.amount_fmt"/>
+                        </tr>
+                        <tr t-foreach="state.data.sections.beban_lain.rows" t-as="row" t-key="row.code">
+                            <td>(-) <span t-esc="row.code"/> <span t-esc="row.name"/></td>
+                            <td class="text-end" t-esc="row.amount_fmt"/>
+                        </tr>
+                        <tr class="fw-bold border-top fs-5">
+                            <td>Laba Bersih (Net Income)</td>
+                            <td class="text-end" t-esc="state.data.laba_bersih_fmt"/>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+        </div>
+    </t>
+</templates>

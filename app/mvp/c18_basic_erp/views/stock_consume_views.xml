@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_c18_basic_erp_stock_consume_list" model="ir.ui.view">
-        <field name="name">c18.account.stock.consume.list</field>
-        <field name="model">c18.account.stock.consume</field>
+        <field name="name">c18.stock.consume.list</field>
+        <field name="model">c18.stock.consume</field>
         <field name="arch" type="xml">
             <list>
                 <field name="name"/>
@@ -16,8 +16,8 @@
     </record>
 
     <record id="view_c18_basic_erp_stock_consume_form" model="ir.ui.view">
-        <field name="name">c18.account.stock.consume.form</field>
-        <field name="model">c18.account.stock.consume</field>
+        <field name="name">c18.stock.consume.form</field>
+        <field name="model">c18.stock.consume</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -37,6 +37,7 @@
                             <field name="cost_center_id" readonly="state != 'draft'"/>
                             <field name="note" readonly="state != 'draft'"/>
                             <field name="amount" readonly="1"/>
+                            <field name="move_id" readonly="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -45,8 +46,8 @@
     </record>
 
     <record id="action_c18_basic_erp_stock_consume" model="ir.actions.act_window">
-        <field name="name">Pemakaian Sendiri (Consume)</field>
-        <field name="res_model">c18.account.stock.consume</field>
+        <field name="name">Internal Consumption</field>
+        <field name="res_model">c18.stock.consume</field>
         <field name="view_mode">list,form</field>
     </record>
 </odoo>

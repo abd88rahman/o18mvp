@@ -33,18 +33,20 @@
                             <field name="is_transfer" invisible="1"/>
                             <field name="date" readonly="state != 'draft'"/>
                             <field name="account_id" readonly="state != 'draft'"/>
-                            <field name="account_id_dest" readonly="state != 'draft'" invisible="not is_transfer"/>
+                            <field name="account_id_dest" readonly="state != 'draft'" invisible="not is_transfer"
+                                   domain="[('account_type', '=', 'cash_bank'), ('id', '!=', account_id)]"/>
                         </group>
                         <group>
                             <field name="partner_id" readonly="state != 'draft'" invisible="is_transfer"/>
                             <field name="cost_center_id" readonly="state != 'draft'"/>
                             <field name="amount" readonly="state != 'draft'" invisible="not is_transfer"/>
                             <field name="note" readonly="state != 'draft'"/>
+                            <field name="move_id" readonly="1"/>
                         </group>
                     </group>
                     <field name="line_ids" readonly="state != 'draft'" invisible="is_transfer">
                         <list editable="bottom">
-                            <field name="account_id"/>
+                            <field name="account_id" domain="[('account_type', '!=', 'cash_bank')]"/>
                             <field name="name"/>
                             <field name="amount"/>
                         </list>
@@ -58,7 +60,7 @@
     </record>
 
     <record id="action_c18_basic_erp_cash_in" model="ir.actions.act_window">
-        <field name="name">Kas Masuk</field>
+        <field name="name">Cash In</field>
         <field name="res_model">c18.account.cash</field>
         <field name="view_mode">list,form</field>
         <field name="domain" eval="[('journal_id.code', '=', 'KM')]"/>
@@ -66,7 +68,7 @@
     </record>
 
     <record id="action_c18_basic_erp_cash_out" model="ir.actions.act_window">
-        <field name="name">Kas Keluar</field>
+        <field name="name">Cash Out</field>
         <field name="res_model">c18.account.cash</field>
         <field name="view_mode">list,form</field>
         <field name="domain" eval="[('journal_id.code', '=', 'KK')]"/>
@@ -74,7 +76,7 @@
     </record>
 
     <record id="action_c18_basic_erp_cash_transfer" model="ir.actions.act_window">
-        <field name="name">Transfer Kas/Bank</field>
+        <field name="name">Cash/Bank Transfer</field>
         <field name="res_model">c18.account.cash</field>
         <field name="view_mode">list,form</field>
         <field name="domain" eval="[('journal_id.code', '=', 'TRF')]"/>

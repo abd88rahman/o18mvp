@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="c18_basic_erp.StockCardReport">
+        <div class="o_c18_stock_card p-4">
+            <h3 class="mb-3">Kartu Stok</h3>
+
+            <div class="d-flex align-items-end gap-3 mb-3 o_c18_report_filters">
+                <div>
+                    <label class="form-label mb-0">Produk</label>
+                    <select class="form-select" t-on-change="onProductChange">
+                        <t t-foreach="productOptions" t-as="opt" t-key="opt.value">
+                            <option t-att-value="opt.value" t-esc="opt.label"
+                                    t-att-selected="opt.value === state.data.product_id"/>
+                        </t>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label mb-0">Dari Tanggal</label>
+                    <input type="date" class="form-control" t-att-value="state.dateFrom" t-on-change="onDateFromChange"/>
+                </div>
+                <div>
+                    <label class="form-label mb-0">Sampai Tanggal</label>
+                    <input type="date" class="form-control" t-att-value="state.dateTo" t-on-change="onDateToChange"/>
+                </div>
+            </div>
+
+            <div t-if="state.loading" class="text-muted">Memuat...</div>
+
+            <t t-if="!state.loading and state.data">
+                <h5 t-esc="state.data.product_label"/>
+                <p class="text-muted">Metode Costing: <span t-esc="state.data.costing_method"/></p>
+
+                <table class="table table-sm table-bordered o_c18_report_table">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>No. Dokumen</th>
+                            <th>Jenis Transaksi</th>
+                            <th class="text-end">Qty Masuk</th>
+                            <th class="text-end">Qty Keluar</th>
+                            <th class="text-end">Saldo Qty</th>
+                            <th class="text-end">Harga Pokok/Unit</th>
+                            <th class="text-end">Nilai Masuk</th>
+                            <th class="text-end">Nilai Keluar</th>
+                            <th class="text-end">Saldo Nilai</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" class="fst-italic">Saldo Awal</td>
+                            <td class="text-end fst-italic" t-esc="state.data.opening_qty_fmt"/>
+                            <td colspan="2"></td>
+                            <td class="text-end fst-italic" t-esc="state.data.opening_value_fmt"/>
+                        </tr>
+                        <tr t-foreach="state.data.rows" t-as="row" t-key="row_index">
+                            <td t-esc="row.date"/>
+                            <td>
+                                <a href="#" t-on-click.prevent="() => this.openDocument(row)" t-esc="row.doc_name"/>
+                            </td>
+                            <td t-esc="row.type_label"/>
+                            <td class="text-end" t-esc="row.qty_in_fmt"/>
+                            <td class="text-end" t-esc="row.qty_out_fmt"/>
+                            <td class="text-end" t-esc="row.saldo_qty_fmt"/>
+                            <td class="text-end" t-esc="row.unit_cost_fmt"/>
+                            <td class="text-end" t-esc="row.value_in_fmt"/>
+                            <td class="text-end" t-esc="row.value_out_fmt"/>
+                            <td class="text-end" t-esc="row.saldo_value_fmt"/>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bold">
+                            <td colspan="5">Saldo Akhir</td>
+                            <td class="text-end" t-esc="state.data.closing_qty_fmt"/>
+                            <td colspan="2"></td>
+                            <td class="text-end" t-esc="state.data.closing_value_fmt"/>
+                        </tr>
+                    </tfoot>
+                </table>
+            </t>
+        </div>
+    </t>
+</templates>

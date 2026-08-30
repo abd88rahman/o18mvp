@@ -4,14 +4,14 @@ from odoo.exceptions import UserError
 
 class PurchaseOrder(models.Model):
     _name = 'c18.purchase.order'
-    _description = 'Purchase Order (ringan, tier Basic)'
+    _description = 'Purchase Order (lightweight, Basic tier)'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True)
     date = fields.Date(required=True, default=fields.Date.context_today)
     cost_center_id = fields.Many2one('c18.account.cost.center')
-    note = fields.Char(string='Keterangan')
+    note = fields.Char(string='Notes')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
     line_ids = fields.One2many('c18.purchase.order.line', 'order_id', copy=True)
@@ -36,7 +36,7 @@ class PurchaseOrder(models.Model):
             if rec.state != 'draft':
                 continue
             if not rec.line_ids:
-                raise UserError(_('PO tidak boleh kosong.'))
+                raise UserError(_('The PO cannot be empty.'))
             rec.name = self.env.ref('c18_basic_erp.seq_c18_basic_erp_po').next_by_id()
             rec.state = 'confirmed'
 
@@ -53,7 +53,7 @@ class PurchaseOrderLine(models.Model):
     sequence = fields.Integer(default=10)
     product_id = fields.Many2one('c18.product', required=True)
     qty = fields.Float(default=1.0)
-    price_unit = fields.Float(string='Harga Satuan')
+    price_unit = fields.Float(string='Unit Price')
     subtotal = fields.Monetary(compute='_compute_subtotal', currency_field='currency_id', store=True)
     currency_id = fields.Many2one(related='order_id.currency_id')
 

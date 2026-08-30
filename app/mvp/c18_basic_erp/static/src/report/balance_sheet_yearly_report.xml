@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="c18_basic_erp.BalanceSheetYearlyReport">
+        <div class="o_c18_balance_sheet_yearly p-4">
+            <h3 class="mb-3">Neraca - 12 Bulan</h3>
+
+            <div class="d-flex align-items-end gap-3 mb-3 o_c18_report_filters">
+                <div>
+                    <label class="form-label mb-0">Tahun</label>
+                    <input type="number" class="form-control" style="width: 100px;"
+                           t-att-value="state.year" t-on-change="onYearChange"/>
+                </div>
+                <div>
+                    <label class="form-label mb-0">Cost Center</label>
+                    <select class="form-select" t-on-change="onCostCenterChange">
+                        <option value="">Semua Cost Center</option>
+                        <t t-foreach="costCenterOptions" t-as="opt" t-key="opt.value">
+                            <option t-att-value="opt.value" t-esc="opt.label"/>
+                        </t>
+                    </select>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="c18_bsy_hide_zero"
+                           t-att-checked="state.hideZero" t-on-change="onHideZeroChange"/>
+                    <label class="form-check-label" for="c18_bsy_hide_zero">Sembunyikan saldo nol (semua bulan)</label>
+                </div>
+            </div>
+
+            <div t-if="state.loading" class="text-muted">Memuat...</div>
+
+            <div t-if="!state.loading and state.data" class="o_c18_yearly_table_wrap" style="overflow-x: auto;">
+                <table class="table table-sm table-bordered o_c18_report_table o_c18_yearly_table">
+                    <thead>
+                        <tr>
+                            <th class="o_c18_freeze_col" style="left: 0; min-width: 200px;">Akun</th>
+                            <t t-foreach="monthLabels" t-as="m" t-key="m">
+                                <th class="text-end" t-esc="m"/>
+                            </t>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="sectionKeys" t-as="key" t-key="key">
+                            <tr class="table-light">
+                                <td class="o_c18_freeze_col fw-bold" style="left: 0;"
+                                    t-esc="state.data.sections[key].label" t-att-colspan="monthLabels.length + 1"/>
+                            </tr>
+                            <tr t-foreach="state.data.sections[key].rows" t-as="row" t-key="row.code + row.name">
+                                <td class="o_c18_freeze_col" style="left: 0;">
+                                    <span t-esc="row.code"/> <span t-esc="row.name"/>
+                                </td>
+                                <t t-foreach="row.months_fmt" t-as="amount" t-key="amount_index">
+                                    <td class="text-end" t-esc="amount"/>
+                                </t>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td class="o_c18_freeze_col" style="left: 0;">Total <t t-esc="state.data.sections[key].label"/></td>
+                                <t t-foreach="state.data.sections[key].subtotal_months_fmt" t-as="amount" t-key="amount_index">
+                                    <td class="text-end" t-esc="amount"/>
+                                </t>
+                            </tr>
+                        </t>
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bold border-top border-dark">
+                            <td class="o_c18_freeze_col" style="left: 0;">TOTAL ASET</td>
+                            <t t-foreach="state.data.total_aset_months_fmt" t-as="amount" t-key="amount_index">
+                                <td class="text-end" t-esc="amount"/>
+                            </t>
+                        </tr>
+                        <tr class="fw-bold">
+                            <td class="o_c18_freeze_col" style="left: 0;">TOTAL KEWAJIBAN + EKUITAS</td>
+                            <t t-foreach="state.data.total_kewajiban_ekuitas_months_fmt" t-as="amount" t-key="amount_index">
+                                <td class="text-end" t-esc="amount"/>
+                            </t>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </t>
+</templates>

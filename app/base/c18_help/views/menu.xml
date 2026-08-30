@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!--
-    Root "Help" SENGAJA top-level (parent kosong), bukan direparent ke
+    Root "QA Guide" SENGAJA top-level (parent kosong), bukan direparent ke
     c18_theme.menu_erp_root - beda karakter dari module bisnis (lihat
-    __manifest__.py). Prototype, belum ada icon custom.
+    __manifest__.py). Label sengaja BUKAN "Help" generik (2026-08-30) - modul
+    ini isinya panduan testing internal (checkpoint, istilah QA), bukan
+    dokumentasi buat end-user/client. Nama "Help" berisiko disangka menu buat
+    siapa saja kalau nanti ada yang lihat database demo/client. Belum ada
+    icon custom.
     -->
-    <menuitem id="menu_help_root" name="Help" sequence="100"/>
+    <menuitem id="menu_help_root" name="QA Guide" sequence="100"/>
 
     <menuitem id="menu_help_guide_00"
               name="00 - Profile"

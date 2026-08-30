@@ -33,6 +33,7 @@
                         <group>
                             <field name="account_id" readonly="state != 'draft'"/>
                             <field name="cost_center_id" readonly="state != 'draft'"/>
+                            <field name="move_id" readonly="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -62,7 +63,7 @@
     </record>
 
     <record id="action_c18_purchase_payment" model="ir.actions.act_window">
-        <field name="name">Pembayaran Vendor</field>
+        <field name="name">Vendor Payment</field>
         <field name="res_model">c18.purchase.payment</field>
         <field name="view_mode">list,form</field>
     </record>

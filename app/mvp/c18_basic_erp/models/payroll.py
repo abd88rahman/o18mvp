@@ -4,17 +4,17 @@ from odoo.exceptions import UserError
 
 class PayrollAccrual(models.Model):
     _name = 'c18.payroll.accrual'
-    _description = 'Payroll - Jurnal Pengakuan (Hutang Gaji)'
+    _description = 'Payroll - Accrual Entry (Salaries Payable)'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
-    partner_id = fields.Many2one('res.partner', help='Opsional - karyawan/pihak terkait.')
+    partner_id = fields.Many2one('res.partner', help='Optional - employee or related party.')
     cost_center_id = fields.Many2one('c18.account.cost.center')
     amount = fields.Monetary(currency_field='currency_id', required=True)
     amount_paid = fields.Monetary(default=0.0, currency_field='currency_id', copy=False)
     amount_residual = fields.Monetary(compute='_compute_amount_residual', currency_field='currency_id', store=True)
-    note = fields.Char(string='Keterangan')
+    note = fields.Char(string='Notes')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted')], default='draft', copy=False, required=True)
@@ -38,7 +38,7 @@ class PayrollAccrual(models.Model):
             if rec.state != 'draft':
                 continue
             if not rec.amount:
-                raise UserError(_('Jumlah wajib diisi.'))
+                raise UserError(_('Amount is required.'))
             move = self.env['c18.account.move'].create({
                 'journal_id': self.env.ref('c18_basic_erp.journal_hgj').id,
                 'date': rec.date,
@@ -83,14 +83,14 @@ class PayrollAccrual(models.Model):
 
 class PayrollPayment(models.Model):
     _name = 'c18.payroll.payment'
-    _description = 'Payroll - Jurnal Pembayaran (Bayar Gaji)'
+    _description = 'Payroll - Payment Entry (Salary Payment)'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
     partner_id = fields.Many2one('res.partner')
-    account_id = fields.Many2one('c18.account.account', string='Akun Kas/Bank', required=True,
-                                  domain=[('account_type', '=', 'kas_bank')])
+    account_id = fields.Many2one('c18.account.account', string='Cash/Bank Account', required=True,
+                                  domain=[('account_type', '=', 'cash_bank')])
     cost_center_id = fields.Many2one('c18.account.cost.center')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
@@ -117,10 +117,10 @@ class PayrollPayment(models.Model):
             if rec.state != 'draft':
                 continue
             if not rec.line_ids:
-                raise UserError(_('Jurnal Pembayaran butuh minimal 1 baris Jurnal Pengakuan.'))
+                raise UserError(_('A Payment Entry requires at least 1 Accrual Entry line.'))
             for line in rec.line_ids:
                 if line.amount_paid > line.amount_residual + 0.001:
-                    raise UserError(_('Nominal bayar tidak boleh lebih dari sisa hutang gaji (%s).', line.accrual_id.name))
+                    raise UserError(_('The payment amount cannot exceed the outstanding salary payable (%s).', line.accrual_id.name))
             move_line_vals = []
             for line in rec.line_ids:
                 move_line_vals.append((0, 0, {
@@ -152,12 +152,12 @@ class PayrollPayment(models.Model):
 
 class PayrollPaymentLine(models.Model):
     _name = 'c18.payroll.payment.line'
-    _description = 'Jurnal Pembayaran Line'
+    _description = 'Payment Entry Line'
     _order = 'sequence, id'
 
     payment_id = fields.Many2one('c18.payroll.payment', required=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
-    accrual_id = fields.Many2one('c18.payroll.accrual', required=True, string='Jurnal Pengakuan',
+    accrual_id = fields.Many2one('c18.payroll.accrual', required=True, string='Accrual Entry',
                                   domain=[('state', '=', 'posted'), ('amount_residual', '>', 0)])
     amount_original = fields.Monetary(related='accrual_id.amount', currency_field='currency_id', readonly=True)
     amount_residual = fields.Monetary(related='accrual_id.amount_residual', currency_field='currency_id', readonly=True)

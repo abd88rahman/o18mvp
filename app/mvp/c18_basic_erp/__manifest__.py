@@ -15,7 +15,7 @@ Fondasi Accounting/GL zero-dependency (tidak extend `account` bawaan Odoo):
 - PO/SO ringan (`c18.purchase.order` / `c18.sale.order`)
 - Penerimaan Barang, Pembelian (`c18.purchase.receipt` / `c18.purchase.bill`)
 - Pengiriman Barang, Penjualan (`c18.sale.delivery` / `c18.sale.invoice`)
-- Costing Persediaan FIFO/Average (`c18.account.stock.layer` + field di `c18.product`)
+- Costing Persediaan FIFO/Average (`c18.stock.layer` + field di `c18.product`)
 - Uang Muka Pembelian/Penjualan (`c18.purchase.advance` / `c18.sale.advance`)
 - Pembayaran Vendor/Penerimaan Piutang dengan deduction (`c18.purchase.payment` / `c18.sale.receipt`) -
   simplifikasi: deduction level header, bukan per-baris invoice seperti draft requirement asal
@@ -23,7 +23,7 @@ Fondasi Accounting/GL zero-dependency (tidak extend `account` bawaan Odoo):
 - Write-off Hutang/Piutang (`c18.purchase.writeoff` / `c18.sale.writeoff`)
 - Aktiva Tetap Basic - form generik (`c18.fixed.asset.entry`)
 - Payroll Basic - Jurnal Pengakuan/Pembayaran (`c18.payroll.accrual` / `c18.payroll.payment`)
-- Pemakaian Sendiri & Stok Opname (`c18.account.stock.consume` / `c18.account.stock.opname`)
+- Pemakaian Sendiri & Stok Opname (`c18.stock.consume` / `c18.stock.opname`)
 - Tutup Buku - Penyesuaian Awal/Akhir Tahun (reuse `c18.account.move`, tanggal terkunci
   1 Jan/31 Des) + proses Tutup Buku otomatis (`c18.account.closing`, nolkan akun Pendapatan/
   Beban ke Laba Ditahan) + penguncian periode (blokir tambah/edit/hapus jurnal di tanggal
@@ -36,6 +36,19 @@ BELUM ada: Laporan Keuangan (Neraca/Laba Rugi/Trial Balance/Buku Besar), Kartu
 Stok, dan seluruh scope tier Standard+ (Aktiva Tetap otomatis, dst - lihat
 erd/00-tiering-produk.md).
 Belum melewati smoke test end-to-end - lihat erd/mvp/00-status-requirement.md.
+
+Demo data untuk presentasi client: TIDAK pakai mekanisme 'demo' bawaan Odoo
+(key 'demo' di manifest) - modul ini 'auto_install': True, dan modul
+auto_install TERBUKTI tidak pernah kebagian flag demo dari proses instalasi
+database (keterbatasan Odoo sendiri, dicek langsung ke source
+odoo/modules/graph.py - bukan bug kita, tidak ada workaround praktis).
+Sebagai gantinya, generate manual lewat odoo shell:
+    env['c18.basic.erp.demo.generator']._generate()
+    env.cr.commit()
+~13 transaksi contoh (Kas Masuk/Keluar/Transfer, siklus Pembelian lengkap,
+siklus Penjualan lengkap, Aktiva Tetap, Payroll), tanggal relatif ke hari
+generate (bukan fixed). Idempotent - aman dipanggil ulang, tidak dobel.
+Detail lengkap: erd/mvp/08-demo-data.md.
 """,
     'category': 'Accounting',
     'depends': ['base', 'web', 'c18_theme'],
@@ -72,8 +85,38 @@ Belum melewati smoke test end-to-end - lihat erd/mvp/00-status-requirement.md.
         'views/exchange_rate_views.xml',
         'views/res_partner_views.xml',
         'views/product_views.xml',
+        'views/res_company_views.xml',
+        'views/financial_report_actions.xml',
         'views/menu.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'c18_basic_erp/static/src/report/trial_balance_report.js',
+            'c18_basic_erp/static/src/report/trial_balance_report.xml',
+            'c18_basic_erp/static/src/report/trial_balance_report.scss',
+            'c18_basic_erp/static/src/report/general_ledger_report.js',
+            'c18_basic_erp/static/src/report/general_ledger_report.xml',
+            'c18_basic_erp/static/src/report/balance_sheet_report.js',
+            'c18_basic_erp/static/src/report/balance_sheet_report.xml',
+            'c18_basic_erp/static/src/report/income_statement_report.js',
+            'c18_basic_erp/static/src/report/income_statement_report.xml',
+            'c18_basic_erp/static/src/report/subsidiary_ledger_report.js',
+            'c18_basic_erp/static/src/report/subsidiary_ledger_report.xml',
+            'c18_basic_erp/static/src/report/equity_changes_report.js',
+            'c18_basic_erp/static/src/report/equity_changes_report.xml',
+            'c18_basic_erp/static/src/report/trial_balance_yearly_report.js',
+            'c18_basic_erp/static/src/report/trial_balance_yearly_report.xml',
+            'c18_basic_erp/static/src/report/trial_balance_yearly_report.scss',
+            'c18_basic_erp/static/src/report/balance_sheet_yearly_report.js',
+            'c18_basic_erp/static/src/report/balance_sheet_yearly_report.xml',
+            'c18_basic_erp/static/src/report/income_statement_yearly_report.js',
+            'c18_basic_erp/static/src/report/income_statement_yearly_report.xml',
+            'c18_basic_erp/static/src/report/stock_card_report.js',
+            'c18_basic_erp/static/src/report/stock_card_report.xml',
+            'c18_basic_erp/static/src/report/inventory_balance_report.js',
+            'c18_basic_erp/static/src/report/inventory_balance_report.xml',
+        ],
+    },
     # auto_install=True - tier Basic wajib ada begitu c18_theme ter-install
     # (satu-satunya depends non-core di atas), konsisten dengan pola
     # auto_install di c18_theme/__manifest__.py sendiri.

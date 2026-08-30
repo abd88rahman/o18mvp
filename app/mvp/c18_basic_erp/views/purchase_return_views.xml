@@ -34,6 +34,7 @@
                             <field name="grni_ref_id" readonly="state != 'draft'"/>
                             <field name="bill_id" readonly="state != 'draft'"/>
                             <field name="cost_center_id" readonly="state != 'draft'"/>
+                            <field name="move_id" readonly="1"/>
                         </group>
                     </group>
                     <field name="line_ids" readonly="state != 'draft'">
@@ -52,7 +53,7 @@
     </record>
 
     <record id="action_c18_purchase_return" model="ir.actions.act_window">
-        <field name="name">Retur Barang Vendor</field>
+        <field name="name">Vendor Return</field>
         <field name="res_model">c18.purchase.return</field>
         <field name="view_mode">list,form</field>
     </record>

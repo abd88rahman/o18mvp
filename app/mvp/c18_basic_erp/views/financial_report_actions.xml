@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_c18_trial_balance_report" model="ir.actions.client">
+        <field name="name">Trial Balance</field>
+        <field name="tag">c18_trial_balance_report</field>
+    </record>
+
+    <record id="action_c18_general_ledger_report" model="ir.actions.client">
+        <field name="name">General Ledger</field>
+        <field name="tag">c18_general_ledger_report</field>
+    </record>
+
+    <record id="action_c18_balance_sheet_report" model="ir.actions.client">
+        <field name="name">Balance Sheet</field>
+        <field name="tag">c18_balance_sheet_report</field>
+    </record>
+
+    <record id="action_c18_income_statement_report" model="ir.actions.client">
+        <field name="name">Income Statement</field>
+        <field name="tag">c18_income_statement_report</field>
+    </record>
+
+    <record id="action_c18_subsidiary_ledger_receivable" model="ir.actions.client">
+        <field name="name">Subsidiary Ledger - Accounts Receivable</field>
+        <field name="tag">c18_subsidiary_ledger_receivable</field>
+        <field name="params" eval="{'ledger_type': 'receivable'}"/>
+    </record>
+
+    <record id="action_c18_subsidiary_ledger_payable" model="ir.actions.client">
+        <field name="name">Subsidiary Ledger - Accounts Payable</field>
+        <field name="tag">c18_subsidiary_ledger_payable</field>
+        <field name="params" eval="{'ledger_type': 'payable'}"/>
+    </record>
+
+    <record id="action_c18_equity_changes_report" model="ir.actions.client">
+        <field name="name">Statement of Changes in Equity</field>
+        <field name="tag">c18_equity_changes_report</field>
+    </record>
+
+    <record id="action_c18_trial_balance_yearly_report" model="ir.actions.client">
+        <field name="name">Trial Balance - 12 Months</field>
+        <field name="tag">c18_trial_balance_yearly_report</field>
+    </record>
+
+    <record id="action_c18_balance_sheet_yearly_report" model="ir.actions.client">
+        <field name="name">Balance Sheet - 12 Months</field>
+        <field name="tag">c18_balance_sheet_yearly_report</field>
+    </record>
+
+    <record id="action_c18_income_statement_yearly_report" model="ir.actions.client">
+        <field name="name">Income Statement - 12 Months</field>
+        <field name="tag">c18_income_statement_yearly_report</field>
+    </record>
+
+    <record id="action_c18_stock_card_report" model="ir.actions.client">
+        <field name="name">Stock Card</field>
+        <field name="tag">c18_stock_card_report</field>
+    </record>
+
+    <record id="action_c18_inventory_balance_report" model="ir.actions.client">
+        <field name="name">Inventory Balance</field>
+        <field name="tag">c18_inventory_balance_report</field>
+    </record>
+</odoo>

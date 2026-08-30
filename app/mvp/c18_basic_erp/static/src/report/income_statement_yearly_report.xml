@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="c18_basic_erp.IncomeStatementYearlyReport">
+        <div class="o_c18_income_statement_yearly p-4">
+            <h3 class="mb-3">Laba Rugi - 12 Bulan</h3>
+
+            <div class="d-flex align-items-end gap-3 mb-3 o_c18_report_filters">
+                <div>
+                    <label class="form-label mb-0">Tahun</label>
+                    <input type="number" class="form-control" style="width: 100px;"
+                           t-att-value="state.year" t-on-change="onYearChange"/>
+                </div>
+                <div>
+                    <label class="form-label mb-0">Cost Center</label>
+                    <select class="form-select" t-on-change="onCostCenterChange">
+                        <option value="">Semua Cost Center</option>
+                        <t t-foreach="costCenterOptions" t-as="opt" t-key="opt.value">
+                            <option t-att-value="opt.value" t-esc="opt.label"/>
+                        </t>
+                    </select>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="c18_isy_hide_zero"
+                           t-att-checked="state.hideZero" t-on-change="onHideZeroChange"/>
+                    <label class="form-check-label" for="c18_isy_hide_zero">Sembunyikan saldo nol (semua bulan)</label>
+                </div>
+            </div>
+
+            <div t-if="state.loading" class="text-muted">Memuat...</div>
+
+            <div t-if="!state.loading and state.data" class="o_c18_yearly_table_wrap" style="overflow-x: auto;">
+                <table class="table table-sm table-bordered o_c18_report_table o_c18_yearly_table">
+                    <thead>
+                        <tr>
+                            <th class="o_c18_freeze_col" style="left: 0; min-width: 220px;">Akun</th>
+                            <t t-foreach="periodLabels" t-as="p" t-key="p">
+                                <th class="text-end" t-esc="p"/>
+                            </t>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="sectionKeys" t-as="key" t-key="key">
+                            <tr t-foreach="state.data.sections[key].rows" t-as="row" t-key="row.code + row.name">
+                                <td class="o_c18_freeze_col" style="left: 0;">
+                                    <span t-esc="row.code"/> <span t-esc="row.name"/>
+                                </td>
+                                <t t-foreach="row.amounts_fmt" t-as="amount" t-key="amount_index">
+                                    <td class="text-end" t-esc="amount"/>
+                                </t>
+                            </tr>
+                            <tr class="fw-bold table-light">
+                                <td class="o_c18_freeze_col" style="left: 0;" t-esc="state.data.sections[key].label"/>
+                                <t t-foreach="state.data.sections[key].subtotal_fmt" t-as="amount" t-key="amount_index">
+                                    <td class="text-end" t-esc="amount"/>
+                                </t>
+                            </tr>
+                        </t>
+                        <tr class="fw-bold border-top">
+                            <td class="o_c18_freeze_col" style="left: 0;">Pendapatan Bersih</td>
+                            <t t-foreach="state.data.pendapatan_bersih_fmt" t-as="amount" t-key="amount_index">
+                                <td class="text-end" t-esc="amount"/>
+                            </t>
+                        </tr>
+                        <tr class="fw-bold">
+                            <td class="o_c18_freeze_col" style="left: 0;">Laba Kotor</td>
+                            <t t-foreach="state.data.laba_kotor_fmt" t-as="amount" t-key="amount_index">
+                                <td class="text-end" t-esc="amount"/>
+                            </t>
+                        </tr>
+                        <tr class="fw-bold">
+                            <td class="o_c18_freeze_col" style="left: 0;">Laba Usaha (Operating Income)</td>
+                            <t t-foreach="state.data.laba_usaha_fmt" t-as="amount" t-key="amount_index">
+                                <td class="text-end" t-esc="amount"/>
+                            </t>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bold fs-5 border-top border-dark">
+                            <td class="o_c18_freeze_col" style="left: 0;">Laba Bersih (Net Income)</td>
+                            <t t-foreach="state.data.laba_bersih_fmt" t-as="amount" t-key="amount_index">
+                                <td class="text-end" t-esc="amount"/>
+                            </t>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </t>
+</templates>

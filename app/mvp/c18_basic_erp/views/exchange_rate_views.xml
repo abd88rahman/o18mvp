@@ -13,7 +13,7 @@
     </record>
 
     <record id="action_c18_basic_erp_exchange_rate" model="ir.actions.act_window">
-        <field name="name">Kurs Harian</field>
+        <field name="name">Daily Exchange Rate</field>
         <field name="res_model">c18.account.exchange.rate</field>
         <field name="view_mode">list</field>
     </record>

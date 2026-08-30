@@ -2,20 +2,20 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 PL_ACCOUNT_TYPES = [
-    'pendapatan',
-    'beban_pokok_pendapatan',
-    'beban_usaha',
-    'pendapatan_luar_usaha',
-    'beban_luar_usaha',
+    'revenue',
+    'cost_of_revenue',
+    'expense',
+    'other_revenue',
+    'other_expense',
 ]
 
 
 class AccountClosing(models.Model):
     _name = 'c18.account.closing'
-    _description = 'Tutup Buku (Closing Entries)'
+    _description = 'Period Closing (Closing Entries)'
     _order = 'closing_date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     fiscal_year = fields.Integer(required=True, default=lambda self: fields.Date.context_today(self).year - 1)
     closing_date = fields.Date(compute='_compute_closing_date', store=True, readonly=True)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
@@ -46,7 +46,7 @@ class AccountClosing(models.Model):
                 ('id', '!=', rec.id),
             ])
             if existing:
-                raise UserError(_('Tahun fiskal %s sudah pernah ditutup.', rec.fiscal_year))
+                raise UserError(_('Fiscal year %s has already been closed.', rec.fiscal_year))
 
             date_from = fields.Date.to_date(f'{rec.fiscal_year}-01-01')
             date_to = rec.closing_date
@@ -65,7 +65,9 @@ class AccountClosing(models.Model):
                     ('date', '<=', date_to),
                     ('move_id.is_closing_entry', '=', False),
                 ])
-                net = sum(lines.mapped('debit')) - sum(lines.mapped('credit'))
+                # Konversi ke company currency dulu (erd/mvp/01 poin 5) - jangan
+                # jumlah debit/credit mentah, bisa campur currency lintas jurnal.
+                net = sum(lines.mapped('debit_company_currency')) - sum(lines.mapped('credit_company_currency'))
                 if not net:
                     continue
                 if net > 0:
@@ -76,7 +78,7 @@ class AccountClosing(models.Model):
                     debit_total += abs(net)
 
             if not move_line_vals:
-                raise UserError(_('Tidak ada saldo Pendapatan/Beban tahun %s untuk ditutup.', rec.fiscal_year))
+                raise UserError(_('No Revenue/Expense balances for year %s to close.', rec.fiscal_year))
 
             diff = debit_total - credit_total
             laba_ditahan = self.env.ref('c18_basic_erp.acc_3_1100')
@@ -88,7 +90,7 @@ class AccountClosing(models.Model):
             move = self.env['c18.account.move'].create({
                 'journal_id': self.env.ref('c18_basic_erp.journal_tutb').id,
                 'date': rec.closing_date,
-                'ref': _('Tutup Buku %s', rec.fiscal_year),
+                'ref': _('Period Closing %s', rec.fiscal_year),
                 'company_id': rec.company_id.id,
                 'is_closing_entry': True,
                 'line_ids': move_line_vals,

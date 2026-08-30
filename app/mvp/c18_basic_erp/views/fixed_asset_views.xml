@@ -35,15 +35,18 @@
                         </group>
                         <group>
                             <field name="debit_account_id" readonly="state != 'draft'"
-                                   domain="[('account_type', '=', 'aktiva_tetap')] if transaction_type == 'pengakuan' else []"/>
+                                   domain="[('account_type', '=', 'fixed_asset')] if transaction_type == 'pengakuan' else []"/>
                             <field name="credit_account_id" readonly="state != 'draft'"/>
                             <field name="amount" readonly="state != 'draft'"/>
+                            <field name="currency_id" readonly="state != 'draft'"/>
+                            <field name="exchange_rate" readonly="state != 'draft'"/>
                         </group>
                     </group>
                     <group>
                         <field name="partner_id" readonly="state != 'draft'"/>
                         <field name="cost_center_id" readonly="state != 'draft'"/>
                         <field name="note" readonly="state != 'draft'"/>
+                        <field name="move_id" readonly="1"/>
                     </group>
                 </sheet>
             </form>
@@ -51,7 +54,7 @@
     </record>
 
     <record id="action_c18_fixed_asset_entry" model="ir.actions.act_window">
-        <field name="name">Aktiva Tetap</field>
+        <field name="name">Fixed Asset</field>
         <field name="res_model">c18.fixed.asset.entry</field>
         <field name="view_mode">list,form</field>
     </record>
@@ -85,7 +88,7 @@
     </record>
 
     <record id="action_c18_fixed_asset_tag" model="ir.actions.act_window">
-        <field name="name">Kode Aset</field>
+        <field name="name">Asset Code</field>
         <field name="res_model">c18.fixed.asset.tag</field>
         <field name="view_mode">list,form</field>
     </record>

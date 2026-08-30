@@ -19,9 +19,9 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_process" type="object" string="Proses Tutup Buku"
+                    <button name="action_process" type="object" string="Process Period Closing"
                             class="oe_highlight" invisible="state != 'draft'"
-                            confirm="Tutup Buku akan menolkan seluruh akun Pendapatan/Beban tahun ini dan memindahkan selisihnya ke Laba Ditahan. Tindakan ini mengunci periode - lanjutkan?"/>
+                            confirm="Period Closing will zero out all Revenue/Expense accounts for this year and move the difference to Retained Earnings. This action locks the period - continue?"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                 </header>
                 <sheet>
@@ -38,7 +38,7 @@
     </record>
 
     <record id="action_c18_basic_erp_closing" model="ir.actions.act_window">
-        <field name="name">Tutup Buku</field>
+        <field name="name">Period Closing</field>
         <field name="res_model">c18.account.closing</field>
         <field name="view_mode">list,form</field>
     </record>

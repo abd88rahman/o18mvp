@@ -4,21 +4,21 @@ from odoo.exceptions import UserError
 
 class SaleReceipt(models.Model):
     _name = 'c18.sale.receipt'
-    _description = 'Penerimaan Piutang'
+    _description = 'Customer Receipt'
     _order = 'date desc, id desc'
 
-    name = fields.Char(default='New', copy=False, readonly=True)
+    name = fields.Char(default='New', copy=False, readonly=True, string='Number')
     date = fields.Date(required=True, default=fields.Date.context_today)
     partner_id = fields.Many2one('res.partner', string='Customer', required=True)
-    account_id = fields.Many2one('c18.account.account', string='Akun Debit', required=True,
-                                  help='Default Kas/Bank, tapi boleh akun lain (Hutang Usaha utk netting, '
-                                       'Persediaan utk barter, Uang Muka Penjualan utk apply DP).')
+    account_id = fields.Many2one('c18.account.account', string='Debit Account', required=True,
+                                  help='Defaults to Cash/Bank, but any other account is allowed (Accounts Payable for netting, '
+                                       'Inventory for barter, Sales Advance to apply a down payment).')
     cost_center_id = fields.Many2one('c18.account.cost.center')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
     line_ids = fields.One2many('c18.sale.receipt.line', 'receipt_id', copy=True)
     deduction_ids = fields.One2many('c18.sale.receipt.deduction', 'receipt_id', copy=True,
-                                     help='Simplifikasi (2026-08-27): deduction level header, bukan per-baris invoice seperti draft requirement asal.')
+                                     help='Simplification (2026-08-27): deduction is at header level, not per invoice line as in the original draft requirement.')
     amount_received_total = fields.Monetary(compute='_compute_totals', currency_field='currency_id', store=True)
     amount_deduction_total = fields.Monetary(compute='_compute_totals', currency_field='currency_id', store=True)
     amount_net = fields.Monetary(compute='_compute_totals', currency_field='currency_id', store=True)
@@ -45,10 +45,10 @@ class SaleReceipt(models.Model):
             if rec.state != 'draft':
                 continue
             if not rec.line_ids:
-                raise UserError(_('Penerimaan Piutang butuh minimal 1 baris invoice.'))
+                raise UserError(_('A Customer Receipt requires at least 1 invoice line.'))
             for line in rec.line_ids:
                 if line.amount_received > line.amount_residual + 0.001:
-                    raise UserError(_('Nominal terima tidak boleh lebih dari sisa piutang (%s).', line.invoice_id.name))
+                    raise UserError(_('The received amount cannot exceed the outstanding receivable balance (%s).', line.invoice_id.name))
             move_line_vals = []
             for line in rec.line_ids:
                 move_line_vals.append((0, 0, {
@@ -91,7 +91,7 @@ class SaleReceipt(models.Model):
 
 class SaleReceiptLine(models.Model):
     _name = 'c18.sale.receipt.line'
-    _description = 'Penerimaan Piutang Line'
+    _description = 'Customer Receipt Line'
     _order = 'sequence, id'
 
     receipt_id = fields.Many2one('c18.sale.receipt', required=True, ondelete='cascade')
@@ -106,14 +106,14 @@ class SaleReceiptLine(models.Model):
 
 class SaleReceiptDeduction(models.Model):
     _name = 'c18.sale.receipt.deduction'
-    _description = 'Penerimaan Piutang - Deduction'
+    _description = 'Customer Receipt - Deduction'
     _order = 'sequence, id'
 
     receipt_id = fields.Many2one('c18.sale.receipt', required=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
-    name = fields.Char(string='Keterangan', required=True)
+    name = fields.Char(string='Description', required=True)
     account_id = fields.Many2one('c18.account.account', required=True)
     amount = fields.Monetary(currency_field='currency_id',
-                              help='Positif = pengurang (debit akun ini, mis. Potongan Penjualan - kita rugi). '
-                                   'Negatif = penambah (kredit akun ini, mis. Pendapatan Denda).')
+                              help='Positive = reduces the receipt (debits this account, e.g. Sales Discount - a loss to us). '
+                                   'Negative = increases the receipt (credits this account, e.g. Penalty Income).')
     currency_id = fields.Many2one(related='receipt_id.currency_id')

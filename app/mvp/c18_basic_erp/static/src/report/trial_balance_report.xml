@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="c18_basic_erp.TrialBalanceReport">
+        <div class="o_c18_trial_balance p-4">
+            <h3 class="mb-3">Trial Balance (Neraca Saldo)</h3>
+
+            <div class="d-flex align-items-end gap-3 mb-3 o_c18_report_filters">
+                <div>
+                    <label class="form-label mb-0">Per Tanggal</label>
+                    <input type="date" class="form-control"
+                           t-att-value="state.dateTo"
+                           t-on-change="onDateChange"/>
+                </div>
+                <div>
+                    <label class="form-label mb-0">Cost Center</label>
+                    <select class="form-select" t-on-change="onCostCenterChange">
+                        <option value="">Semua Cost Center</option>
+                        <t t-foreach="costCenterOptions" t-as="opt" t-key="opt.value">
+                            <option t-att-value="opt.value" t-esc="opt.label"/>
+                        </t>
+                    </select>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="c18_hide_zero"
+                           t-att-checked="state.hideZero"
+                           t-on-change="onHideZeroChange"/>
+                    <label class="form-check-label" for="c18_hide_zero">Sembunyikan saldo nol</label>
+                </div>
+            </div>
+
+            <div t-if="state.loading" class="text-muted">Memuat...</div>
+
+            <t t-if="!state.loading and state.data">
+                <div t-if="state.data.mismatch" class="alert alert-danger">
+                    Total Debit tidak sama dengan Total Kredit - ada bug di sistem, laporkan segera.
+                </div>
+
+                <table class="table table-sm table-bordered o_c18_report_table">
+                    <thead>
+                        <tr>
+                            <th>Kode Akun</th>
+                            <th>Nama Akun</th>
+                            <th class="text-end">Debit</th>
+                            <th class="text-end">Kredit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="state.data.rows" t-as="row" t-key="row.account_id">
+                            <td t-esc="row.code"/>
+                            <td t-esc="row.name"/>
+                            <td class="text-end" t-esc="row.debit_fmt"/>
+                            <td class="text-end" t-esc="row.credit_fmt"/>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bold">
+                            <td colspan="2">Total</td>
+                            <td class="text-end" t-esc="state.data.totals.debit_fmt"/>
+                            <td class="text-end" t-esc="state.data.totals.credit_fmt"/>
+                        </tr>
+                    </tfoot>
+                </table>
+            </t>
+        </div>
+    </t>
+</templates>
