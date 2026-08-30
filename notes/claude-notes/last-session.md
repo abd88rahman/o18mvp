@@ -1,7 +1,7 @@
-# Titik Akhir Sesi Ini (2026-08-30, sesi lanjutan)
+# Titik Akhir Sesi Ini (2026-08-31, lanjutan dari 2026-08-30)
 
 ## Kalimat Penutup Sesi
-> (menunggu instruksi lanjutan dari user — sesi lanjutan di hari yang sama setelah sesi besar poin 1-18 di bawah. Fokus sesi ini: rapi-rapi menu Reports + 2 laporan baru (Aging, Sales/Purchase Analysis), fitur Print PDF dokumen transaksi dibangun dari nol (PO/SO/Invoice), dashboard Home dgn breakdown count per form, rapi-rapi menu Configuration & Company Settings, translasi nama jurnal ke Inggris (kode ditunda), report baru Journal Items, patch GLOBAL row-number+zebra-stripe+equal-width utk semua list view di app (bukan cuma c18_basic_erp), ganti warna brand LimeGreen→Emerald, favicon transparan+recolor. Tidak ada pertanyaan terbuka spesifik di akhir, murni permintaan "update" catatan sesi sebelum commit.)
+> (menunggu instruksi lanjutan dari user — lanjutan percakapan yang sama dari 2026-08-30 (poin 1-29), nyambung ke hari kalender baru 2026-08-31 dgn 1 temuan tambahan: menu Apps ternyata bisa keakses semua user di salah satu database user. Tidak ada pertanyaan terbuka spesifik di akhir, murni permintaan "catat + commit + push".)
 
 ## Ringkasan Progres Sesi Ini
 
@@ -306,6 +306,11 @@ User rasa warna primary lama (`#32cd32` LimeGreen, dipilih sesi-sesi sebelumnya)
 ### 29. Favicon: Background Transparan + Warna Ikut Emerald (2026-08-30, sesi lanjutan)
 `favicon_custom.png`/`favicon_custom_32.png` (huruf "O" hitam di atas putih) diminta background putihnya dihilangkan. Dikerjakan pakai Python PIL langsung (bukan tool khusus - lingkungan ini punya Pillow terpasang): alpha = 255-luminance per pixel (putih→alpha 0, hitam→alpha 255, tepi anti-alias otomatis blend halus), lalu RGB di-set ke emerald `#0F9D58` (susulan permintaan user, biar konsisten sama warna brand baru poin 28) dengan alpha tetap dipertahankan. **Catatan verifikasi**: preview visual tool Read selalu render di atas kanvas putih, jadi TIDAK bisa dipakai membedakan "background putih asli" vs "transparan yang divisualisasikan di atas putih" - transparansi WAJIB dikonfirmasi programatik (cek nilai alpha pixel pojok = 0), bukan cuma dilihat. File gambar statis - tidak perlu `-u`/restart, cukup browser hard-refresh (favicon biasanya di-cache agresif).
 
+### 30. Menu "Apps" Dikunci Permanen ke Grup Administration/Settings (2026-08-31)
+User laporan: di salah satu database lokal-nya, menu "Apps" (`base.menu_management`, action bawaan `base.open_module_tree` yang sudah dibatasi domain `c18_*` di `ir_module_module_views.xml` sejak sesi sebelumnya) bisa diakses SEMUA user, bukan cuma admin. Dicek: Odoo core SEHARUSNYA sudah default `groups="base.group_system"` di menu ini (dikonfirmasi baca langsung source `base_menus.xml`), dan 4 database yang saya kelola di sini semua SUDAH benar (`groups_id` = Settings) - jadi bukan disebabkan kode apa pun di repo ini (dicek grep `group_system`/`post_init_hook` di seluruh `app/`, nihil). User konfirmasi yang mereka ubah manual: field `Groups` di menu item "Apps" sendiri (lewat Settings > Technical > Menu Items) - kosong di database mereka, entah kenapa (drift database, bukan bug kode).
+
+**Fix**: dikunci eksplisit via XML (`<record id="base.menu_management" model="ir.ui.menu"><field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/></record>`, command `(6,0,ids)` = REPLACE total bukan tambah) di file yang sama (`ir_module_module_views.xml`) - supaya berlaku permanen & deterministik di database manapun (baru atau lama), tidak tergantung kondisi drift database individual. Diverifikasi ke 4 database - semua `groups_id` sekarang eksplisit `{Settings}`.
+
 ## Temuan Gap (Dicatat, Belum Diperbaiki)
 - **Fixed Asset reconciliation, edge case minor**: `_check_coa_reconciliation` di `fixed_asset.py` menjumlah SEMUA baris debit dari akun bertipe `fixed_asset` (termasuk Akumulasi Penyusutan, karena satu tipe yang sama) untuk dibanding ke total Acquisition — aman untuk alur normal, tapi kalau nanti ada transaksi Disposal/Sale yang men-debit Akumulasi Penyusutan, bisa memicu warning mismatch palsu. Belum diperbaiki, prioritas rendah, dicatat sebagai referensi kalau nanti ketemu warning aneh pas testing Disposal.
 
@@ -372,3 +377,4 @@ Sudah diberi nomor supaya gampang disebut. **TODO 2 lama (Laporan Keuangan + Kar
 - `app/base/c18_theme/static/src/js/list_renderer_row_number_patch.js`, `static/src/xml/list_renderer_row_number_patch.xml`, `static/src/scss/list_view_tweaks.scss` — patch GLOBAL `ListRenderer` (nomor baris + zebra-stripe + matiin magic column width), berlaku ke SELURUH app termasuk layar core Odoo, bukan cuma `c18_basic_erp` (progres poin 27, Keputusan Besar poin 14-15).
 - `app/base/c18_theme/static/src/scss/colors.scss` — warna brand `$o-brand-primary`/`$o-community-color` sekarang Emerald `#0F9D58` (progres poin 28, sebelumnya LimeGreen `#32cd32`).
 - `app/base/c18_theme/static/src/img/favicon_custom.png`, `favicon_custom_32.png` — background transparan + huruf "O" warna Emerald (progres poin 29).
+- `app/base/c18_theme/views/ir_module_module_views.xml` — sekarang juga kunci `groups_id` menu "Apps" (`base.menu_management`) eksplisit ke Administration/Settings, bukan cuma domain filter `c18_*` yang sudah ada dari sesi sebelumnya (progres poin 30).

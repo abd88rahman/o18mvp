@@ -5,9 +5,21 @@ cuma menampilkan modul custom kita (prefix c18_*) - lihat konvensi prefix di
 erd/00-konvensi-teknis.md poin 2. Proyek ini sengaja zero-dependency ke app
 bisnis bawaan Odoo, jadi app-app bawaan itu tidak perlu (dan tidak boleh)
 kelihatan/di-install dari sini.
+
+Menu "Apps" sendiri (base.menu_management) SEHARUSNYA sudah default
+groups="base.group_system" dari Odoo core - tapi ditemukan kosong di salah
+satu database (2026-08-31), entah kenapa (bukan disebabkan kode manapun di
+repo ini, sudah dicek). Dipaksa eksplisit di sini (eval (6,0,...) - REPLACE
+total, bukan tambah) supaya user biasa (non-Administration/Settings) tidak
+pernah bisa lihat/akses menu Apps di database manapun, tidak tergantung
+kondisi awal database.
 -->
 <odoo>
     <record id="base.open_module_tree" model="ir.actions.act_window">
         <field name="domain">[('name', '=like', 'c18\_%')]</field>
+    </record>
+
+    <record id="base.menu_management" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
     </record>
 </odoo>
