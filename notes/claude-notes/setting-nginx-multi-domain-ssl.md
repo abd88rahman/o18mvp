@@ -14,6 +14,16 @@ Jawaban atas [`../human-notes/cara setting nginx.txt`](../human-notes/cara%20set
 
 Kendala yang ditemukan & solusinya (dicatat untuk referensi kalau ulang di server lain): `nginx -t` sempat gagal dengan error `socket() [::]:80 failed (97: Address family not supported by protocol)` — penyebabnya baris `listen [::]:80 default_server;` di `sites-enabled/default` (server ini tidak mendukung IPv6). Solusi: hapus symlink `sites-enabled/default` (`sudo rm /etc/nginx/sites-enabled/default`). Juga sempat `systemctl reload nginx` gagal karena nginx belum pernah di-`start` — servicenya perlu `sudo systemctl start nginx` dulu (bukan reload) untuk instalasi baru.
 
+**Susulan (2026-08-31)**: `413 Request Entity Too Large` saat restore database (3MB) lewat Database Manager — server block awal tidak punya `client_max_body_size` (default nginx cuma 1MB). File `sites-available/sub1.domain.id` di server WAJIB ditambah manual (bukan otomatis kebawa dari repo, krn file ini dibuat langsung di server lewat heredoc, bukan disalin dari `app/docker/nginx/odoo-erp.conf`):
+```bash
+sudo nano /etc/nginx/sites-available/sub1.domain.id
+# tambah baris "client_max_body_size 500M;" di dalam blok server { ... }
+# (kalau sudah ada blok listen 443 ssl dari certbot, tambahkan di SEMUA blok server yang ada)
+sudo nginx -t
+sudo systemctl reload nginx
+```
+Template repo (`app/docker/nginx/odoo-erp.conf`) dan langkah 2 di atas sudah diupdate ikut sertakan baris ini, supaya domain berikutnya (odoo2 dst) tidak kena masalah yang sama.
+
 **Belum dikerjakan**: cek ulang `docker compose ps` di `app/docker/` repo ini untuk pastikan service `nginx` (profile `proxy`) tidak ikut jalan (supaya tidak bentrok port 80 dengan nginx host).
 
 Bagian "Referensi Multi-Domain" di bawahnya baru relevan **nanti** kalau odoo2 (atau repo lain) sudah dibuat dan mau digabung ke server yang sama.
@@ -40,6 +50,10 @@ upstream odoo1_longpolling {
 server {
     listen 80;
     server_name sub1.domain.id;
+
+    # Default nginx cuma 1MB - kekecilan utk restore database (Database
+    # Manager) atau upload attachment besar. 500M cukup longgar.
+    client_max_body_size 500M;
 
     proxy_read_timeout 720s;
     proxy_connect_timeout 720s;

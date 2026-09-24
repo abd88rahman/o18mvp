@@ -13,10 +13,29 @@ services:
       # Lihat notes/human-notes/master-plan.txt.
       - ./pgdata:/var/lib/postgresql/data
 
+  # One-shot sebelum odoo18-erp start: betulkan owner data/ ke user odoo
+  # container. Di server Linux, bind mount bawa owner host (root/user deploy)
+  # sehingga user odoo tidak bisa tulis sessions/filestore -> Permission
+  # denied. Pakai image yang sama supaya nama user "odoo" pasti cocok UID-nya.
+  # Cuma file yang owner-nya belum benar yang di-chown (cepat walau filestore
+  # besar). Di Docker Desktop Windows chown bisa gagal - diabaikan, tidak perlu.
+  odoo18-erp-init:
+    image: odoo:18
+    user: root
+    entrypoint:
+      - sh
+      - -c
+      - 'find /var/lib/odoo ! -user odoo -exec chown odoo:odoo {} + || echo "WARN: chown data/ gagal"'
+    volumes:
+      - ./data:/var/lib/odoo
+
   odoo18-erp:
     image: odoo:18
     depends_on:
-      - db
+      db:
+        condition: service_started
+      odoo18-erp-init:
+        condition: service_completed_successfully
     environment:
       - HOST=db
       - USER=${POSTGRES_USER}
@@ -25,14 +44,20 @@ services:
       - ../base:/mnt/extra-addons/base
       - ../mvp:/mnt/extra-addons/mvp
       - ../custom:/mnt/extra-addons/custom
-      - ./etc:/etc/odoo
-    # Port di-expose langsung juga (di luar nginx) buat kemudahan development
-    # lokal (akses langsung http://localhost:8069/odoo tanpa lewat proxy).
-    # Untuk production, cukup lewat nginx (port 80/443) - port ini bisa
-    # dihapus/dibatasi ke localhost saja.
+      # etc/ cuma berisi odoo.conf (read-only). Data runtime (filestore,
+      # sessions, log) dipisah ke data/ -> /var/lib/odoo (default image
+      # odoo:18). Owner data/ dibetulkan otomatis oleh odoo18-erp-init.
+      - ./etc:/etc/odoo:ro
+      - ./data:/var/lib/odoo
+    # Argumen CLI menimpa data_dir/logfile di odoo.conf (yang masih menunjuk
+    # /etc/odoo) - supaya tidak ada tulis ke etc/ yang read-only.
+    command: odoo --data-dir=/var/lib/odoo --logfile=/var/lib/odoo/odoo-server.log
+    # Port cuma di-bind ke localhost: akses dev lokal http://localhost:8069/odoo
+    # tetap jalan, tapi tidak terbuka ke internet di server. Akses publik
+    # lewat nginx (nginx ke odoo via network docker, tidak lewat port ini).
     ports:
-      - "8069:8069"
-      - "8072:8072"
+      - "127.0.0.1:8069:8069"
+      - "127.0.0.1:8072:8072"
 
   nginx:
     # profile "proxy" - tidak ikut start otomatis di "docker compose up -d".

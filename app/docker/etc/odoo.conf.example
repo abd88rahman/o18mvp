@@ -27,7 +27,7 @@ server_wide_modules = base,web,c18_theme
 ; --------------------------------------------------------------------------
 ; -D / --data-dir | filestore, sessions, addons upload tersimpan di sini
 ; --------------------------------------------------------------------------
-data_dir = /etc/odoo
+data_dir = /var/lib/odoo
 
 ; --------------------------------------------------------------------------
 ; Master password Database Manager - GANTI sebelum deploy, jangan pernah
@@ -51,7 +51,7 @@ proxy_mode = True
 ; supaya password tidak dobel ditulis di file ini.
 ; --------------------------------------------------------------------------
 
-logfile = /etc/odoo/odoo-server.log
+logfile = /var/lib/odoo/odoo-server.log
 
 ; list_db dibiarkan default (True/tidak diisi) - kontrol akses Database
 ; Manager sudah dipegang oleh gate Master Password custom di c18_theme,

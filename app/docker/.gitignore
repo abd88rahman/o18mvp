@@ -10,3 +10,4 @@ pgdata/*
 etc/filestore/
 etc/sessions/
 etc/*.log
+data/
