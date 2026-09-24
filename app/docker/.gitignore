@@ -3,8 +3,9 @@
 etc/odoo.conf
 
 # Data Postgres (bind mount native - lihat notes/human-notes/master-plan.txt & docker-compose.yml)
-pgdata/*
-!pgdata/.gitkeep
+# Tanpa .gitkeep: initdb Postgres menolak folder yang tidak kosong, dan
+# Docker otomatis membuat pgdata/ kalau belum ada.
+pgdata/
 
 # Data runtime Odoo (filestore/sessions/log) yang ikut ke-mount di etc/
 etc/filestore/
